@@ -1,0 +1,36 @@
+local o = vim.o -- Global options
+local w = vim.wo -- Window options
+local b = vim.bo -- Buffer options
+
+vim.g.mapleader=" "
+
+o.autoindent = true
+o.clipboard = "unnamed,unnamedplus"
+o.completeopt="menu,menuone,noselect"
+o.cursorline = true
+o.expandtab = true
+o.hidden = true
+o.hlsearch= true
+o.ignorecase= true
+o.incsearch= true
+o.modeline = false
+o.mouse = 'a'
+o.number = true
+o.scrolloff = 8
+o.shiftwidth = 2
+o.shortmess= 'I'
+o.showmatch= true
+o.showmode = false
+o.sidescrolloff = 8
+o.signcolumn = "yes"
+o.smartcase = true
+o.smartindent = true
+o.softtabstop = 2
+o.splitbelow = true
+o.splitright = true
+o.tabstop = 2
+o.termguicolors = true
+o.timeoutlen = 300
+o.undofile = true
+o.updatetime = 300
+o.wrap = false
