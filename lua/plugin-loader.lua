@@ -78,6 +78,7 @@ return require('packer').startup({function(use)
     'saadparwaiz1/cmp_luasnip',
     'onsails/lspkind-nvim',
     'wbthomason/packer.nvim',
+    'andymass/vim-matchup',
   }
 end,
 config = {
