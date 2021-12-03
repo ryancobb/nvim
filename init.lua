@@ -1,4 +1,4 @@
-require('plugins')
+require('plugin-loader')
 require('options')
 require('mappings')
 require('lsp')
