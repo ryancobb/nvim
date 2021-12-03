@@ -17,29 +17,12 @@ require('toggleterm').setup {
   close_on_exit = false, -- close the terminal window when the process exits
 }
 
-local Terminal  = require('toggleterm.terminal').Terminal
-local lazygit = Terminal:new({
-  cmd = "lazygit",
-  dir = "git_dir",
-  direction = "float",
-  close_on_exit = true,
-  float_opts = {
-    border = "single",
-  },
-  on_open = function(term)
-    vim.cmd("startinsert!")
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
-  end,
-})
+local opts = { noremap = true, silent = true }
 
-function _lazygit_toggle()
-  lazygit:toggle()
-end
+vim.api.nvim_command('autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-\\> <cmd>exe v:count1 . "ToggleTerm"<CR>')
+vim.api.nvim_command('autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-t> <cmd>exe v:count1 . "ToggleTerm"<CR>')
 
-local opts = { noremap = true, silent = true } 
-
-vim.api.nvim_set_keymap("n", "<leader>g", "<cmd>lua _lazygit_toggle()<CR>", opts)
-vim.api.nvim_set_keymap('n', [[<c-\>]], '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>', opts)
-vim.api.nvim_set_keymap('i', [[<c-\>]], '<esc><cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>', opts)
-vim.api.nvim_set_keymap('n', [[<c-t>]], '<cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>', opts)
-vim.api.nvim_set_keymap('i', [[<c-t>]], '<esc><cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>', opts)
+vim.api.nvim_set_keymap('n', [[<c-\>]], '<cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>', opts)
+vim.api.nvim_set_keymap('i', [[<c-\>]], '<esc><cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>', opts)
+vim.api.nvim_set_keymap('n', '<c-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<CR>', opts)
+vim.api.nvim_set_keymap('i', '<c-t>', '<esc><cmd>exe v:count1 . "ToggleTerm direction=float"<CR>', opts)

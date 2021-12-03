@@ -34,5 +34,4 @@ vim.api.nvim_set_keymap('t', '<c-h>', '<c-\\><c-n><c-w>h', opts)
 vim.api.nvim_set_keymap('t', '<c-j>', '<c-\\><c-n><c-w>j', opts)
 vim.api.nvim_set_keymap('t', '<c-k>', '<c-\\><c-n><c-w>k', opts)
 vim.api.nvim_set_keymap('t', '<c-l>', '<c-\\><c-n><c-w>l', opts)
-
 vim.api.nvim_set_keymap('t', 'jk', '<C-\\><C-n>', opts)
