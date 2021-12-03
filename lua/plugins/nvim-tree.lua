@@ -6,7 +6,7 @@ require('nvim-tree').setup {
   auto_close = true,
   filters = {
     dotfiles = false,
-    custom = { '.git' }
+    custom = { '.git', '.DS_STORE', '.bundle', '.vscode', '.theia', '.jest', '.optic', '.storybook' }
   },
   git = {
     enable = false,

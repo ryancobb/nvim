@@ -1,3 +1,14 @@
+local function diff_source()
+  local gitsigns = vim.b.gitsigns_status_dict
+  if gitsigns then
+    return {
+      added = gitsigns.added,
+      modified = gitsigns.changed,
+      removed = gitsigns.removed
+    }
+  end
+end
+
 require('lualine').setup {
   options = {
     icons_enabled = true,
@@ -9,8 +20,11 @@ require('lualine').setup {
   },
   sections = {
     lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff',
-                  {'diagnostics', sources={'nvim_lsp'}}},
+    lualine_b = { 
+      {'b:gitsigns_head', icon = ''},
+      {'diff', source = diff_source},
+      {'diagnostics', sources={'nvim_lsp'}}
+    },
     lualine_c = {'filename'},
     lualine_x = {'filetype'},
     lualine_y = {'progress'},
