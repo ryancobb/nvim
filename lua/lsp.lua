@@ -49,7 +49,7 @@ require('nvim-lsp-installer').on_server_ready(function(server)
     on_attach = on_attach,
     capabilities = capabilities,
     flags = {
-      debounce_text_changes = 150
+      debounce_text_changes = 300
     }
   }
 
@@ -60,7 +60,7 @@ require("lspconfig")['solargraph'].setup({
   on_attach = on_attach,
   capabilities = capabilities,
   flags = {
-    debounce_text_changes = 150
+    debounce_text_changes = 500
   },
   cmd = { '/Users/ryancobb/.asdf/shims/solargraph', 'stdio' }
 })

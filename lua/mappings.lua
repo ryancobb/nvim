@@ -36,9 +36,3 @@ vim.api.nvim_set_keymap('t', '<c-k>', '<c-\\><c-n><c-w>k', opts)
 vim.api.nvim_set_keymap('t', '<c-l>', '<c-\\><c-n><c-w>l', opts)
 
 vim.api.nvim_set_keymap('t', 'jk', '<C-\\><C-n>', opts)
-
-vim.api.nvim_set_keymap('n', [[<c-\>]], '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>', opts)
-vim.api.nvim_set_keymap('i', [[<c-\>]], '<esc><cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>', opts)
-vim.api.nvim_set_keymap('n', [[<c-t>]], '<cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>', opts)
-vim.api.nvim_set_keymap('i', [[<c-t>]], '<esc><cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>', opts)
-
