@@ -1,4 +1,17 @@
-require('telescope').setup {
+local telescope = require('telescope')
+local actions = require('telescope.actions')
+
+telescope.setup {
+  defaults = {
+    mappings = {
+      i = {
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-k>"] = actions.move_selection_previous,
+        ["<C-l>"] = actions.cycle_history_next,
+        ["<C-h>"] = actions.cycle_history_prev,
+      }
+    }
+  },
   extensions = {
     fzf = {
       fuzzy = true,
@@ -9,4 +22,4 @@ require('telescope').setup {
   }
 }
 
-require('telescope').load_extension('fzf')
+telescope.load_extension('fzf')
