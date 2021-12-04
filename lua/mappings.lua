@@ -4,16 +4,21 @@ local opts = {
 }
 
 vim.api.nvim_set_keymap('n', '<leader>e', ':lua require("nvimtree").toggle()<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>c', ':BufferClose<CR>', opts)
+
 vim.api.nvim_set_keymap('n', '<leader>f', ':Telescope find_files<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>t', ':Telescope live_grep<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>sr', ':Telescope oldfiles<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>sl', ':Telescope resume<CR>', opts)
+
 vim.api.nvim_set_keymap('n', '<leader>h', ':noh<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>tl', ":let @*=join([expand('%'), line('.')], ':')<CR>", opts)
 vim.api.nvim_set_keymap('n', '<leader>tf', ":let @*=expand('%')<CR>", opts)
 
 vim.api.nvim_set_keymap('n', '<tab>', ':BufferNext<CR>', opts)
 vim.api.nvim_set_keymap('n', '<s-tab>', ':BufferPrevious<CR>', opts)
+vim.api.nvim_set_keymap('n', '<s-l>', ':BufferNext<CR>', opts)
+vim.api.nvim_set_keymap('n', '<s-h>', ':BufferPrevious<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>c', ':BufferClose<CR>', opts)
 
 vim.api.nvim_set_keymap('n', '<c-h>', '<c-w>h', opts)
 vim.api.nvim_set_keymap('n', '<c-j>', '<c-w>j', opts)
@@ -24,7 +29,6 @@ vim.api.nvim_set_keymap('n', '<c-up>', ':resize -2<CR>', opts)
 vim.api.nvim_set_keymap('n', '<c-down>', ':resize +2<CR>', opts)
 vim.api.nvim_set_keymap('n', '<c-left>', ':vertical resize -2<CR>', opts)
 vim.api.nvim_set_keymap('n', '<c-right>', ':vertical resize +2<CR>', opts)
-
 
 vim.api.nvim_set_keymap('x', '<s-k>', ":move '<-2<CR>gv-gv", opts)
 vim.api.nvim_set_keymap('x', '<s-j>', ":move '>+1+<CR>gv-gv", opts)

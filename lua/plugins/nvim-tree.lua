@@ -9,7 +9,7 @@ require('nvim-tree').setup {
     custom = { '.git', '.DS_STORE', '.bundle', '.vscode', '.theia', '.jest', '.optic', '.storybook' }
   },
   git = {
-    enable = false,
+    enable = true,
     ignore = false
   },
   view = {
