@@ -1,18 +1,27 @@
+utils = require('utils')
+
 local opts = {
   noremap = true,
   silent = true
 }
 
-vim.api.nvim_set_keymap('n', '<leader>e', ':lua require("nvimtree").toggle()<CR>', opts)
+local keymaps = {
+  ['n'] = {
+    {'<leader>e', ':lua require("nvimtree").toggle()<CR>'},
 
-vim.api.nvim_set_keymap('n', '<leader>f', ':Telescope find_files<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>t', ':Telescope live_grep<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>sr', ':Telescope oldfiles<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>sl', ':Telescope resume<CR>', opts)
+    {'<leader>f', ':Telescope find_files<CR>'},
+    {'<leader>t', ':Telescope live_grep<CR>'},
+    {'<leader>sr', ':Telescope oldfiles<CR>'},
+    {'<leader>sl', ':Telescope resume<CR>'},
 
-vim.api.nvim_set_keymap('n', '<leader>h', ':noh<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>tl', ":let @*=join([expand('%'), line('.')], ':')<CR>", opts)
-vim.api.nvim_set_keymap('n', '<leader>tf', ":let @*=expand('%')<CR>", opts)
+    {'<leader>h', ':noh<CR>'},
+    {'<leader>tl', ":let @*=join([expand('%'), line('.')], ':')<CR>"},
+    {'<leader>tf', ":let @*=expand('%')<CR>"},
+
+  }
+}
+
+utils.set_keymaps(keymaps)
 
 vim.api.nvim_set_keymap('n', '<tab>', ':BufferNext<CR>', opts)
 vim.api.nvim_set_keymap('n', '<s-tab>', ':BufferPrevious<CR>', opts)

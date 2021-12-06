@@ -1,7 +1,7 @@
 return require('packer').startup({function(use)
   use {
     'EdenEast/nightfox.nvim',
-    config = function() require('plugins.nightfox') end
+    config = function() require('plugins.theme') end
   }
 
   use {
@@ -29,7 +29,7 @@ return require('packer').startup({function(use)
 
   use {
     'numToStr/Comment.nvim',
-    config = function() require('Comment').setup() end
+    config = function() require('plugins.comment') end
   }
 
   use {
@@ -65,6 +65,12 @@ return require('packer').startup({function(use)
     'akinsho/toggleterm.nvim',
     config = function () require('plugins.toggleterm') end
   }
+
+  use({
+    "catppuccin/nvim",
+    as = "catppuccin",
+    config = function() require('plugins.theme') end
+  })
 
   use {
     'neovim/nvim-lspconfig',
