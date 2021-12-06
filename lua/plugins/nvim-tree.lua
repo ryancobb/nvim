@@ -6,7 +6,7 @@ require('nvim-tree').setup {
   auto_close = true,
   filters = {
     dotfiles = false,
-    custom = { '.git', '.DS_STORE', '.bundle', '.vscode', '.theia', '.jest', '.optic', '.storybook' }
+    custom = { '.git', '.DS_Store', '.bundle', '.vscode', '.theia', '.jest', '.optic', '.storybook' }
   },
   git = {
     enable = true,
@@ -17,7 +17,7 @@ require('nvim-tree').setup {
     height = 30,
     hide_root_folder = false,
     side = 'left',
-    auto_resize = false,
+    auto_resize = true,
     mappings = {
       custom_only = false,
       list = {}
