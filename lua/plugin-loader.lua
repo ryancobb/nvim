@@ -16,12 +16,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'romgrk/barbar.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons' },
-    config = function() require('plugins.barbar') end
-  }
-
-  use {
     'nvim-lualine/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons', opt = true},
     config = function() require('plugins.lualine') end
@@ -72,6 +66,11 @@ return require('packer').startup({function(use)
     config = function() require('plugins.theme') end
   })
 
+  use({
+    'akinsho/bufferline.nvim',
+    config = function() require('plugins.bufferline') end
+  })
+
   use {
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
@@ -85,6 +84,8 @@ return require('packer').startup({function(use)
     'onsails/lspkind-nvim',
     'wbthomason/packer.nvim',
     'andymass/vim-matchup',
+    'ggandor/lightspeed.nvim',
+    'famiu/bufdelete.nvim'
   }
 end,
 config = {

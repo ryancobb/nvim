@@ -3,7 +3,11 @@ vim.api.nvim_command('let g:nvim_tree_window_picker_exclude = { "buftype": [ "te
 require('nvim-tree').setup {
   disable_netrw = true,
   hijack_netrw = true,
+  hijack_cursor = true,
   auto_close = true,
+  update_focused_file = {
+    enable = true
+  },
   filters = {
     dotfiles = false,
     custom = { '.git', '.DS_Store', '.bundle', '.vscode', '.theia', '.jest', '.optic', '.storybook' }

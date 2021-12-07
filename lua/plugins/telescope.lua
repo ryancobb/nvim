@@ -12,6 +12,26 @@ telescope.setup {
       }
     }
   },
+  pickers = {
+    find_files = {
+      find_command = { 
+        "fd",
+        "--type=file", 
+        "--hidden", 
+        "--no-ignore",
+        "--exclude=vendor",
+        "--exclude=node_modules",
+        "--exclude=tmp",
+        "--exclude=.git",
+        "--exclude=publics/packs",
+        "--exclude=publics/packs-test",
+        "--exclude=specs/fixtures/"
+      }
+    },
+    live_grep = {
+      only_sort_text = true,
+    }
+  },
   extensions = {
     fzf = {
       fuzzy = true,
