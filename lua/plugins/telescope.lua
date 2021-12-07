@@ -25,7 +25,7 @@ telescope.setup {
         "--exclude=.git",
         "--exclude=publics/packs",
         "--exclude=publics/packs-test",
-        "--exclude=specs/fixtures/"
+        "--exclude=spec/fixtures"
       }
     },
     live_grep = {
