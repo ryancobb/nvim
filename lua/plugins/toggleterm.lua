@@ -16,13 +16,3 @@ require('toggleterm').setup {
   direction = 'horizontal',
   close_on_exit = false, -- close the terminal window when the process exits
 }
-
-local opts = { noremap = true, silent = true }
-
-vim.api.nvim_command('autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-\\> <cmd>exe v:count1 . "ToggleTerm"<CR>')
-vim.api.nvim_command('autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-t> <cmd>exe v:count1 . "ToggleTerm"<CR>')
-
-vim.api.nvim_set_keymap('n', [[<c-\>]], '<cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>', opts)
-vim.api.nvim_set_keymap('i', [[<c-\>]], '<esc><cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>', opts)
-vim.api.nvim_set_keymap('n', '<c-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<CR>', opts)
-vim.api.nvim_set_keymap('i', '<c-t>', '<esc><cmd>exe v:count1 . "ToggleTerm direction=float"<CR>', opts)

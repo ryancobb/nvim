@@ -42,7 +42,7 @@ local on_attach = function(client, bufnr)
 end
 
 require('nvim-lsp-installer').on_server_ready(function(server)
-  local opts = {
+  local default_opts = {
     on_attach = on_attach,
     capabilities = capabilities,
     flags = {
@@ -50,7 +50,20 @@ require('nvim-lsp-installer').on_server_ready(function(server)
     }
   }
 
-  server:setup(opts)
+  local server_opts = {
+    ["sumneko_lua"] = function()
+      default_opts.settings = {
+        Lua = {
+          diagnostics = {
+            globals = {'vim'}
+          }
+        }
+      }
+    end,
+  }
+
+  local server_options = server_opts[server.name] and server_opts[server.name]() or default_opts
+  server:setup(server_options)
 end)
 
 require("lspconfig")['solargraph'].setup({

@@ -17,13 +17,13 @@ return require('packer').startup({function(use)
 
   use {
     'nvim-lualine/lualine.nvim',
-    requires = {'kyazdani42/nvim-web-devicons', opt = true},
+    requires = {'kyazdani42/nvim-web-devicons'},
     config = function() require('plugins.lualine') end
   }
 
   use {
     'numToStr/Comment.nvim',
-    config = function() require('plugins.comment') end
+    config = function() require('plugins.comment') end,
   }
 
   use {
@@ -39,7 +39,7 @@ return require('packer').startup({function(use)
 
   use {
     'windwp/nvim-autopairs',
-    config = function () require('plugins.autopairs') end
+    config = function() require('plugins.autopairs') end
   }
 
   use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
@@ -47,31 +47,31 @@ return require('packer').startup({function(use)
   use {
     'nvim-telescope/telescope.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
-    config = function () require('plugins.telescope') end
+    config = function() require('plugins.telescope') end
   }
 
   use {
     'lukas-reineke/indent-blankline.nvim',
-    config = function () require('plugins.indent-blankline') end
+    config = function() require('plugins.indent-blankline') end
   }
 
   use {
     'akinsho/toggleterm.nvim',
-    config = function () require('plugins.toggleterm') end
+    config = function() require('plugins.toggleterm') end,
   }
 
-  use({
-    "catppuccin/nvim",
-    as = "catppuccin",
-    config = function() require('plugins.theme') end
-  })
-
-  use({
+  use {
     'akinsho/bufferline.nvim',
     config = function() require('plugins.bufferline') end
-  })
+  }
 
   use {
+    'vim-test/vim-test',
+    config = function() require('plugins.vim-test') end
+  }
+
+  use {
+    'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
     'williamboman/nvim-lsp-installer',
@@ -82,10 +82,9 @@ return require('packer').startup({function(use)
     'L3MON4D3/LuaSnip',
     'saadparwaiz1/cmp_luasnip',
     'onsails/lspkind-nvim',
-    'wbthomason/packer.nvim',
     'andymass/vim-matchup',
-    'ggandor/lightspeed.nvim',
-    'famiu/bufdelete.nvim'
+    'famiu/bufdelete.nvim',
+    'sindrets/diffview.nvim',
   }
 end,
 config = {

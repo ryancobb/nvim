@@ -10,22 +10,34 @@ telescope.setup {
         ["<C-l>"] = actions.cycle_history_next,
         ["<C-h>"] = actions.cycle_history_prev,
       }
+    },
+    file_ignore_patterns ={
+      'vendor',
+      'node_modules',
+      'tmp',
+      '.git',
+      'public/packs',
+      'public/packs-test',
+      'spec/fixtures',
+      'db/postgresql'
     }
+  },
+  vimgrep_arguments = {
+    "rg",
+    "--no-heading",
+    "--with-filename",
+    "--column",
+    "--smart-case",
+    "--hidden",
+    "--no-ignore",
   },
   pickers = {
     find_files = {
-      find_command = { 
+      find_command = {
         "fd",
-        "--type=file", 
-        "--hidden", 
+        "--type=file",
+        "--hidden",
         "--no-ignore",
-        "--exclude=vendor",
-        "--exclude=node_modules",
-        "--exclude=tmp",
-        "--exclude=.git",
-        "--exclude=publics/packs",
-        "--exclude=publics/packs-test",
-        "--exclude=spec/fixtures"
       }
     },
     live_grep = {

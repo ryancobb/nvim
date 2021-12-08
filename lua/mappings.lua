@@ -1,19 +1,25 @@
-utils = require('utils')
-
 local keymaps = {
   ['n'] = {
     {'<leader>e', ':NvimTreeToggle<CR>'},
 
     {'<leader>f', ':Telescope find_files<CR>'},
-    {'<leader>t', ':Telescope live_grep<CR>'},
+    {'<leader>st', ':Telescope live_grep<CR>'},
     {'<leader>sr', ':Telescope oldfiles<CR>'},
     {'<leader>sl', ':Telescope resume<CR>'},
+    {'<leader>gd', ':DiffviewOpen<CR>'},
     {'<leader>gb', ':Telescope git_branches<CR>'},
     {'<leader>gs', ':Telescope git_status<CR>'},
 
+    {[[<c-\>]], '<cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>'},
+    {'<c-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<CR>'},
+    {[[<c-]>]], '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>'},
+
     {'<leader>h', ':noh<CR>'},
-    {'<leader>tl', ":let @*=join([expand('%'), line('.')], ':')<CR>"},
-    {'<leader>tf', ":let @*=expand('%')<CR>"},
+
+    {'<leader>tn', ":TestNearest<CR>"},
+    {'<leader>tf', ":TestFile<CR>"},
+    {'<leader>tl', ":TestLast<CR>"},
+    {'<leader>tv', ":TestVisit<CR>"},
 
     {'<tab>', ':BufferLineCycleNext<CR>'},
     {'<s-tab>', ':BufferLineCyclePrev<CR>'},
@@ -33,17 +39,17 @@ local keymaps = {
     {'<c-down>', ':resize +2<CR>'},
     {'<c-left>', ':vertical resize -2<CR>'},
     {'<c-right>', ':vertical resize +2<CR>'},
-
-    {'<leader>/', '<esc><cmd>lua require("Comment.api").gc(vim.fn.visualmode())<CR>'}
   },
 
-  ['v'] = {
-    {'<leader>/', '<esc><cmd>lua require("Comment.api").gc(vim.fn.visualmode())<CR>'}
+  ['i'] = {
+    {[[<c-\>]], '<esc><cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>'},
+    {'<c-t>', '<esc><cmd>exe v:count1 . "ToggleTerm direction=float"<CR>'},
+    {[[<c-]>]], '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>'},
   },
 
   ['x'] = {
     {'<s-k>', ":move '<-2<CR>gv-gv"},
-    {'<s-j>', ":move '>+1+<CR>gv-gv"}
+    {'<s-j>', ":move '>+1<CR>gv-gv"}
   },
 
   ['t'] = {
@@ -55,4 +61,4 @@ local keymaps = {
   }
 }
 
-utils.set_keymaps(keymaps)
+require('utils').set_keymaps(keymaps)
