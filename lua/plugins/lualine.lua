@@ -9,7 +9,15 @@ local function diff_source()
   end
 end
 
+local filename = {
+  'filename',
+  file_status = true,
+  path = 1,
+  icons_enabled = true
+}
+
 require('lualine').setup {
+
   options = {
     icons_enabled = true,
     theme = 'nightfox',
@@ -20,17 +28,12 @@ require('lualine').setup {
   },
   sections = {
     lualine_a = {'mode'},
-    lualine_b = { 
+    lualine_b = {
       {'b:gitsigns_head', icon = ''},
       {'diff', source = diff_source},
-      {'diagnostics', sources={'nvim_lsp'}}
+      -- {'diagnostics', sources={'nvim_lsp'}}
     },
-    lualine_c = {{
-      'filename',
-      file_status = true,
-      path = 1,
-      icons_enabled = true
-    }},
+    lualine_c = { filename },
     lualine_x = {'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
@@ -38,7 +41,7 @@ require('lualine').setup {
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
-    lualine_c = {'filename'},
+    lualine_c = { filename },
     lualine_x = {'location'},
     lualine_y = {},
     lualine_z = {}

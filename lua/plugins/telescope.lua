@@ -9,35 +9,46 @@ telescope.setup {
         ["<C-k>"] = actions.move_selection_previous,
         ["<C-l>"] = actions.cycle_history_next,
         ["<C-h>"] = actions.cycle_history_prev,
+        ["<esc>"] = actions.close,
       }
-    },
-    file_ignore_patterns ={
-      'vendor',
-      'node_modules',
-      'tmp',
-      '.git',
-      'public/packs',
-      'public/packs-test',
-      'spec/fixtures',
-      'db/postgresql'
     }
   },
   vimgrep_arguments = {
+    "--color=never",
     "rg",
     "--no-heading",
     "--with-filename",
+    "--line-number",
     "--column",
     "--smart-case",
+    "--trim",
     "--hidden",
     "--no-ignore",
+    "--glob=!vendor/**",
+    "--glob=!node_modules/**",
+    "--glob=!tmp/**",
+    "--glob=!.git/**",
+    "--glob=!public/packs/**",
+    "--glob=!public/packs-test/**",
+    "--glob=!spec/fixtures/**",
+    "--glob=!db/postgresql/**",
   },
   pickers = {
     find_files = {
       find_command = {
         "fd",
         "--type=file",
+        "--strip-cwd-prefix",
         "--hidden",
         "--no-ignore",
+        "--exclude=vendor",
+        "--exclude=node_modules",
+        "--exclude=tmp",
+        "--exclude=.git",
+        "--exclude=public/packs",
+        "--exclude=public/packs-test",
+        "--exclude=spec/fixtures",
+        "--exclude=db/postgresql",
       }
     },
     live_grep = {
@@ -55,3 +66,5 @@ telescope.setup {
 }
 
 telescope.load_extension('fzf')
+telescope.load_extension("termfinder")
+telescope.load_extension('projects')

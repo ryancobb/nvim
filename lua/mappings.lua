@@ -4,17 +4,15 @@ local keymaps = {
 
     {'<leader>f', ':Telescope find_files<CR>'},
     {'<leader>st', ':Telescope live_grep<CR>'},
+    {'<leader>sc', ':Telescope grep_string<CR>'},
     {'<leader>sr', ':Telescope oldfiles<CR>'},
     {'<leader>sl', ':Telescope resume<CR>'},
     {'<leader>gd', ':DiffviewOpen<CR>'},
     {'<leader>gb', ':Telescope git_branches<CR>'},
     {'<leader>gs', ':Telescope git_status<CR>'},
+    {'<c-t>', ':Telescope termfinder find<CR>'},
 
-    {[[<c-\>]], '<cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>'},
-    {'<c-t>', '<cmd>exe v:count1 . "ToggleTerm direction=float"<CR>'},
-    {[[<c-]>]], '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>'},
-
-    {'<leader>h', ':noh<CR>'},
+    {'<CR>', ':noh<CR><CR>'},
 
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},
@@ -27,8 +25,8 @@ local keymaps = {
     {'<s-h>', ':BufferLineCyclePrev<CR>'},
     {'<s-left>', ':BufferLineMovePrev<CR>'},
     {'<s-right>', ':BufferLineMoveNext<CR>'},
-    {'<leader>c', ':Bdelete<CR>'},
-    {'<leader>q', ':bdelete<CR>'},
+    {'<leader>c', ':Bdelete!<CR>'},
+    {'<leader>q', ':bdelete!<CR>'},
 
     {'<c-h>', '<c-w>h'},
     {'<c-j>', '<c-w>j'},
@@ -39,12 +37,6 @@ local keymaps = {
     {'<c-down>', ':resize +2<CR>'},
     {'<c-left>', ':vertical resize -2<CR>'},
     {'<c-right>', ':vertical resize +2<CR>'},
-  },
-
-  ['i'] = {
-    {[[<c-\>]], '<esc><cmd>exe v:count1 . "ToggleTerm direction=horizontal"<CR>'},
-    {'<c-t>', '<esc><cmd>exe v:count1 . "ToggleTerm direction=float"<CR>'},
-    {[[<c-]>]], '<cmd>exe v:count1 . "ToggleTerm direction=vertical"<CR>'},
   },
 
   ['x'] = {

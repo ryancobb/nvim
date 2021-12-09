@@ -71,6 +71,16 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'ahmedkhalf/project.nvim',
+    config = function() require('project_nvim').setup() end
+  }
+
+  use {
+    'folke/which-key.nvim',
+    config = function() require('which-key').setup() end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
@@ -85,6 +95,8 @@ return require('packer').startup({function(use)
     'andymass/vim-matchup',
     'famiu/bufdelete.nvim',
     'sindrets/diffview.nvim',
+    'fladson/vim-kitty',
+    'tknightz/telescope-termfinder.nvim'
   }
 end,
 config = {

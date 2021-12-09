@@ -6,8 +6,5 @@ nightfox.setup {
     keywords = 'bold',
     functions = 'italic,bold'
   },
-  inverse = {
-    -- match_paren = true
-  }
 }
 nightfox.load()
