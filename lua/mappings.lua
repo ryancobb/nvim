@@ -12,8 +12,6 @@ local keymaps = {
     {'<leader>gs', ':Telescope git_status<CR>'},
     {'<leader>t', ':Telescope termfinder find<CR>'},
 
-    {'<CR>', ':noh<CR><CR>'},
-
     {'tn', ":TestNearest<CR>"},
     {'tf', ":TestFile<CR>"},
     {'tl', ":TestLast<CR>"},
@@ -24,8 +22,8 @@ local keymaps = {
     {'<s-tab>', ':BufferLineCyclePrev<CR>'},
     {'<s-l>', ':BufferLineCycleNext<CR>'},
     {'<s-h>', ':BufferLineCyclePrev<CR>'},
-    {'<s-left>', ':BufferLineMovePrev<CR>'},
-    {'<s-right>', ':BufferLineMoveNext<CR>'},
+    {'<', ':BufferLineMovePrev<CR>'},
+    {'>', ':BufferLineMoveNext<CR>'},
     {'<leader>c', ':Bdelete!<CR>'},
     {'<leader>q', ':bdelete!<CR>'},
 
@@ -44,6 +42,19 @@ local keymaps = {
     {'<leader>xd', ':TroubleToggle document_diagnostics<CR>'},
     {'<leader>xq', ':TroubleToggle quickfix<CR>'},
     {'<leader>xl', ':TroubleToggle loclist<CR>'},
+
+    {'<leader>h', ':noh<CR>'},
+    {'n', "<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>"},
+    {'N', "<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>"},
+    {'*', "*<Cmd>lua require('hlslens').start()<CR>"},
+    {'#', "#<Cmd>lua require('hlslens').start()<CR>"},
+    {'g*', "g*<Cmd>lua require('hlslens').start()<CR>"},
+    {'g#', "g#<Cmd>lua require('hlslens').start()<CR>"},
+  },
+
+  ['v'] = {
+    {'<s-j>', ":m '>+1<CR>gv=gv"},
+    {'<s-k>', ":m '<-2<CR>gv=gv"},
   },
 
   ['t'] = {

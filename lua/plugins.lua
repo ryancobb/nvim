@@ -29,7 +29,7 @@ return require('packer').startup({function(use)
   use {
     'lewis6991/gitsigns.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
-    config = function() require('gitsigns').setup() end
+    config = function() require('plugins.gitsigns') end
   }
 
   use {
@@ -83,23 +83,17 @@ return require('packer').startup({function(use)
   use {
     "folke/trouble.nvim",
     requires = "kyazdani42/nvim-web-devicons",
-    config = function()
-      require("trouble").setup()
-    end
+    config = function() require("trouble").setup() end
   }
 
   use {
     'monkoose/matchparen.nvim',
-    config = function()
-      require('matchparen').setup()
-    end
+    config = function() require('matchparen').setup() end
   }
 
   use {
-    'matze/vim-move',
-    config = function()
-      vim.g.move_key_modifier = 'S'
-    end
+    'kevinhwang91/nvim-hlslens',
+    config = function() require('hlslens').setup() end
   }
 
   use {
@@ -118,7 +112,7 @@ return require('packer').startup({function(use)
     'sindrets/diffview.nvim',
     'fladson/vim-kitty',
     'tknightz/telescope-termfinder.nvim',
-    'lewis6991/impatient.nvim'
+    'lewis6991/impatient.nvim',
   }
 end,
 config = {

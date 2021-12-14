@@ -1,3 +1,5 @@
+local colors = require('nightfox.colors').load()
+
 local function diff_source()
   local gitsigns = vim.b.gitsigns_status_dict
   if gitsigns then
@@ -9,6 +11,28 @@ local function diff_source()
   end
 end
 
+local treesitter = {
+  function()
+    local b = vim.api.nvim_get_current_buf()
+    if next(vim.treesitter.highlighter.active[b]) then
+      return " "
+    end
+    return ""
+  end,
+  color = { fg = colors.green }
+}
+
+local lsp = {
+  function()
+    local buf_clients = vim.lsp.buf_get_clients()
+    if buf_clients == nil then
+      return ""
+    else
+      return "LSP"
+    end
+  end,
+}
+
 local filename = {
   'filename',
   file_status = true,
@@ -17,11 +41,10 @@ local filename = {
 }
 
 require('lualine').setup {
-
   options = {
     icons_enabled = true,
     theme = 'nightfox',
-    component_separators = { left = '', right = ''},
+    component_separators = { left = '|', right = '|'},
     section_separators = { left = '', right = ''},
     disabled_filetypes = { 'NvimTree' },
     always_divide_middle = true,
@@ -30,11 +53,13 @@ require('lualine').setup {
     lualine_a = {'mode'},
     lualine_b = {
       {'b:gitsigns_head', icon = ''},
+    },
+    lualine_c = {
+      filename,
       {'diff', source = diff_source},
       {'diagnostics'}
     },
-    lualine_c = { filename },
-    lualine_x = {},
+    lualine_x = {lsp, treesitter},
     lualine_y = {'filetype'},
     lualine_z = {'location'}
   },
