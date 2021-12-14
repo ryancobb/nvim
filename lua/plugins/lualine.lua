@@ -31,11 +31,11 @@ require('lualine').setup {
     lualine_b = {
       {'b:gitsigns_head', icon = ''},
       {'diff', source = diff_source},
-      -- {'diagnostics', sources={'nvim_lsp'}}
+      {'diagnostics'}
     },
     lualine_c = { filename },
-    lualine_x = {'filetype'},
-    lualine_y = {'progress'},
+    lualine_x = {},
+    lualine_y = {'filetype'},
     lualine_z = {'location'}
   },
   inactive_sections = {

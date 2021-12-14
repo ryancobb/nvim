@@ -1,8 +1,7 @@
 local o = vim.o -- Global options
-local w = vim.wo -- Window options
-local b = vim.bo -- Buffer options
 
 vim.g.mapleader=" "
+vim.g.loaded_matchparen = 1
 
 o.autoindent = true
 o.clipboard = "unnamed,unnamedplus"
@@ -16,12 +15,10 @@ o.incsearch= true
 o.modeline = false
 o.mouse = 'a'
 o.number = true
--- o.scrolloff = 8
 o.shiftwidth = 2
 o.shortmess= 'IFa'
 o.showmatch= true
 o.showmode = false
--- o.sidescrolloff = 8
 o.signcolumn = "yes"
 o.smartcase = true
 o.smartindent = true

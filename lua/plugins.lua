@@ -81,6 +81,28 @@ return require('packer').startup({function(use)
   }
 
   use {
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+    config = function()
+      require("trouble").setup()
+    end
+  }
+
+  use {
+    'monkoose/matchparen.nvim',
+    config = function()
+      require('matchparen').setup()
+    end
+  }
+
+  use {
+    'matze/vim-move',
+    config = function()
+      vim.g.move_key_modifier = 'S'
+    end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
@@ -92,14 +114,15 @@ return require('packer').startup({function(use)
     'L3MON4D3/LuaSnip',
     'saadparwaiz1/cmp_luasnip',
     'onsails/lspkind-nvim',
-    'andymass/vim-matchup',
     'famiu/bufdelete.nvim',
     'sindrets/diffview.nvim',
     'fladson/vim-kitty',
-    'tknightz/telescope-termfinder.nvim'
+    'tknightz/telescope-termfinder.nvim',
+    'lewis6991/impatient.nvim'
   }
 end,
 config = {
+  compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua',
   display = {
     open_fn = require('packer.util').float,
   }

@@ -10,15 +10,16 @@ local keymaps = {
     {'<leader>gd', ':DiffviewOpen<CR>'},
     {'<leader>gb', ':Telescope git_branches<CR>'},
     {'<leader>gs', ':Telescope git_status<CR>'},
-    {'<c-t>', ':Telescope termfinder find<CR>'},
+    {'<leader>t', ':Telescope termfinder find<CR>'},
 
     {'<CR>', ':noh<CR><CR>'},
 
-    {'<leader>tn', ":TestNearest<CR>"},
-    {'<leader>tf', ":TestFile<CR>"},
-    {'<leader>tl', ":TestLast<CR>"},
-    {'<leader>tv', ":TestVisit<CR>"},
+    {'tn', ":TestNearest<CR>"},
+    {'tf', ":TestFile<CR>"},
+    {'tl', ":TestLast<CR>"},
+    {'tv', ":TestVisit<CR>"},
 
+    {'gb', ':BufferLinePick<CR>'},
     {'<tab>', ':BufferLineCycleNext<CR>'},
     {'<s-tab>', ':BufferLineCyclePrev<CR>'},
     {'<s-l>', ':BufferLineCycleNext<CR>'},
@@ -37,11 +38,12 @@ local keymaps = {
     {'<c-down>', ':resize +2<CR>'},
     {'<c-left>', ':vertical resize -2<CR>'},
     {'<c-right>', ':vertical resize +2<CR>'},
-  },
 
-  ['x'] = {
-    {'<s-k>', ":move '<-2<CR>gv-gv"},
-    {'<s-j>', ":move '>+1<CR>gv-gv"}
+    {'<leader>xx', ':TroubleToggle<CR>'},
+    {'<leader>xw', ':TroubleToggle workspace_diagnostics<CR>'},
+    {'<leader>xd', ':TroubleToggle document_diagnostics<CR>'},
+    {'<leader>xq', ':TroubleToggle quickfix<CR>'},
+    {'<leader>xl', ':TroubleToggle loclist<CR>'},
   },
 
   ['t'] = {
