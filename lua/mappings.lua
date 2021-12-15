@@ -22,8 +22,6 @@ local keymaps = {
     {'<s-tab>', ':BufferLineCyclePrev<CR>'},
     {'<s-l>', ':BufferLineCycleNext<CR>'},
     {'<s-h>', ':BufferLineCyclePrev<CR>'},
-    {'<', ':BufferLineMovePrev<CR>'},
-    {'>', ':BufferLineMoveNext<CR>'},
     {'<leader>c', ':Bdelete!<CR>'},
     {'<leader>q', ':bdelete!<CR>'},
 
