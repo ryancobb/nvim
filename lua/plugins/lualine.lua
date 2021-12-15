@@ -37,7 +37,9 @@ local filename = {
   'filename',
   file_status = true,
   path = 1,
-  icons_enabled = true
+  icons_enabled = true,
+  separator = { right = '' },
+  padding = { left = 1, right = 0 }
 }
 
 require('lualine').setup {
@@ -56,7 +58,10 @@ require('lualine').setup {
     },
     lualine_c = {
       filename,
-      {'diff', source = diff_source},
+      {
+        'diff',
+        source = diff_source,
+      },
       {'diagnostics'}
     },
     lualine_x = {lsp, treesitter},
