@@ -87,11 +87,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'monkoose/matchparen.nvim',
-    config = function() require('matchparen').setup() end
-  }
-
-  use {
     'kevinhwang91/nvim-hlslens',
     config = function() require('hlslens').setup() end
   }
@@ -113,6 +108,7 @@ return require('packer').startup({function(use)
     'fladson/vim-kitty',
     'tknightz/telescope-termfinder.nvim',
     'lewis6991/impatient.nvim',
+    'andymass/vim-matchup'
   }
 end,
 config = {
