@@ -108,7 +108,8 @@ return require('packer').startup({function(use)
     'fladson/vim-kitty',
     'tknightz/telescope-termfinder.nvim',
     'lewis6991/impatient.nvim',
-    'andymass/vim-matchup'
+    'andymass/vim-matchup',
+    'p00f/nvim-ts-rainbow'
   }
 end,
 config = {
