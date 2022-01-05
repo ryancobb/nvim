@@ -24,11 +24,10 @@ local treesitter = {
 
 local lsp = {
   function()
-    local buf_clients = vim.lsp.buf_get_clients()
-    if buf_clients == nil then
-      return ""
-    else
+    if next(vim.lsp.buf_get_clients()) ~= nil then
       return "LSP"
+    else
+      return ""
     end
   end,
 }
