@@ -76,8 +76,9 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'folke/which-key.nvim',
-    config = function() require('which-key').setup() end
+    'zeertzjq/which-key.nvim',
+    config = function() require('which-key').setup() end,
+    branch = 'patch-1'
   }
 
   use {
@@ -109,7 +110,8 @@ return require('packer').startup({function(use)
     'tknightz/telescope-termfinder.nvim',
     'lewis6991/impatient.nvim',
     'andymass/vim-matchup',
-    'p00f/nvim-ts-rainbow'
+    'p00f/nvim-ts-rainbow',
+    'google/vim-jsonnet',
   }
 end,
 config = {
