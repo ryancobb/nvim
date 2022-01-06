@@ -32,6 +32,7 @@ o.splitright = true
 o.tabstop = 2
 o.termguicolors = true
 o.timeoutlen = 300
+o.title = true
 o.undofile = true
 o.updatetime = 300
 o.wrap = false

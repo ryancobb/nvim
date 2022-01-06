@@ -17,9 +17,7 @@ require('bufferline').setup {
     -- end,
     -- NOTE: this will be called a lot so don't do any heavy processing here
     offsets = {{
-      filetype = "NvimTree",
-      highlight = "Directory",
-      text_align = "left"
+      filetype = "NvimTree"
     }},
     show_buffer_icons = true, -- disable filetype icons for buffers
     show_buffer_close_icons = false,

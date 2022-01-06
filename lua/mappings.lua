@@ -25,11 +25,6 @@ local keymaps = {
     {'<leader>c', ':Bdelete!<CR>'},
     {'<leader>q', ':bdelete!<CR>'},
 
-    {'<c-h>', '<c-w>h'},
-    {'<c-j>', '<c-w>j'},
-    {'<c-k>', '<c-w>k'},
-    {'<c-l>', '<c-w>l'},
-
     {'<c-up>', ':resize -2<CR>'},
     {'<c-down>', ':resize +2<CR>'},
     {'<c-left>', ':vertical resize -2<CR>'},

@@ -82,14 +82,13 @@ return require('packer').startup({function(use)
   }
 
   use {
-    "folke/trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
-    config = function() require("trouble").setup() end
+    'kevinhwang91/nvim-hlslens',
+    config = function() require('hlslens').setup() end
   }
 
   use {
-    'kevinhwang91/nvim-hlslens',
-    config = function() require('hlslens').setup() end
+    'knubie/vim-kitty-navigator',
+    run = 'cp ./*.py ~/.config/kitty/'
   }
 
   use {
@@ -105,7 +104,6 @@ return require('packer').startup({function(use)
     'saadparwaiz1/cmp_luasnip',
     'onsails/lspkind-nvim',
     'famiu/bufdelete.nvim',
-    'sindrets/diffview.nvim',
     'fladson/vim-kitty',
     'tknightz/telescope-termfinder.nvim',
     'lewis6991/impatient.nvim',
