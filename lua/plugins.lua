@@ -83,7 +83,7 @@ return require('packer').startup({function(use)
 
   use {
     'kevinhwang91/nvim-hlslens',
-    config = function() require('hlslens').setup() end
+    config = function() require('plugins.hlslens') end
   }
 
   use {
@@ -110,6 +110,7 @@ return require('packer').startup({function(use)
     'andymass/vim-matchup',
     'p00f/nvim-ts-rainbow',
     'google/vim-jsonnet',
+    'towolf/vim-helm',
   }
 end,
 config = {
