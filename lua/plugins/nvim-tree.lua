@@ -1,5 +1,7 @@
 vim.api.nvim_command('let g:nvim_tree_window_picker_exclude = { "buftype": [ "terminal" ] }')
 vim.g.nvim_tree_respect_buf_cwd = 1
+vim.g.nvim_tree_indent_markers = 1
+vim.g.nvim_tree_git_hl = 1
 
 require('nvim-tree').setup {
   disable_netrw = true,
@@ -9,7 +11,7 @@ require('nvim-tree').setup {
   update_cwd = true,
   update_focused_file = {
     enable = true,
-    update_cwd = false
+    update_cwd = true
   },
   filters = {
     dotfiles = false,
