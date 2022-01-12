@@ -1,4 +1,5 @@
 local colors = require('nightfox.colors').load()
+local gps = require('nvim-gps')
 
 local function diff_source()
   local gitsigns = vim.b.gitsigns_status_dict
@@ -57,21 +58,20 @@ require('lualine').setup {
     },
     lualine_c = {
       filename,
-      {
-        'diff',
-        source = diff_source,
-      },
-      {'diagnostics'}
+      { 'diff', source = diff_source },
+      {'diagnostics'},
     },
-    lualine_x = {lsp, treesitter},
+    lualine_x = {
+      { gps.get_location, cond = gps.is_available },
+    },
     lualine_y = {'filetype'},
-    lualine_z = {'location'}
+    lualine_z = {}
   },
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
     lualine_c = { filename },
-    lualine_x = {'location'},
+    lualine_x = {},
     lualine_y = {},
     lualine_z = {}
   },

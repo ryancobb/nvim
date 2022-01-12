@@ -51,8 +51,9 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'lukas-reineke/indent-blankline.nvim',
-    config = function() require('plugins.indent-blankline') end
+    "SmiteshP/nvim-gps",
+    requires = "nvim-treesitter/nvim-treesitter",
+    config = function() require('plugins.gps') end
   }
 
   use {
