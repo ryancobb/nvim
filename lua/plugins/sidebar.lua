@@ -5,7 +5,7 @@ require("sidebar-nvim").setup({
     initial_width = 35,
     hide_statusline = true,
     update_interval = 1000,
-    sections = { "datetime", "git", "files", "diagnostics" },
+    sections = { "datetime", "git", "diagnostics", "files" },
     section_separator = "-----",
     datetime = { format = "%a %b %d, %H:%M", clocks = {{ name = "local" }} },
     todos = { ignored_paths = { "~" } },

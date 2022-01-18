@@ -45,12 +45,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    "SmiteshP/nvim-gps",
-    requires = "nvim-treesitter/nvim-treesitter",
-    config = function() require('plugins.gps') end
-  }
-
-  use {
     'akinsho/toggleterm.nvim',
     config = function() require('plugins.toggleterm') end,
   }
