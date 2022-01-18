@@ -16,9 +16,7 @@ require('bufferline').setup {
     --   return " " .. icon .. count
     -- end,
     -- NOTE: this will be called a lot so don't do any heavy processing here
-    offsets = {{
-      filetype = "NvimTree"
-    }},
+    offsets = {},
     show_buffer_icons = true, -- disable filetype icons for buffers
     show_buffer_close_icons = false,
     show_close_icon = false,
