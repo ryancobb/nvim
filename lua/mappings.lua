@@ -1,6 +1,6 @@
 local keymaps = {
   ['n'] = {
-    {'<leader>e', ':NvimTreeToggle<CR>'},
+    {'<leader>e', ':SidebarNvimToggle<CR>'},
 
     {'<leader>f', ':Telescope find_files<CR>'},
     {'<leader>st', ':Telescope live_grep<CR>'},

@@ -6,6 +6,8 @@ local o = vim.o -- Global options
 
 vim.g.mapleader=" "
 vim.g.loaded_matchparen = 1
+vim.g.Illuminate_delay = 1000
+vim.g.Illuminate_highlightUnderCursor = 0
 
 o.autoindent = true
 o.clipboard = "unnamed,unnamedplus"

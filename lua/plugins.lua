@@ -10,12 +10,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'kyazdani42/nvim-tree.lua',
-    requires = { 'kyazdani42/nvim-web-devicons' },
-    config = function() require('plugins.nvim-tree') end
-  }
-
-  use {
     'nvim-lualine/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons'},
     config = function() require('plugins.lualine') end
@@ -77,9 +71,8 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'zeertzjq/which-key.nvim',
-    config = function() require('which-key').setup() end,
-    branch = 'patch-1'
+    'folke/which-key.nvim',
+    config = function() require('which-key').setup() end
   }
 
   use {
@@ -90,6 +83,16 @@ return require('packer').startup({function(use)
   use {
     'knubie/vim-kitty-navigator',
     run = 'cp ./*.py ~/.config/kitty/'
+  }
+
+  use {
+    'RRethy/vim-illuminate',
+    config = function() require('plugins.vim-illuminate') end
+  }
+
+  use {
+    "sidebar-nvim/sidebar.nvim",
+    config = function() require('plugins.sidebar') end
   }
 
   use {
@@ -114,6 +117,7 @@ return require('packer').startup({function(use)
     'towolf/vim-helm',
   }
 end,
+
 config = {
   compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua',
   display = {
