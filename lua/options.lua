@@ -2,11 +2,12 @@ if vim.fn.has('nvim') == 1 then
   vim.cmd([[let $GIT_EDITOR = 'nvr -cc split --remote-wait']])
 end
 
+local g = vim.g
 local o = vim.o -- Global options
 
-vim.g.mapleader=" "
-vim.g.loaded_matchparen = 1
-vim.g.Illuminate_delay = 1000
+g.mapleader=" "
+g.loaded_matchparen = 1
+g.Illuminate_delay = 1000
 vim.g.Illuminate_highlightUnderCursor = 0
 
 o.autoindent = true
@@ -37,4 +38,29 @@ o.timeoutlen = 300
 o.title = true
 o.undofile = true
 o.updatetime = 300
-o.wrap = false
+o.wrap = false-- disable some builtin vim plugins
+
+local disabled_built_ins = {
+   "2html_plugin",
+   "getscript",
+   "getscriptPlugin",
+   "gzip",
+   "logipat",
+   "netrw",
+   "netrwPlugin",
+   "netrwSettings",
+   "netrwFileHandlers",
+   "matchit",
+   "tar",
+   "tarPlugin",
+   "rrhelper",
+   "spellfile_plugin",
+   "vimball",
+   "vimballPlugin",
+   "zip",
+   "zipPlugin",
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+   g["loaded_" .. plugin] = 1
+end

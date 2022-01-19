@@ -1,3 +1,4 @@
 require("project_nvim").setup {
-  detection_methods = { ".git" }
+  detection_methods = { "pattern" },
+  patterns = { ".git" }
 }

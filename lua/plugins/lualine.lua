@@ -1,4 +1,5 @@
 local colors = require('nightfox.colors').load()
+local lsp_status = require('lsp-status')
 
 local function diff_source()
   local gitsigns = vim.b.gitsigns_status_dict
@@ -22,14 +23,10 @@ local treesitter = {
   color = { fg = colors.green }
 }
 
-local lsp = {
+local lspStatus = {
   function()
-    if next(vim.lsp.buf_get_clients()) ~= nil then
-      return "LSP"
-    else
-      return ""
-    end
-  end,
+    return lsp_status.status()
+  end
 }
 
 local filename = {
@@ -58,9 +55,9 @@ require('lualine').setup {
     lualine_c = {
       filename,
       { 'diff', source = diff_source },
-      {'diagnostics'},
+      {},
     },
-    lualine_x = {},
+    lualine_x = { lspStatus, treesitter },
     lualine_y = {'filetype'},
     lualine_z = {}
   },

@@ -1,3 +1,6 @@
+local lsp_status = require('lsp-status')
+lsp_status.register_progress()
+
 vim.diagnostic.config({
   virtual_text = false,
   signs = true,
@@ -12,7 +15,15 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local build_capabilities = function()
+  local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
+  lsp_capabilities = require('cmp_nvim_lsp').update_capabilities(lsp_capabilities)
+  lsp_capabilities = vim.tbl_extend('keep', lsp_capabilities, lsp_status.capabilities)
+
+  return lsp_capabilities
+end
+
+local capabilities = build_capabilities()
 
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -39,6 +50,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>d', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+  lsp_status.on_attach(client)
 end
 
 require('nvim-lsp-installer').on_server_ready(function(server)
