@@ -7,4 +7,4 @@ nightfox.setup {
     functions = 'italic,bold'
   },
 }
-nightfox.load("duskfox")
+nightfox.load("nightfox")
