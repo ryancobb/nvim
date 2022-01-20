@@ -104,7 +104,8 @@ return require('packer').startup({function(use)
     'p00f/nvim-ts-rainbow',
     'google/vim-jsonnet',
     'towolf/vim-helm',
-    'nvim-lua/lsp-status.nvim'
+    'nvim-lua/lsp-status.nvim',
+    'lambdalisue/suda.vim'
   }
 end,
 
