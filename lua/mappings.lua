@@ -2,6 +2,11 @@ local keymaps = {
   ['n'] = {
     {'<leader>e', ':SidebarNvimToggle<CR>'},
 
+    {'<C-h>', '<C-w>h'},
+    {'<C-j>', '<C-w>j'},
+    {'<C-k>', '<C-w>k'},
+    {'<C-l>', '<C-w>l'},
+
     {'<leader>f', ':Telescope find_files<CR>'},
     {'<leader>st', ':Telescope live_grep<CR>'},
     {'<leader>sc', ':Telescope grep_string<CR>'},
