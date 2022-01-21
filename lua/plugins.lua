@@ -105,7 +105,8 @@ return require('packer').startup({function(use)
     'google/vim-jsonnet',
     'towolf/vim-helm',
     'nvim-lua/lsp-status.nvim',
-    'lambdalisue/suda.vim'
+    'lambdalisue/suda.vim',
+    'kdheepak/lazygit.nvim'
   }
 end,
 

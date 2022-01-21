@@ -1,5 +1,5 @@
 if vim.fn.has('nvim') == 1 then
-  vim.cmd([[let $GIT_EDITOR = 'nvr -cc split --remote-wait']])
+  vim.cmd([[let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"]])
 end
 
 local g = vim.g

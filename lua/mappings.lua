@@ -12,9 +12,9 @@ local keymaps = {
     {'<leader>sc', ':Telescope grep_string<CR>'},
     {'<leader>sr', ':Telescope oldfiles<CR>'},
     {'<leader>sl', ':Telescope resume<CR>'},
-    {'<leader>gd', ':DiffviewOpen<CR>'},
     {'<leader>gb', ':Telescope git_branches<CR>'},
     {'<leader>gs', ':Telescope git_status<CR>'},
+    {'<leader>gg', ':LazyGit<CR>'},
     {'<leader>t', ':Telescope termfinder find<CR>'},
 
     {'tn', ":TestNearest<CR>"},
