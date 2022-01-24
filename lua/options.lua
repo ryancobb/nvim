@@ -8,9 +8,9 @@ local o = vim.o -- Global options
 g.mapleader=" "
 g.loaded_matchparen = 1
 g.Illuminate_delay = 1000
-vim.g.Illuminate_highlightUnderCursor = 0
+g.Illuminate_highlightUnderCursor = 0
 
-o.autoindent = true
+o.autoindent = false
 o.clipboard = "unnamed,unnamedplus"
 o.completeopt="menu,menuone,noselect"
 o.cursorline = true
@@ -28,7 +28,7 @@ o.showmatch= true
 o.showmode = false
 o.signcolumn = "yes"
 o.smartcase = true
-o.smartindent = true
+o.smartindent = false
 o.softtabstop = 2
 o.splitbelow = true
 o.splitright = true
@@ -41,26 +41,26 @@ o.updatetime = 300
 o.wrap = false-- disable some builtin vim plugins
 
 local disabled_built_ins = {
-   "2html_plugin",
-   "getscript",
-   "getscriptPlugin",
-   "gzip",
-   "logipat",
-   "netrw",
-   "netrwPlugin",
-   "netrwSettings",
-   "netrwFileHandlers",
-   "matchit",
-   "tar",
-   "tarPlugin",
-   "rrhelper",
-   "spellfile_plugin",
-   "vimball",
-   "vimballPlugin",
-   "zip",
-   "zipPlugin",
+  "2html_plugin",
+  "getscript",
+  "getscriptPlugin",
+  "gzip",
+  "logipat",
+  "netrw",
+  "netrwPlugin",
+  "netrwSettings",
+  "netrwFileHandlers",
+  "matchit",
+  "tar",
+  "tarPlugin",
+  "rrhelper",
+  "spellfile_plugin",
+  "vimball",
+  "vimballPlugin",
+  "zip",
+  "zipPlugin",
 }
 
 for _, plugin in pairs(disabled_built_ins) do
-   g["loaded_" .. plugin] = 1
+  g["loaded_" .. plugin] = 1
 end

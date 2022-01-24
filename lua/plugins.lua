@@ -85,6 +85,11 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'nvim-lua/lsp-status.nvim',
+    config = function() require('plugins.lsp-status') end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
@@ -104,7 +109,6 @@ return require('packer').startup({function(use)
     'p00f/nvim-ts-rainbow',
     'google/vim-jsonnet',
     'towolf/vim-helm',
-    'nvim-lua/lsp-status.nvim',
     'lambdalisue/suda.vim',
     'kdheepak/lazygit.nvim'
   }
