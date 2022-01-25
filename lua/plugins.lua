@@ -90,6 +90,11 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'windwp/nvim-spectre',
+    config = function() require('plugins.spectre') end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',

@@ -28,18 +28,11 @@ local keymaps = {
     {'<s-l>', ':BufferLineCycleNext<CR>'},
     {'<s-h>', ':BufferLineCyclePrev<CR>'},
     {'<leader>c', ':Bdelete!<CR>'},
-    {'<leader>q', ':bdelete!<CR>'},
 
     {'<c-up>', ':resize -2<CR>'},
     {'<c-down>', ':resize +2<CR>'},
     {'<c-left>', ':vertical resize -2<CR>'},
     {'<c-right>', ':vertical resize +2<CR>'},
-
-    {'<leader>xx', ':TroubleToggle<CR>'},
-    {'<leader>xw', ':TroubleToggle workspace_diagnostics<CR>'},
-    {'<leader>xd', ':TroubleToggle document_diagnostics<CR>'},
-    {'<leader>xq', ':TroubleToggle quickfix<CR>'},
-    {'<leader>xl', ':TroubleToggle loclist<CR>'},
 
     {'<leader>h', ':noh<CR>'},
     {'n', "<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>"},

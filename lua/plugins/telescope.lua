@@ -32,6 +32,7 @@ telescope.setup {
     "--glob=!public/packs-test/**",
     "--glob=!spec/fixtures/**",
     "--glob=!db/postgresql/**",
+    "--glob=!.terraform/**"
   },
   pickers = {
     find_files = {
@@ -49,6 +50,7 @@ telescope.setup {
         "--exclude=public/packs-test",
         "--exclude=spec/fixtures",
         "--exclude=db/postgresql",
+        "--exclude=.terraform",
       }
     },
     live_grep = {
