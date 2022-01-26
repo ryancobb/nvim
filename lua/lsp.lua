@@ -49,6 +49,7 @@ local on_attach = function(client, bufnr)
 end
 
 require('nvim-lsp-installer').on_server_ready(function(server)
+  local util = require('lspconfig.util')
   local default_opts = {
     on_attach = on_attach,
     capabilities = capabilities,
@@ -67,6 +68,9 @@ require('nvim-lsp-installer').on_server_ready(function(server)
         }
       }
     end,
+    ["terraformls"] = function()
+      default_opts.root_dir = util.root_pattern('.git')
+    end
   }
 
   local server_options = server_opts[server.name] and server_opts[server.name]() or default_opts
