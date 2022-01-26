@@ -1,6 +1,6 @@
 local keymaps = {
   ['n'] = {
-    {'<leader>e', ':SidebarNvimToggle<CR>'},
+    {'<leader>e', ':NvimTreeToggle<CR>'},
 
     {'<C-h>', '<C-w>h'},
     {'<C-j>', '<C-w>j'},
@@ -9,6 +9,7 @@ local keymaps = {
 
     {'<leader>f', ':Telescope find_files<CR>'},
     {'<leader>st', ':Telescope live_grep<CR>'},
+    {'<leader>ss', ':lua require("spectre").open()<CR>'},
     {'<leader>sc', ':Telescope grep_string<CR>'},
     {'<leader>sr', ':Telescope oldfiles<CR>'},
     {'<leader>sl', ':Telescope resume<CR>'},

@@ -85,13 +85,21 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'nvim-lua/lsp-status.nvim',
-    config = function() require('plugins.lsp-status') end
+    'windwp/nvim-spectre',
+    config = function() require('plugins.spectre') end
   }
 
   use {
-    'windwp/nvim-spectre',
-    config = function() require('plugins.spectre') end
+    'kyazdani42/nvim-tree.lua',
+    requires = {
+      'kyazdani42/nvim-web-devicons',
+    },
+    config = function() require('plugins.nvim-tree') end
+  }
+
+  use {
+    'j-hui/fidget.nvim',
+    config = function() require('plugins.fidget') end
   }
 
   use {
@@ -115,7 +123,7 @@ return require('packer').startup({function(use)
     'google/vim-jsonnet',
     'towolf/vim-helm',
     'lambdalisue/suda.vim',
-    'kdheepak/lazygit.nvim'
+    'kdheepak/lazygit.nvim',
   }
 end,
 

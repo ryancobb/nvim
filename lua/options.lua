@@ -11,6 +11,7 @@ g.Illuminate_delay = 1000
 g.Illuminate_highlightUnderCursor = 0
 
 o.autoindent = false
+o.autoread = true
 o.clipboard = "unnamed,unnamedplus"
 o.completeopt="menu,menuone,noselect"
 o.cursorline = true
@@ -36,6 +37,7 @@ o.tabstop = 2
 o.termguicolors = true
 o.timeoutlen = 300
 o.title = true
+o.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 o.undofile = true
 o.updatetime = 300
 o.wrap = false-- disable some builtin vim plugins
