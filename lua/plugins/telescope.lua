@@ -3,6 +3,26 @@ local actions = require('telescope.actions')
 
 telescope.setup {
   defaults = {
+    prompt_prefix = "   ",
+    selection_caret = "  ",
+    entry_prefix = "  ",
+    layout_strategy = "horizontal",
+    layout_config = {
+      horizontal = {
+        preview_width = 0.55,
+        results_width = 0.8,
+      },
+      vertical = {
+        mirror = false
+      },
+      width = 0.95,
+      height = 0.95,
+      preview_cutoff = 120
+    },
+    border = {},
+    borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+    color_devicons = true,
+    use_less = true,
     mappings = {
       i = {
         ["<C-j>"] = actions.move_selection_next,

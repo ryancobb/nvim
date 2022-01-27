@@ -2,6 +2,8 @@ if vim.fn.has('nvim') == 1 then
   vim.cmd([[let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"]])
 end
 
+vim.cmd[[ filetype indent off ]]
+
 local g = vim.g
 local o = vim.o -- Global options
 
