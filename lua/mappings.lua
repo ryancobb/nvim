@@ -1,5 +1,7 @@
 local keymaps = {
   ['n'] = {
+    {'q', '<Nop>'},
+
     {'<leader>e', ':NvimTreeToggle<CR>'},
 
     {'<C-h>', '<C-w>h'},
@@ -13,15 +15,15 @@ local keymaps = {
     {'<leader>sc', ':Telescope grep_string<CR>'},
     {'<leader>sr', ':Telescope oldfiles<CR>'},
     {'<leader>sl', ':Telescope resume<CR>'},
+    {'<leader>se', ':Telescope termfinder find<CR>'},
     {'<leader>gb', ':Telescope git_branches<CR>'},
     {'<leader>gs', ':Telescope git_status<CR>'},
     {'<leader>gg', ':LazyGit<CR>'},
-    {'<leader>t', ':Telescope termfinder find<CR>'},
 
-    {'tn', ":TestNearest<CR>"},
-    {'tf', ":TestFile<CR>"},
-    {'tl', ":TestLast<CR>"},
-    {'tv', ":TestVisit<CR>"},
+    {'<leader>tn', ":TestNearest<CR>"},
+    {'<leader>tf', ":TestFile<CR>"},
+    {'<leader>tl', ":TestLast<CR>"},
+    {'<leader>tv', ":TestVisit<CR>"},
 
     {'gb', ':BufferLinePick<CR>'},
     {'<tab>', ':BufferLineCycleNext<CR>'},
@@ -29,9 +31,10 @@ local keymaps = {
     {'<s-l>', ':BufferLineCycleNext<CR>'},
     {'<s-h>', ':BufferLineCyclePrev<CR>'},
     {'<leader>c', ':Bdelete!<CR>'},
+    {'<leader>q', ':<C-w>q'},
 
-    {'<c-up>', ':resize -2<CR>'},
-    {'<c-down>', ':resize +2<CR>'},
+    {'<c-up>', ':resize +2<CR>'},
+    {'<c-down>', ':resize -2<CR>'},
     {'<c-left>', ':vertical resize -2<CR>'},
     {'<c-right>', ':vertical resize +2<CR>'},
 

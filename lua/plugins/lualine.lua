@@ -45,7 +45,7 @@ require('lualine').setup {
     theme = 'nightfox',
     component_separators = { left = '|', right = '|'},
     section_separators = { left = '', right = ''},
-    disabled_filetypes = {},
+    disabled_filetypes = { 'NvimTree' },
     always_divide_middle = true,
   },
   sections = {
