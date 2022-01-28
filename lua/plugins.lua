@@ -36,14 +36,6 @@ return require('packer').startup({function(use)
     config = function() require('plugins.autopairs') end
   }
 
-  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-
-  use {
-    'nvim-telescope/telescope.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
-    config = function() require('plugins.telescope') end
-  }
-
   use {
     'akinsho/toggleterm.nvim',
     config = function() require('plugins.toggleterm') end,
@@ -102,6 +94,12 @@ return require('packer').startup({function(use)
     config = function() require('plugins.fidget') end
   }
 
+  use { 
+    'ibhagwan/fzf-lua',
+    requires = { 'kyazdani42/nvim-web-devicons' },
+    config = function() require('plugins.fzf-lua') end
+  }
+
   use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
@@ -116,7 +114,6 @@ return require('packer').startup({function(use)
     'onsails/lspkind-nvim',
     'famiu/bufdelete.nvim',
     'fladson/vim-kitty',
-    'tknightz/telescope-termfinder.nvim',
     'lewis6991/impatient.nvim',
     'andymass/vim-matchup',
     'p00f/nvim-ts-rainbow',
