@@ -1,59 +1,60 @@
 return require('packer').startup({function(use)
   use {
     'EdenEast/nightfox.nvim',
-    config = function() require('plugins.theme') end
+    config = function() require('plugins.configs.theme') end
   }
 
   use {
     'nvim-treesitter/nvim-treesitter',
-    config = function() require('plugins.treesitter') end
+    config = function() require('plugins.configs.treesitter') end
   }
 
   use {
     'nvim-lualine/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons'},
-    config = function() require('plugins.lualine') end
+    after = 'nightfox.nvim',
+    config = function() require('plugins.configs.lualine') end
   }
 
   use {
     'numToStr/Comment.nvim',
-    config = function() require('plugins.comment') end,
+    config = function() require('plugins.configs.comment') end,
   }
 
   use {
     'lewis6991/gitsigns.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
-    config = function() require('plugins.gitsigns') end
+    config = function() require('plugins.configs.gitsigns') end
   }
 
   use {
     'hrsh7th/nvim-cmp',
-    config = function() require('plugins.cmp') end
+    config = function() require('plugins.configs.cmp') end
   }
 
   use {
     'windwp/nvim-autopairs',
-    config = function() require('plugins.autopairs') end
+    config = function() require('plugins.configs.autopairs') end
   }
 
   use {
     'akinsho/toggleterm.nvim',
-    config = function() require('plugins.toggleterm') end,
+    config = function() require('plugins.configs.toggleterm') end,
   }
 
   use {
     'akinsho/bufferline.nvim',
-    config = function() require('plugins.bufferline') end
+    config = function() require('plugins.configs.bufferline') end
   }
 
   use {
     'vim-test/vim-test',
-    config = function() require('plugins.vim-test') end
+    config = function() require('plugins.configs.vim-test') end
   }
 
   use {
     'ahmedkhalf/project.nvim',
-    config = function() require('plugins.project') end
+    config = function() require('plugins.configs.project') end
   }
 
   use {
@@ -63,22 +64,22 @@ return require('packer').startup({function(use)
 
   use {
     'kevinhwang91/nvim-hlslens',
-    config = function() require('plugins.hlslens') end
+    config = function() require('plugins.configs.hlslens') end
   }
 
   use {
     'RRethy/vim-illuminate',
-    config = function() require('plugins.vim-illuminate') end
+    config = function() require('plugins.configs.vim-illuminate') end
   }
 
   use {
     "sidebar-nvim/sidebar.nvim",
-    config = function() require('plugins.sidebar') end
+    config = function() require('plugins.configs.sidebar') end
   }
 
   use {
     'windwp/nvim-spectre',
-    config = function() require('plugins.spectre') end
+    config = function() require('plugins.configs.spectre') end
   }
 
   use {
@@ -86,18 +87,18 @@ return require('packer').startup({function(use)
     requires = {
       'kyazdani42/nvim-web-devicons',
     },
-    config = function() require('plugins.nvim-tree') end
+    config = function() require('plugins.configs.nvim-tree') end
   }
 
   use {
     'j-hui/fidget.nvim',
-    config = function() require('plugins.fidget') end
+    config = function() require('plugins.configs.fidget') end
   }
 
-  use { 
+  use {
     'ibhagwan/fzf-lua',
     requires = { 'kyazdani42/nvim-web-devicons' },
-    config = function() require('plugins.fzf-lua') end
+    config = function() require('plugins.configs.fzf-lua') end
   }
 
   use {
@@ -125,7 +126,6 @@ return require('packer').startup({function(use)
 end,
 
 config = {
-  compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua',
   display = {
     open_fn = require('packer.util').float,
   }

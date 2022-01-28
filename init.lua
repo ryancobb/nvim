@@ -1,6 +1,4 @@
-require('impatient')
-require('plugins')
-require('packer_compiled')
+require('plugins.init')
 require('options')
 require('mappings')
 require('lsp')

@@ -28,7 +28,7 @@ local keymaps = {
     {'<s-l>', ':BufferLineCycleNext<CR>'},
     {'<s-h>', ':BufferLineCyclePrev<CR>'},
     {'<leader>c', ':Bdelete!<CR>'},
-    {'<leader>q', ':<C-w>q'},
+    {'<leader>q', '<C-w>q'},
 
     {'<c-up>', ':resize +2<CR>'},
     {'<c-down>', ':resize -2<CR>'},

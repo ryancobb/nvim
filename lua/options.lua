@@ -2,8 +2,6 @@ if vim.fn.has('nvim') == 1 then
   vim.cmd([[let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"]])
 end
 
-vim.cmd[[ filetype indent off ]]
-
 local g = vim.g
 local o = vim.o -- Global options
 
@@ -12,7 +10,7 @@ g.loaded_matchparen = 1
 g.Illuminate_delay = 1000
 g.Illuminate_highlightUnderCursor = 0
 
-o.autoindent = false
+o.autoindent = true
 o.autoread = true
 o.clipboard = "unnamed,unnamedplus"
 o.completeopt="menu,menuone,noselect"
@@ -31,7 +29,7 @@ o.showmatch= true
 o.showmode = false
 o.signcolumn = "yes"
 o.smartcase = true
-o.smartindent = false
+o.smartindent = true
 o.softtabstop = 2
 o.splitbelow = true
 o.splitright = true
