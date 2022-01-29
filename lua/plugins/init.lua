@@ -102,6 +102,16 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'lukas-reineke/indent-blankline.nvim',
+    config = function() require('plugins.configs.indent-blankline') end
+  }
+
+  use {
+    'andymass/vim-matchup',
+    config = function() require('plugins.configs.vim-matchup') end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
@@ -116,7 +126,6 @@ return require('packer').startup({function(use)
     'famiu/bufdelete.nvim',
     'fladson/vim-kitty',
     'lewis6991/impatient.nvim',
-    'andymass/vim-matchup',
     'p00f/nvim-ts-rainbow',
     'google/vim-jsonnet',
     'towolf/vim-helm',
