@@ -33,6 +33,16 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-cmdline',
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-path',
+    'saadparwaiz1/cmp_luasnip',
+    'onsails/lspkind-nvim',
+    'L3MON4D3/LuaSnip',
+  }
+
+  use {
     'windwp/nvim-autopairs',
     config = function() require('plugins.configs.autopairs') end
   }
@@ -116,16 +126,8 @@ return require('packer').startup({function(use)
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
     'williamboman/nvim-lsp-installer',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
-    'L3MON4D3/LuaSnip',
-    'saadparwaiz1/cmp_luasnip',
-    'onsails/lspkind-nvim',
-    'famiu/bufdelete.nvim',
+    'ojroques/nvim-bufdel',
     'fladson/vim-kitty',
-    'lewis6991/impatient.nvim',
     'p00f/nvim-ts-rainbow',
     'google/vim-jsonnet',
     'towolf/vim-helm',

@@ -3,16 +3,17 @@ if vim.fn.has('nvim') == 1 then
 end
 
 local g = vim.g
-local o = vim.o -- Global options
+local o = vim.o
 
 g.mapleader=" "
 g.loaded_matchparen = 1
 g.Illuminate_delay = 1000
 g.Illuminate_highlightUnderCursor = 0
 
-o.autoindent = true
 o.autoread = true
-o.clipboard = "unnamed,unnamedplus"
+o.clipboard = "unnamedplus"
+o.cmdheight = 1
+o.ruler = false
 o.completeopt="menu,menuone,noselect"
 o.cursorline = true
 o.expandtab = true
@@ -27,20 +28,17 @@ o.shiftwidth = 2
 o.shortmess= 'IFa'
 o.showmatch= true
 o.showmode = false
-o.signcolumn = "yes"
 o.smartcase = true
 o.smartindent = true
-o.softtabstop = 2
 o.splitbelow = true
 o.splitright = true
 o.tabstop = 2
 o.termguicolors = true
-o.timeoutlen = 300
+o.timeoutlen = 400
 o.title = true
 o.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 o.undofile = true
 o.updatetime = 300
-o.wrap = false-- disable some builtin vim plugins
 
 local disabled_built_ins = {
   "2html_plugin",
