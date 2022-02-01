@@ -12,9 +12,11 @@ local keymaps = {
     {'<leader>f', ':FzfLua files<CR>'},
     {'<leader>st', ':FzfLua live_grep_native<CR>'},
     {'<leader>ss', ':lua require("spectre").open()<CR>'},
-    {'<leader>sc', ':FzfLua grep<CR>'},
+    {'<leader>sc', ':FzfLua grep_cword<CR>'},
+    {'<leader>sC', ':FzfLua grep_cWORD<CR>'},
     {'<leader>sr', ':FzfLua oldfiles<CR>'},
     {'<leader>sl', ':FzfLua resume<CR>'},
+    {'<leader>sv', ':FzfLua grep_visual<CR>'},
     {'<leader>gg', ':LazyGit<CR>'},
 
     {'<leader>tn', ":TestNearest<CR>"},
