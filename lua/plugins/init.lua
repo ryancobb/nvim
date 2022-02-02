@@ -126,7 +126,7 @@ return require('packer').startup({function(use)
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
     'williamboman/nvim-lsp-installer',
-    'ojroques/nvim-bufdel',
+    'famiu/bufdelete.nvim',
     'fladson/vim-kitty',
     'p00f/nvim-ts-rainbow',
     'google/vim-jsonnet',
