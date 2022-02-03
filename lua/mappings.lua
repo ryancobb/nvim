@@ -21,6 +21,7 @@ local keymaps = {
     {'<leader>sl', ':FzfLua resume<CR>'},
     {'<leader>sv', ':FzfLua grep_visual<CR>'},
     {'<leader>gg', ':LazyGit<CR>'},
+    {'<leader>gs', ':FzfLua git_status<CR>'},
 
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},

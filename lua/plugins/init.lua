@@ -122,6 +122,11 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'iamcco/markdown-preview.nvim',
+    run = 'cd app && yarn install'
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
