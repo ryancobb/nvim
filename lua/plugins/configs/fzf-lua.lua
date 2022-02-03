@@ -1,7 +1,7 @@
 require('fzf-lua').setup {
-  global_resume = false,
   winopts = {
     hl = {
+      -- for nightfox
       normal = 'NormalSB',
       border = 'NormalSB'
     }

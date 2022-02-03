@@ -22,12 +22,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'lewis6991/gitsigns.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
-    config = function() require('plugins.configs.gitsigns') end
-  }
-
-  use {
     'hrsh7th/nvim-cmp',
     config = function() require('plugins.configs.cmp') end
   }
@@ -127,6 +121,14 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'tanvirtin/vgit.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim'
+    },
+    config = function() require('plugins.configs.vgit') end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
@@ -138,6 +140,7 @@ return require('packer').startup({function(use)
     'towolf/vim-helm',
     'lambdalisue/suda.vim',
     'kdheepak/lazygit.nvim',
+    'rebelot/kanagawa.nvim'
   }
 end,
 

@@ -20,8 +20,12 @@ local keymaps = {
     {'<leader>sr', ':FzfLua oldfiles<CR>'},
     {'<leader>sl', ':FzfLua resume<CR>'},
     {'<leader>sv', ':FzfLua grep_visual<CR>'},
-    {'<leader>gg', ':LazyGit<CR>'},
-    {'<leader>gs', ':FzfLua git_status<CR>'},
+
+    {'<leader>gg', ':VGit project_diff_preview<CR>'},
+    {'<leader>gs', ':VGit buffer_diff_preview<CR>'},
+    {'<leader>gp', ':VGit buffer_hunk_preview<CR>'},
+    {']c', ':VGit hunk_down<CR>'},
+    {'[c', ':VGit hunk_up<CR>'},
 
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},

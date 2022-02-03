@@ -1,12 +1,14 @@
-local nightfox = require('nightfox')
+-- local nightfox = require('nightfox')
+--
+-- nightfox.setup {
+--   fox = 'nordfox',
+--   styles = {
+--     comments = 'italic',
+--     keywords = 'bold',
+--     functions = 'italic,bold'
+--   },
+-- }
+--
+-- nightfox.load()
 
-nightfox.setup {
-  fox = 'nordfox',
-  styles = {
-    comments = 'italic',
-    keywords = 'bold',
-    functions = 'italic,bold'
-  },
-}
-
-nightfox.load()
+vim.cmd('colorscheme kanagawa')
