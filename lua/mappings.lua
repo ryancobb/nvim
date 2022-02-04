@@ -4,8 +4,9 @@ local keymaps = {
 
     {'<leader>e', ':NvimTreeToggle<CR>'},
 
-    {'<leader>\\', ':exe v:count1 . "ToggleTerm direction=vertical"<CR>'},
-    {'<leader>-', ':exe v:count1 . "ToggleTerm direction=horizontal"<CR>'},
+    {'<c-\\>', '<Cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>'},
+    {'<leader>tv', ':let g:terminal_direction="vertical"<CR>'},
+    {'<leader>th', ':let g:terminal_direction="horizontal"<CR>'},
 
     {'<C-h>', '<C-w>h'},
     {'<C-j>', '<C-w>j'},
@@ -31,7 +32,6 @@ local keymaps = {
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},
     {'<leader>tl', ":TestLast<CR>"},
-    {'<leader>tv', ":TestVisit<CR>"},
 
     {'<s-l>', ':BufferLineCycleNext<CR>'},
     {'<s-h>', ':BufferLineCyclePrev<CR>'},
