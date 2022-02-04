@@ -1,10 +1,5 @@
 return require('packer').startup({function(use)
   use {
-    'EdenEast/nightfox.nvim',
-    config = function() require('plugins.configs.theme') end
-  }
-
-  use {
     'nvim-treesitter/nvim-treesitter',
     config = function() require('plugins.configs.treesitter') end
   }
@@ -12,7 +7,6 @@ return require('packer').startup({function(use)
   use {
     'nvim-lualine/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons'},
-    after = 'nightfox.nvim',
     config = function() require('plugins.configs.lualine') end
   }
 
@@ -140,7 +134,8 @@ return require('packer').startup({function(use)
     'towolf/vim-helm',
     'lambdalisue/suda.vim',
     'kdheepak/lazygit.nvim',
-    'rebelot/kanagawa.nvim'
+    'rebelot/kanagawa.nvim',
+    'EdenEast/nightfox.nvim',
   }
 end,
 
