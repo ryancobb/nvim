@@ -20,6 +20,7 @@ local keymaps = {
     {'<leader>sr', ':FzfLua oldfiles<CR>'},
     {'<leader>sl', ':FzfLua resume<CR>'},
     {'<leader>sv', ':FzfLua grep_visual<CR>'},
+    {'<leader>sb', ':FzfLua buffers<CR>'},
 
     {'<leader>gg', ':VGit project_diff_preview<CR>'},
     {'<leader>gs', ':VGit buffer_diff_preview<CR>'},
