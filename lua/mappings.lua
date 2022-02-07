@@ -23,12 +23,6 @@ local keymaps = {
     {'<leader>sv', ':FzfLua grep_visual<CR>'},
     {'<leader>sb', ':FzfLua buffers<CR>'},
 
-    {'<leader>gg', ':VGit project_diff_preview<CR>'},
-    {'<leader>gs', ':VGit buffer_diff_preview<CR>'},
-    {'<leader>gp', ':VGit buffer_hunk_preview<CR>'},
-    {']c', ':VGit hunk_down<CR>'},
-    {'[c', ':VGit hunk_up<CR>'},
-
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},
     {'<leader>tl', ":TestLast<CR>"},
@@ -43,7 +37,6 @@ local keymaps = {
     {'<c-left>', ':vertical resize -2<CR>'},
     {'<c-right>', ':vertical resize +2<CR>'},
 
-    {'<leader>h', ':noh<CR>'},
     {'n', "<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>"},
     {'N', "<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>"},
     {'*', "*<Cmd>lua require('hlslens').start()<CR>"},

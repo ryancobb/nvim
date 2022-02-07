@@ -123,6 +123,11 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'anuvyklack/pretty-fold.nvim',
+    config = function() require('plugins.configs.pretty-fold') end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
