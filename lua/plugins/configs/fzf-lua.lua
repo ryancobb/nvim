@@ -14,5 +14,8 @@ require('fzf-lua').setup {
   },
   files = {
     fd_opts = "--color=never --type f --hidden --follow --exclude .git --exclude spec/fixtures --exclude vendor --exclude qa/vendor"
+  },
+  grep = {
+    rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=512 --hidden --glob=!.git",
   }
 }
