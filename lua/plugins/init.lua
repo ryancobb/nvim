@@ -141,7 +141,8 @@ return require('packer').startup({function(use)
     'kdheepak/lazygit.nvim',
     'rebelot/kanagawa.nvim',
     'EdenEast/nightfox.nvim',
-    'RRethy/nvim-treesitter-endwise'
+    'RRethy/nvim-treesitter-endwise',
+    'lewis6991/impatient.nvim'
   }
 end,
 

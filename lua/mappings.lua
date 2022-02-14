@@ -5,8 +5,9 @@ local keymaps = {
     {'<leader>e', ':NvimTreeToggle<CR>'},
 
     {'<c-\\>', '<Cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>'},
-    {'<leader>tv', ':let g:terminal_direction="vertical"<CR>'},
-    {'<leader>th', ':let g:terminal_direction="horizontal"<CR>'},
+    {'<c-t>v', ':let g:terminal_direction="vertical"<CR>'},
+    {'<c-t>h', ':let g:terminal_direction="horizontal"<CR>'},
+    {'<c-t>f', ':let g:terminal_direction="float"<CR>'},
 
     {'<C-h>', '<C-w>h'},
     {'<C-j>', '<C-w>j'},

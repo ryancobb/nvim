@@ -1,3 +1,5 @@
+require('impatient')
+
 require('plugins.init')
 require('theme')
 require('options')
