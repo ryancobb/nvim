@@ -15,7 +15,7 @@ local keymaps = {
     {'<C-l>', '<C-w>l'},
 
     {'<leader>f', ':FzfLua files<CR>'},
-    {'<leader>st', ':lua require("fzf-lua").live_grep_glob<CR>'},
+    {'<leader>st', ':lua require("fzf-lua").live_grep_glob()<CR>'},
     {'<leader>ss', ':lua require("spectre").open()<CR>'},
     {'<leader>sc', ':FzfLua grep_cword<CR>'},
     {'<leader>sC', ':FzfLua grep_cWORD<CR>'},
