@@ -16,13 +16,14 @@ local keymaps = {
 
     {'<leader>f', ':FzfLua files<CR>'},
     {'<leader>st', ':lua require("fzf-lua").live_grep_glob()<CR>'},
-    {'<leader>ss', ':lua require("spectre").open()<CR>'},
     {'<leader>sc', ':FzfLua grep_cword<CR>'},
     {'<leader>sC', ':FzfLua grep_cWORD<CR>'},
-    {'<leader>sr', ':FzfLua oldfiles<CR>'},
-    {'<leader>sl', ':FzfLua resume<CR>'},
+    {'<leader>so', ':FzfLua oldfiles<CR>'},
+    {'<leader>sr', ':FzfLua resume<CR>'},
     {'<leader>sv', ':FzfLua grep_visual<CR>'},
     {'<leader>sb', ':FzfLua buffers<CR>'},
+    {'<leader>ssd', ':FzfLua lsp_document_symbols<CR>'},
+    {'<leader>ssw', ':FzfLua lsp_workspace_symbols<CR>'},
 
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},

@@ -4,5 +4,6 @@ require('indent_blankline').setup {
   show_current_context = true,
   filetype_exclude = {
     'toggleterm'
-  }
+  },
+  use_treesitter = true
 }

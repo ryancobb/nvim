@@ -21,6 +21,7 @@ o.ignorecase= true
 o.incsearch= true
 o.modeline = false
 o.mouse = 'a'
+o.nowrap = true
 o.number = true
 o.ruler = false
 o.shiftwidth = 2

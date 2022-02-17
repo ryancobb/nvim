@@ -22,4 +22,7 @@ require('toggleterm').setup {
   persist_size = true,
   direction = vim.g.terminal_direction,
   close_on_exit = false, -- close the terminal window when the process exits
+  float_opts = {
+    border = 'curved'
+  }
 }
