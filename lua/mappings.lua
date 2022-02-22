@@ -25,6 +25,8 @@ local keymaps = {
     {'<leader>ssd', ':FzfLua lsp_document_symbols<CR>'},
     {'<leader>ssw', ':FzfLua lsp_workspace_symbols<CR>'},
 
+    {'<leader>gg', ':Neogit<CR>'},
+
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},
     {'<leader>tl', ":TestLast<CR>"},

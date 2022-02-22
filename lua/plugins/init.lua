@@ -110,19 +110,11 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'tanvirtin/vgit.nvim',
-    requires = {
-      'nvim-lua/plenary.nvim'
-    },
-    config = function() require('plugins.configs.vgit') end
-  }
-
-  use {
     'anuvyklack/pretty-fold.nvim',
     config = function() require('plugins.configs.pretty-fold') end
   }
 
-  use { 
+  use {
     'sindrets/diffview.nvim',
     requires = 'nvim-lua/plenary.nvim',
     config = function() require('plugins.configs.diffview') end
@@ -135,6 +127,14 @@ return require('packer').startup({function(use)
       'sindrets/diffview.nvim'
     },
     config = function() require('plugins.configs.neogit') end
+  }
+
+  use {
+    'lewis6991/gitsigns.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim'
+    },
+    config = function() require('plugins.configs.gitsigns') end
   }
 
   use {
