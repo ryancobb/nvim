@@ -2,11 +2,6 @@ local set_keymap = function(lhs, rhs) vim.api.nvim_buf_set_keymap(0, 't', lhs, r
 
 require('fzf-lua').setup {
   winopts = {
-    hl = {
-      -- for nightfox
-      normal = 'NormalSB',
-      border = 'NormalSB'
-    },
     window_on_create = function()
       set_keymap('<c-j>', '<down>')
       set_keymap('<c-k>', '<up>')

@@ -1,5 +1,3 @@
-local colors = require('nightfox.colors').load()
-
 local function diff_source()
   local gitsigns = vim.b.gitsigns_status_dict
   if gitsigns then
@@ -26,8 +24,7 @@ local treesitter = {
       return " "
     end
     return ""
-  end,
-  color = { fg = colors.green }
+  end
 }
 
 local filename = {
@@ -44,7 +41,7 @@ require('lualine').setup {
     icons_enabled = true,
     component_separators = { left = '|', right = '|'},
     section_separators = { left = '', right = ''},
-    disabled_filetypes = { 'NvimTree' },
+    disabled_filetypes = { 'NvimTree', 'DiffViewFiles' },
     always_divide_middle = true,
   },
   sections = {

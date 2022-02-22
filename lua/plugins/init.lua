@@ -122,6 +122,12 @@ return require('packer').startup({function(use)
     config = function() require('plugins.configs.pretty-fold') end
   }
 
+  use { 
+    'sindrets/diffview.nvim',
+    requires = 'nvim-lua/plenary.nvim',
+    config = function() require('plugins.configs.diffview') end
+  }
+
   use {
     'TimUntersberger/neogit',
     requires = {
