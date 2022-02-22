@@ -123,6 +123,15 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'TimUntersberger/neogit',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim'
+    },
+    config = function() require('plugins.configs.neogit') end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
@@ -133,11 +142,9 @@ return require('packer').startup({function(use)
     'google/vim-jsonnet',
     'towolf/vim-helm',
     'lambdalisue/suda.vim',
-    'kdheepak/lazygit.nvim',
     'rebelot/kanagawa.nvim',
-    'EdenEast/nightfox.nvim',
     'RRethy/nvim-treesitter-endwise',
-    'lewis6991/impatient.nvim'
+    'lewis6991/impatient.nvim',
   }
 end,
 
