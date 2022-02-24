@@ -2,7 +2,7 @@ local keymaps = {
   ['n'] = {
     {'q', '<Nop>'},
 
-    {'<leader>e', ':NvimTreeToggle<CR>'},
+    {'<leader>e', ':Telescope file_browser path=%:p:h<CR>'},
 
     {'<c-\\>', '<Cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>'},
     {'<c-t>v', ':let g:terminal_direction="vertical"<CR>'},
@@ -14,18 +14,15 @@ local keymaps = {
     {'<C-k>', '<C-w>k'},
     {'<C-l>', '<C-w>l'},
 
-    {'<leader>f', ':FzfLua files<CR>'},
-    {'<leader>st', ':lua require("fzf-lua").live_grep_native()<CR>'},
-    {'<leader>sc', ':FzfLua grep_cword<CR>'},
-    {'<leader>sC', ':FzfLua grep_cWORD<CR>'},
-    {'<leader>so', ':FzfLua oldfiles<CR>'},
-    {'<leader>sr', ':FzfLua resume<CR>'},
-    {'<leader>sv', ':FzfLua grep_visual<CR>'},
-    {'<leader>sb', ':FzfLua buffers<CR>'},
-    {'<leader>ssd', ':FzfLua lsp_document_symbols<CR>'},
-    {'<leader>ssw', ':FzfLua lsp_workspace_symbols<CR>'},
+    {'<leader>f', ':Telescope find_files<CR>'},
+    {'<leader>st', ':Telescope live_grep<CR>'},
+    {'<leader>sc', ':Telescope grep_string<CR>'},
+    {'<leader>so', ':Telescope oldfiles<CR>'},
+    {'<leader>sr', ':Telescope resume<CR>'},
+    {'<leader>sb', ':Telescope buffers<CR>'},
 
-    {'<leader>gg', ':Neogit<CR>'},
+    {'<leader>gg', ':DiffviewOpen<CR>'},
+    {'<leader>gf', ':DiffviewFileHistory<CR>'},
 
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},
