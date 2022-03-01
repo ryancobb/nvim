@@ -2,7 +2,7 @@ local keymaps = {
   ['n'] = {
     {'q', '<Nop>'},
 
-    {'<leader>e', ':Telescope file_browser path=%:p:h<CR>'},
+    {'<leader>e', ':NvimTreeFocus<CR>'},
 
     {'<c-\\>', '<Cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>'},
     {'<c-t>v', ':let g:terminal_direction="vertical"<CR>'},
@@ -14,14 +14,14 @@ local keymaps = {
     {'<C-k>', '<C-w>k'},
     {'<C-l>', '<C-w>l'},
 
-    {'<leader>f', ':Telescope find_files<CR>'},
-    {'<leader>st', ':Telescope live_grep<CR>'},
-    {'<leader>sc', ':Telescope grep_string<CR>'},
-    {'<leader>so', ':Telescope oldfiles<CR>'},
-    {'<leader>sr', ':Telescope resume<CR>'},
-    {'<leader>sb', ':Telescope buffers<CR>'},
+    {'<leader>f', ':FzfLua files<CR>'},
+    {'<leader>st', ':FzfLua live_grep<CR>'},
+    {'<leader>sc', ':FzfLua grep_string<CR>'},
+    {'<leader>so', ':FzfLua oldfiles<CR>'},
+    {'<leader>sr', ':FzfLua resume<CR>'},
+    {'<leader>sb', ':FzfLua buffers<CR>'},
 
-    {'<leader>gg', ':DiffviewOpen<CR>'},
+    {'<leader>gg', ':Neogit<CR>'},
     {'<leader>gf', ':DiffviewFileHistory<CR>'},
 
     {'<leader>tn', ":TestNearest<CR>"},

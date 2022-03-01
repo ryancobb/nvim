@@ -71,11 +71,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    "sidebar-nvim/sidebar.nvim",
-    config = function() require('plugins.configs.sidebar') end
-  }
-
-  use {
     'j-hui/fidget.nvim',
     config = function() require('plugins.configs.fidget') end
   }
@@ -124,13 +119,16 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} },
-    config = function() require('plugins.configs.telescope') end
+    'kyazdani42/nvim-tree.lua',
+    requires = {
+      'kyazdani42/nvim-web-devicons',
+    },
+    config = function() require('plugins.configs.nvimtree') end
   }
 
-  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-  use { "nvim-telescope/telescope-file-browser.nvim" }
+  use { 'ibhagwan/fzf-lua',
+    requires = { 'kyazdani42/nvim-web-devicons' }
+  }
 
   use {
     'wbthomason/packer.nvim',
