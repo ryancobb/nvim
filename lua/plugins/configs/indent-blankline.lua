@@ -3,7 +3,15 @@ require('indent_blankline').setup {
   context_char = "│",
   show_current_context = true,
   filetype_exclude = {
-    'toggleterm'
+    'help',
+    'terminal',
+    'packer',
+    'lspinfo',
+    'TelescopePrompt',
+    'TelescopeResults',
+    'lsp-installer',
+    'toggleterm',
+    ''
   },
   use_treesitter = true
 }

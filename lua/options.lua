@@ -21,8 +21,8 @@ o.ignorecase= true
 o.incsearch= true
 o.modeline = false
 o.mouse = 'a'
-o.wrap = false
 o.number = true
+o.pumheight = 10
 o.ruler = false
 o.shiftwidth = 2
 o.shortmess= 'IFa'
@@ -34,13 +34,15 @@ o.smartcase = true
 o.smartindent = false
 o.splitbelow = true
 o.splitright = true
+o.swapfile = false
 o.tabstop = 2
 o.termguicolors = true
 o.timeoutlen = 400
 o.title = true
 o.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 o.undofile = true
-o.updatetime = 300
+o.updatetime = 500
+o.wrap = false
 
 local disabled_built_ins = {
   "2html_plugin",

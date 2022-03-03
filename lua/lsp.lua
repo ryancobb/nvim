@@ -1,9 +1,8 @@
 vim.diagnostic.config({
-  virtual_text = false,
+  virtual_text = true,
   signs = true,
   underline = true,
   update_in_insert = false,
-  severity_sort = false
 })
 
  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
@@ -20,10 +19,25 @@ for type, icon in pairs(signs) do
 end
 
 local build_capabilities = function()
-  local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
-  lsp_capabilities = require('cmp_nvim_lsp').update_capabilities(lsp_capabilities)
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+  capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.textDocument.completion.completionItem.preselectSupport = true
+  capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
+  capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
+  capabilities.textDocument.completion.completionItem.deprecatedSupport = true
+  capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
+  capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
+  capabilities.textDocument.completion.completionItem.resolveSupport = {
+     properties = {
+        "documentation",
+        "detail",
+        "additionalTextEdits",
+     },
+  }
 
-  return lsp_capabilities
+  return capabilities
 end
 
 local capabilities = build_capabilities()
@@ -55,6 +69,24 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
   buf_set_keymap('n', '<leader>ssd', '<cmd>Telescope lsp_document_symbols<CR>', opts)
   buf_set_keymap('n', '<leader>ssw', '<cmd>Telescope lsp_workspace_symbols<CR>', opts)
+
+  require('lsp_signature').on_attach {
+    bind = true,
+    doc_lines = 0,
+    floating_window = true,
+    fix_pos = true,
+    hint_enable = true,
+    hint_prefix = " ",
+    hint_scheme = "String",
+    hi_parameter = "Search",
+    max_height = 22,
+    max_width = 120, -- max_width of signature floating_window, line will be wrapped if exceed max_width
+    handler_opts = {
+      border = "single", -- double, single, shadow, none
+    },
+    zindex = 200, -- by default it will be on top of all floating windows, set to 50 send it to bottom
+    padding = "", -- character to pad on left and right of signature can be ' ', or '|'  etc
+  }
 end
 
 require('nvim-lsp-installer').on_server_ready(function(server)

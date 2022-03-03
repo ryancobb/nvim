@@ -132,7 +132,14 @@ return require('packer').startup({function(use)
     config = function() require('plugins.configs.telescope') end
   }
 
-  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+  use {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    run = 'make'
+  }
+
+  use {
+    'ray-x/lsp_signature.nvim',
+  }
 
   use {
     'wbthomason/packer.nvim',

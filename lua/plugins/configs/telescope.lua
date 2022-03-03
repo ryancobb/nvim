@@ -4,7 +4,7 @@ require('telescope').setup {
   defaults = {
     mappings = {
       i = {
-        ['<C-u>'] = false
+        ['<esc>'] = actions.close
       }
     },
     vimgrep_arguments = {
