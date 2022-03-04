@@ -21,6 +21,8 @@ local keymaps = {
     {'<leader>sr', ':Telescope resume<CR>'},
     {'<leader>sb', ':Telescope buffers<CR>'},
 
+    {'<leader>b', ':BufferLinePick<CR>'},
+
     {'<leader>gg', ':Neogit<CR>'},
     {'<leader>gf', ':DiffviewFileHistory<CR>'},
 
