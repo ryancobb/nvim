@@ -63,7 +63,7 @@ require('lualine').setup {
   },
   inactive_sections = {
     lualine_a = {},
-    lualine_b = { {'b:gitsigns_head', icon = ''} },
+    lualine_b = {},
     lualine_c = { filename },
     lualine_x = {},
     lualine_y = {},
