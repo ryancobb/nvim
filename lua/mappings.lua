@@ -14,12 +14,12 @@ local keymaps = {
     {'<C-k>', '<C-w>k'},
     {'<C-l>', '<C-w>l'},
 
-    {'<leader>f', ':Telescope find_files<CR>'},
-    {'<leader>st', ':Telescope live_grep<CR>'},
-    {'<leader>sc', ':Telescope grep_string<CR>'},
-    {'<leader>so', ':Telescope oldfiles<CR>'},
-    {'<leader>sr', ':Telescope resume<CR>'},
-    {'<leader>sb', ':Telescope buffers<CR>'},
+    {'<leader>f', ':FzfLua files<CR>'},
+    {'<leader>st', ':FzfLua live_grep<CR>'},
+    {'<leader>sc', ':FzfLua grep_string<CR>'},
+    {'<leader>so', ':FzfLua oldfiles<CR>'},
+    {'<leader>sr', ':FzfLua resume<CR>'},
+    {'<leader>sb', ':FzfLua buffers<CR>'},
 
     {'<leader>b', ':BufferLinePick<CR>'},
 

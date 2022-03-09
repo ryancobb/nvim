@@ -126,15 +126,9 @@ return require('packer').startup({function(use)
     config = function() require('plugins.configs.nvimtree') end
   }
 
-  use {
-    'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} },
-    config = function() require('plugins.configs.telescope') end
-  }
-
-  use {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    run = 'make'
+  use { 'ibhagwan/fzf-lua',
+    requires = { 'kyazdani42/nvim-web-devicons' },
+    config = function() require('plugins.configs.fzflua') end
   }
 
   use {
