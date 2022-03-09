@@ -1,5 +1,5 @@
 require('neogit').setup {
-  kind = "floating",
+  kind = "replace",
   integrations = {
     diffview = true
   }
