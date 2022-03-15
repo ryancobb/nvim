@@ -1,10 +1,12 @@
 local g = vim.g
 local o = vim.o
 
-g.mapleader=" "
-g.loaded_matchparen = 1
 g.Illuminate_delay = 1000
 g.Illuminate_highlightUnderCursor = 0
+g.did_load_filetypes = 0
+g.do_filetype_lua = 1
+g.loaded_matchparen = 1
+g.mapleader=" "
 
 o.autoread = true
 o.clipboard = "unnamedplus"

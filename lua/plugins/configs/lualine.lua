@@ -21,10 +21,11 @@ local treesitter = {
   function()
     local b = vim.api.nvim_get_current_buf()
     if next(vim.treesitter.highlighter.active[b]) then
-      return " "
+      return ""
     end
     return ""
-  end
+  end,
+  color = { fg = '#76946A' }
 }
 
 local filename = {
@@ -39,7 +40,7 @@ local filename = {
 require('lualine').setup {
   options = {
     icons_enabled = true,
-    component_separators = { left = '|', right = '|'},
+    component_separators = { left = '', right = ''},
     section_separators = { left = '', right = ''},
     disabled_filetypes = { 'NvimTree', 'DiffviewFiles' },
     always_divide_middle = true,
@@ -56,9 +57,10 @@ require('lualine').setup {
     },
     lualine_x = {
       lsp_client_names,
-      treesitter
+      treesitter,
+      'filetype'
     },
-    lualine_y = {'filetype'},
+    lualine_y = {},
     lualine_z = {}
   },
   inactive_sections = {
