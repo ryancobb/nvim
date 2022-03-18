@@ -1,7 +1,8 @@
 require('kanagawa').setup {
-  override = {
+  overrides = {
     Boolean = { link = 'Special' },
-    NormalFloat = { link = 'Pmenu' }
+    NormalFloat = { link = 'Pmenu' },
+    WinSeparator = { link = 'LineNr' }
   }
 }
 
