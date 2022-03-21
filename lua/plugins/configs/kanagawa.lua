@@ -1,8 +1,8 @@
 require('kanagawa').setup {
   dimInactive = true,
+  globalStatus = true,
   overrides = {
     Boolean = { link = 'Special' },
-    WinSeparator = { link = 'LineNr' }
   }
 }
 

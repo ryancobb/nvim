@@ -126,9 +126,25 @@ return require('packer').startup({function(use)
     config = function() require('plugins.configs.nvimtree') end
   }
 
-  use { 'ibhagwan/fzf-lua',
+  use {
+    'ibhagwan/fzf-lua',
     requires = { 'kyazdani42/nvim-web-devicons' },
     config = function() require('plugins.configs.fzflua') end
+  }
+
+  use {
+    'nvim-orgmode/orgmode',
+    config = function() require('plugins.configs.orgmode') end
+  }
+
+  use {
+    "akinsho/org-bullets.nvim",
+    config = function() require("org-bullets").setup{} end
+  }
+
+  use {
+    'chentau/marks.nvim',
+    config = function() require('marks').setup{} end
   }
 
   use {
