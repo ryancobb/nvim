@@ -15,7 +15,7 @@ local keymaps = {
     {'<C-l>', '<C-w>l'},
 
     {'<leader>f', ':FzfLua files<CR>'},
-    {'<leader>st', ':FzfLua live_grep_glob<CR>'},
+    {'<leader>st', ':FzfLua live_grep_native<CR>'},
     {'<leader>sc', ':FzfLua grep_string<CR>'},
     {'<leader>so', ':FzfLua oldfiles<CR>'},
     {'<leader>sr', ':FzfLua resume<CR>'},
