@@ -44,17 +44,21 @@ require('lualine').setup {
     section_separators = { left = '', right = ''},
     disabled_filetypes = { 'NvimTree', 'DiffviewFiles' },
     always_divide_middle = true,
-    globalstatus = true
+    globalstatus = false
   },
   sections = {
-    lualine_a = {'mode'},
+    lualine_a = {
+    {
+        function() return ' ' end,
+        padding = { left = 0, right = 0}
+      }
+    },
     lualine_b = {
       {'b:gitsigns_head', icon = ''},
     },
     lualine_c = {
       filename,
       { 'diff', source = diff_source },
-      {},
     },
     lualine_x = {
       lsp_client_names,
@@ -62,7 +66,12 @@ require('lualine').setup {
       'filetype'
     },
     lualine_y = {},
-    lualine_z = {}
+    lualine_z = {
+      {
+        function() return ' ' end,
+        padding = { left = 0, right = 0}
+      }
+    },
   },
   inactive_sections = {
     lualine_a = {},

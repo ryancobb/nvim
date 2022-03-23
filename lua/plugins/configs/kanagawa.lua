@@ -1,6 +1,6 @@
 require('kanagawa').setup {
   dimInactive = true,
-  globalStatus = true,
+  globalStatus = false,
   overrides = {
     Boolean = { link = 'Special' },
   }

@@ -143,24 +143,19 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'chentau/marks.nvim',
-    config = function() require('marks').setup{} end
-  }
-
-  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
     'williamboman/nvim-lsp-installer',
     'famiu/bufdelete.nvim',
     'fladson/vim-kitty',
-    'p00f/nvim-ts-rainbow',
     'google/vim-jsonnet',
     'towolf/vim-helm',
     'lambdalisue/suda.vim',
     'rebelot/kanagawa.nvim',
     'RRethy/nvim-treesitter-endwise',
     'lewis6991/impatient.nvim',
+    'mrjones2014/smart-splits.nvim'
   }
 end,
 
