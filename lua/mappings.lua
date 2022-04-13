@@ -25,7 +25,7 @@ local keymaps = {
 
     {'<leader>b', ':BufferLinePick<CR>'},
 
-    {'<leader>gg', ':Neogit<CR>'},
+    {'<leader>gg', ':LazyGit<CR>'},
     {'<leader>gf', ':DiffviewFileHistory<CR>'},
 
     {'<leader>tn', ":TestNearest<CR>"},
@@ -60,7 +60,7 @@ local keymaps = {
     {'<c-j>', '<c-\\><c-n><c-w>j'},
     {'<c-k>', '<c-\\><c-n><c-w>k'},
     {'<c-l>', '<c-\\><c-n><c-w>l'},
-    {'jk', '<C-\\><C-n>'}
+    {'<c-n>', '<c-\\><c-n>'}
   }
 }
 

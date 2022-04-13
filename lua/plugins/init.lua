@@ -96,21 +96,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'sindrets/diffview.nvim',
-    requires = 'nvim-lua/plenary.nvim',
-    config = function() require('plugins.configs.diffview') end
-  }
-
-  use {
-    'TimUntersberger/neogit',
-    requires = {
-      'nvim-lua/plenary.nvim',
-      'sindrets/diffview.nvim'
-    },
-    config = function() require('plugins.configs.neogit') end
-  }
-
-  use {
     'lewis6991/gitsigns.nvim',
     requires = {
       'nvim-lua/plenary.nvim'
@@ -143,6 +128,11 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'kdheepak/lazygit.nvim',
+    config = function() require('plugins.configs.lazygit') end
+  }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'antoinemadec/FixCursorHold.nvim',
@@ -155,7 +145,7 @@ return require('packer').startup({function(use)
     'rebelot/kanagawa.nvim',
     'RRethy/nvim-treesitter-endwise',
     'lewis6991/impatient.nvim',
-    'mrjones2014/smart-splits.nvim'
+    'mrjones2014/smart-splits.nvim',
   }
 end,
 
