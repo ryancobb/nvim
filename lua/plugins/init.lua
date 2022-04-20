@@ -21,13 +21,13 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-cmdline',
     'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-path',
-    'saadparwaiz1/cmp_luasnip',
     'onsails/lspkind-nvim',
+    'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-cmdline',
     'L3MON4D3/LuaSnip',
+    'saadparwaiz1/cmp_luasnip',
   }
 
   use {
@@ -118,18 +118,12 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'nvim-orgmode/orgmode',
-    config = function() require('plugins.configs.orgmode') end
-  }
-
-  use {
-    "akinsho/org-bullets.nvim",
-    config = function() require("org-bullets").setup{} end
-  }
-
-  use {
     'kdheepak/lazygit.nvim',
     config = function() require('plugins.configs.lazygit') end
+  }
+
+  use {
+    'simrat39/symbols-outline.nvim',
   }
 
   use {
@@ -146,6 +140,7 @@ return require('packer').startup({function(use)
     'RRethy/nvim-treesitter-endwise',
     'lewis6991/impatient.nvim',
     'mrjones2014/smart-splits.nvim',
+    'gbprod/cutlass.nvim'
   }
 end,
 

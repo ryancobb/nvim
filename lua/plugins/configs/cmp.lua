@@ -11,15 +11,13 @@ cmp.setup {
       require('luasnip').lsp_expand(args.body)
     end
   },
-  mapping = {
-    ['<C-e>'] = cmp.mapping.close(),
+  mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<CR>'] = cmp.mapping.confirm {
+    ['<CR>'] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Replace,
       select = false
-    },
-
+    }),
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -39,14 +37,13 @@ cmp.setup {
         fallback()
       end
     end, { "i", "s" }),
-  },
+  }),
   sources = cmp.config.sources({
     { name = 'buffer' },
     { name = 'luasnip' },
     { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'nvim_lua'},
-    { name = 'orgmode' }
   }),
   formatting = {
     format = lspkind.cmp_format({
@@ -57,12 +54,14 @@ cmp.setup {
 }
 
 cmp.setup.cmdline('/', {
+  mapping = cmp.mapping.preset.cmdline(),
   sources = {
     { name = 'buffer' }
   }
 })
 
 cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources(
     {{ name = 'path' }},
     {{ name = 'cmdline' }}

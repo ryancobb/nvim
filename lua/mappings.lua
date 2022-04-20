@@ -16,7 +16,7 @@ local keymaps = {
 
     {'<leader>f', ':FzfLua files<CR>'},
     {'<leader>st', ':FzfLua live_grep_glob<CR>'},
-    {'<leader>sc', ':FzfLua grep_string<CR>'},
+    {'<leader>sc', ':FzfLua grep_cword<CR>'},
     {'<leader>so', ':FzfLua oldfiles<CR>'},
     {'<leader>sr', ':FzfLua resume<CR>'},
     {'<leader>sb', ':FzfLua buffers<CR>'},
@@ -31,6 +31,9 @@ local keymaps = {
     {'<leader>tn', ":TestNearest<CR>"},
     {'<leader>tf', ":TestFile<CR>"},
     {'<leader>tl', ":TestLast<CR>"},
+
+    {'<leader>yf', ':let @+=fnamemodify(expand("%"), ":~:.")<CR>'}, -- yank file path
+    {'<leader>yl', ':let @+=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>'}, -- yank file path with line number
 
     {'<s-l>', ':BufferLineCycleNext<CR>'},
     {'<s-h>', ':BufferLineCyclePrev<CR>'},
