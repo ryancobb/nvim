@@ -41,21 +41,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'akinsho/bufferline.nvim',
-    config = function() require('plugins.configs.bufferline') end
-  }
-
-  use {
-    'vim-test/vim-test',
-    config = function() require('plugins.configs.vim-test') end
-  }
-
-  use {
-    'ahmedkhalf/project.nvim',
-    config = function() require('plugins.configs.project') end
-  }
-
-  use {
     'folke/which-key.nvim',
     config = function() require('which-key').setup() end
   }
@@ -91,11 +76,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'anuvyklack/pretty-fold.nvim',
-    config = function() require('plugins.configs.pretty-fold') end
-  }
-
-  use {
     'lewis6991/gitsigns.nvim',
     requires = {
       'nvim-lua/plenary.nvim'
@@ -104,11 +84,23 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'kyazdani42/nvim-tree.lua',
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v2.x",
     requires = {
-      'kyazdani42/nvim-web-devicons',
+      "nvim-lua/plenary.nvim",
+      "kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
     },
-    config = function() require('plugins.configs.nvimtree') end
+    config = function()
+      require("neo-tree").setup({
+        enable_diagnostics = false,
+        filesystem = {
+          filtered_items = {
+            visible = true,
+          }
+        }
+      })
+    end
   }
 
   use {
@@ -123,13 +115,8 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'simrat39/symbols-outline.nvim',
-  }
-
-  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
-    'antoinemadec/FixCursorHold.nvim',
     'williamboman/nvim-lsp-installer',
     'famiu/bufdelete.nvim',
     'fladson/vim-kitty',
@@ -140,7 +127,9 @@ return require('packer').startup({function(use)
     'RRethy/nvim-treesitter-endwise',
     'lewis6991/impatient.nvim',
     'mrjones2014/smart-splits.nvim',
-    'gbprod/cutlass.nvim'
+    'gbprod/cutlass.nvim',
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    'sindrets/diffview.nvim'
   }
 end,
 

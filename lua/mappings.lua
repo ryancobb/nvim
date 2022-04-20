@@ -2,7 +2,10 @@ local keymaps = {
   ['n'] = {
     {'q', '<Nop>'},
 
-    {'<leader>e', ':NvimTreeFocus<CR>'},
+    {'<leader>e', ':Neotree<CR>'},
+    {'<leader>b', ':Neotree buffers<CR>'},
+
+    {'<leader><space>', ':FzfLua buffers<CR>'},
 
     {'<c-\\>', '<Cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>'},
     {'<c-t>v', ':let g:terminal_direction="vertical"<CR>'},
@@ -19,24 +22,14 @@ local keymaps = {
     {'<leader>sc', ':FzfLua grep_cword<CR>'},
     {'<leader>so', ':FzfLua oldfiles<CR>'},
     {'<leader>sr', ':FzfLua resume<CR>'},
-    {'<leader>sb', ':FzfLua buffers<CR>'},
-
-    {'<leader>nf', ':NvimTreeFindFile<CR>'},
-
-    {'<leader>b', ':BufferLinePick<CR>'},
 
     {'<leader>gg', ':LazyGit<CR>'},
     {'<leader>gf', ':DiffviewFileHistory<CR>'},
-
-    {'<leader>tn', ":TestNearest<CR>"},
-    {'<leader>tf', ":TestFile<CR>"},
-    {'<leader>tl', ":TestLast<CR>"},
+    {'<leader>gs', ':Neotree git_status<CR>'},
 
     {'<leader>yf', ':let @+=fnamemodify(expand("%"), ":~:.")<CR>'}, -- yank file path
     {'<leader>yl', ':let @+=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>'}, -- yank file path with line number
 
-    {'<s-l>', ':BufferLineCycleNext<CR>'},
-    {'<s-h>', ':BufferLineCyclePrev<CR>'},
     {'<leader>c', ':Bdelete<CR>'},
     {'<leader>q', '<C-w>q'},
 

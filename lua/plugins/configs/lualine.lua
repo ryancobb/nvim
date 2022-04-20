@@ -33,18 +33,13 @@ local filename = {
   file_status = true,
   path = 1,
   icons_enabled = true,
-  separator = { right = '' },
-  padding = { left = 1, right = 0 }
 }
 
 require('lualine').setup {
   options = {
-    icons_enabled = true,
-    component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
-    disabled_filetypes = { 'NvimTree', 'DiffviewFiles' },
-    always_divide_middle = true,
-    globalstatus = false
+    component_separators = '|',
+    section_separators = '',
+    disabled_filetypes = { 'neo-tree', 'DiffviewFiles' },
   },
   sections = {
     lualine_a = {

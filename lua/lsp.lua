@@ -5,34 +5,24 @@ vim.diagnostic.config({
   update_in_insert = false,
 })
 
- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = "single",
- })
- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-    border = "single",
- })
+local signs = {
+    Error = " ",
+    Warn = " ",
+    Hint = " ",
+    Info = " "
+}
 
-local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
 end
 
-local build_capabilities = function()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
-
-  return capabilities
-end
-
-local capabilities = build_capabilities()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  -- Enable completion triggered by <c-x><c-o>
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
   local opts = { noremap=true, silent=true }
@@ -50,9 +40,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gr', '<cmd>FzfLua lsp_references<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<leader>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-  buf_set_keymap('n', '<leader>ssd', '<cmd>FzfLua lsp_document_symbols<CR>', opts)
+  buf_set_keymap('n', '<leader>so', '<cmd>FzfLua lsp_document_symbols<CR>', opts)
   buf_set_keymap('n', '<leader>ssw', '<cmd>FzfLua lsp_workspace_symbols<CR>', opts)
 end
 
@@ -61,9 +50,6 @@ require('nvim-lsp-installer').on_server_ready(function(server)
   local default_opts = {
     on_attach = on_attach,
     capabilities = capabilities,
-    flags = {
-      debounce_text_changes = 300
-    }
   }
 
   local server_opts = {
@@ -88,9 +74,6 @@ end)
 require("lspconfig")['solargraph'].setup({
   on_attach = on_attach,
   capabilities = capabilities,
-  flags = {
-    debounce_text_changes = 500
-  },
   cmd = { '/Users/ryancobb/.asdf/shims/solargraph', 'stdio' }
 })
 
