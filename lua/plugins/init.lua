@@ -90,6 +90,24 @@ return require('packer').startup({function(use)
       "nvim-lua/plenary.nvim",
       "kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
       "MunifTanjim/nui.nvim",
+      {
+        -- only needed if you want to use the "open_window_picker" command
+        's1n7ax/nvim-window-picker',
+        tag = "1.*",
+        config = function()
+          require'window-picker'.setup({
+            autoselect_one = true,
+            include_current = false,
+            filter_rules = {
+              bo = {
+                filetype = { 'neo-tree', "neo-tree-popup", "notify", "quickfix" },
+                buftype = { 'terminal' },
+              },
+            },
+            other_win_hl_color = '#e35e4f',
+          })
+        end,
+      }
     },
     config = function()
       require("neo-tree").setup({
@@ -98,7 +116,7 @@ return require('packer').startup({function(use)
           filtered_items = {
             visible = true,
           }
-        }
+        },
       })
     end
   }
@@ -115,6 +133,19 @@ return require('packer').startup({function(use)
   }
 
   use {
+    'dstein64/nvim-scrollview',
+    config = function() require('scrollview').setup({
+      current_only = true,
+      winblend = 100
+    })
+    end
+  }
+
+  use { 'ray-x/lsp_signature.nvim' }
+
+  use { 'simrat39/symbols-outline.nvim' }
+
+  use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
     'williamboman/nvim-lsp-installer',
@@ -129,7 +160,7 @@ return require('packer').startup({function(use)
     'mrjones2014/smart-splits.nvim',
     'gbprod/cutlass.nvim',
     'nvim-treesitter/nvim-treesitter-textobjects',
-    'sindrets/diffview.nvim'
+    'sindrets/diffview.nvim',
   }
 end,
 

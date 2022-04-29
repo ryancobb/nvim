@@ -4,13 +4,12 @@ local keymaps = {
 
     {'<leader>e', ':Neotree<CR>'},
     {'<leader>b', ':Neotree buffers<CR>'},
-
-    {'<leader><space>', ':FzfLua buffers<CR>'},
+    {'<leader>r', ':Neotree reveal<CR>'},
 
     {'<c-\\>', '<Cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>'},
-    {'<c-t>v', ':let g:terminal_direction="vertical"<CR>'},
-    {'<c-t>h', ':let g:terminal_direction="horizontal"<CR>'},
-    {'<c-t>f', ':let g:terminal_direction="float"<CR>'},
+    {'<leader>tv', ':let g:terminal_direction="vertical"<CR>'},
+    {'<leader>th', ':let g:terminal_direction="horizontal"<CR>'},
+    {'<leader>tf', ':let g:terminal_direction="float"<CR>'},
 
     {'<C-h>', ':SmartCursorMoveLeft<CR>'},
     {'<C-j>', ':SmartCursorMoveDown<CR>'},
@@ -20,12 +19,12 @@ local keymaps = {
     {'<leader>f', ':FzfLua files<CR>'},
     {'<leader>st', ':FzfLua live_grep_glob<CR>'},
     {'<leader>sc', ':FzfLua grep_cword<CR>'},
-    {'<leader>so', ':FzfLua oldfiles<CR>'},
     {'<leader>sr', ':FzfLua resume<CR>'},
 
     {'<leader>gg', ':LazyGit<CR>'},
     {'<leader>gf', ':DiffviewFileHistory<CR>'},
     {'<leader>gs', ':Neotree git_status<CR>'},
+    {'<leader>gr', ':Gitsigns reset_hunk<CR>'},
 
     {'<leader>yf', ':let @+=fnamemodify(expand("%"), ":~:.")<CR>'}, -- yank file path
     {'<leader>yl', ':let @+=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>'}, -- yank file path with line number
@@ -59,5 +58,13 @@ local keymaps = {
     {'<c-n>', '<c-\\><c-n>'}
   }
 }
+
+vim.keymap.set('n', '<leader><space>', function()
+  require('fzf-lua').buffers({ fzf_opts = { ['--keep-right'] = '' } })
+end)
+
+vim.keymap.set('n', '<leader>?', function()
+  require('fzf-lua').oldfiles({ fzf_opts = { ['--keep-right'] = '' } })
+end)
 
 require('utils').set_keymaps(keymaps)

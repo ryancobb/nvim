@@ -35,14 +35,22 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>k', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<leader>D', '<cmd>FzfLua lsp_type_definitions<CR>', opts)
-  buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<leader>lr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>FzfLua lsp_references<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<leader>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-  buf_set_keymap('n', '<leader>so', '<cmd>FzfLua lsp_document_symbols<CR>', opts)
   buf_set_keymap('n', '<leader>ssw', '<cmd>FzfLua lsp_workspace_symbols<CR>', opts)
+
+  vim.keymap.set('n', '<leader>so',
+    function()
+      require('fzf-lua').lsp_document_symbols({fzf_cli_args='--with-nth=2..'})
+    end,
+    { buffer = bufnr }
+  )
+
+  require("lsp_signature").on_attach()
 end
 
 require('nvim-lsp-installer').on_server_ready(function(server)
