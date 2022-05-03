@@ -14,7 +14,7 @@ require('fzf-lua').setup {
     preview = { default = 'bat_native' }
   },
   files = {
-    fd_opts = "--color=never --type f --hidden --follow --no-ignore --exclude .git --exclude node_modules --exclude tmp --exclude spec/fixtures/vcr_cassettes",
+    fd_opts = "--color=never --type f --hidden --follow --no-ignore --exclude .git --exclude public --exclude node_modules --exclude tmp --exclude spec/fixtures/vcr_cassettes",
     git_icons = false
   },
   buffers = {

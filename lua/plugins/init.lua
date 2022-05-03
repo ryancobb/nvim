@@ -1,14 +1,13 @@
-return require('packer').startup({function(use)
+local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+end
+
+require('packer').startup({function(use)
   use {
     'wbthomason/packer.nvim',
     'neovim/nvim-lspconfig',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
-    'L3MON4D3/LuaSnip',
-    'saadparwaiz1/cmp_luasnip',
-    'onsails/lspkind-nvim',
     'williamboman/nvim-lsp-installer',
     'famiu/bufdelete.nvim',
     'fladson/vim-kitty',
@@ -24,11 +23,96 @@ return require('packer').startup({function(use)
     'sindrets/diffview.nvim',
     'ray-x/lsp_signature.nvim',
     'simrat39/symbols-outline.nvim',
+    'onsails/lspkind.nvim',
   }
 
   use {
-    'hrsh7th/nvim-cmp',
-    config = function() require('plugins.configs.cmp') end
+    'kevinhwang91/nvim-hlslens',
+    config = function()
+      local kopts = {noremap = true, silent = true}
+
+      vim.api.nvim_set_keymap('n', 'n',
+        [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+        kopts)
+      vim.api.nvim_set_keymap('n', 'N',
+        [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+        kopts)
+      vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+      vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+      vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+      vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+
+      require('hlslens').setup({
+        calm_down = true,
+        nearest_only = true
+      })
+    end
+
+  }
+
+  use {
+    'ms-jpq/coq_nvim',
+    branch = 'coq',
+    config = function()
+      vim.g.coq_settings = {
+        keymap = {
+          recommended = false,
+          jump_to_mark = "null"
+        },
+        auto_start = 'shut-up',
+        display = {
+          icons = {
+            mode = 'short'
+          },
+          pum = {
+            fast_close = false
+          }
+        }
+      }
+
+      require('coq')
+
+      local remap = vim.api.nvim_set_keymap
+      local npairs = require('nvim-autopairs')
+
+      npairs.setup({ map_bs = false, map_cr = false })
+
+      -- these mappings are coq recommended mappings unrelated to nvim-autopairs
+      remap('i', '<esc>', [[pumvisible() ? "<c-e><esc>" : "<esc>"]], { expr = true, noremap = true })
+      remap('i', '<c-c>', [[pumvisible() ? "<c-e><c-c>" : "<c-c>"]], { expr = true, noremap = true })
+      remap('i', '<tab>', [[pumvisible() ? "<c-n>" : "<tab>"]], { expr = true, noremap = true })
+      remap('i', '<s-tab>', [[pumvisible() ? "<c-p>" : "<bs>"]], { expr = true, noremap = true })
+
+      -- skip it, if you use another global object
+      _G.MUtils= {}
+
+      MUtils.CR = function()
+        if vim.fn.pumvisible() ~= 0 then
+          if vim.fn.complete_info({ 'selected' }).selected ~= -1 then
+            return npairs.esc('<c-y>')
+          else
+            return npairs.esc('<c-e>') .. npairs.autopairs_cr()
+          end
+        else
+          return npairs.autopairs_cr()
+        end
+      end
+      remap('i', '<cr>', 'v:lua.MUtils.CR()', { expr = true, noremap = true })
+
+      MUtils.BS = function()
+        if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ 'mode' }).mode == 'eval' then
+          return npairs.esc('<c-e>') .. npairs.autopairs_bs()
+        else
+          return npairs.autopairs_bs()
+        end
+      end
+      remap('i', '<bs>', 'v:lua.MUtils.BS()', { expr = true, noremap = true })
+    end
+  }
+
+  use {
+    'ms-jpq/coq.artifacts',
+    branch = 'artifacts'
   }
 
   use {
@@ -80,11 +164,6 @@ return require('packer').startup({function(use)
   use {
     'andymass/vim-matchup',
     config = function() require('plugins.configs.vim-matchup') end
-  }
-
-  use {
-    'iamcco/markdown-preview.nvim',
-    run = 'cd app && yarn install'
   }
 
   use {
