@@ -39,11 +39,10 @@ cmp.setup {
     end, { "i", "s" }),
   }),
   sources = cmp.config.sources({
-    { name = 'buffer' },
-    { name = 'luasnip' },
     { name = 'nvim_lsp' },
-    { name = 'path' },
-    { name = 'nvim_lua'},
+    { name = 'luasnip' },
+    { name = 'buffer' },
+    { name = 'path'}
   }),
   formatting = {
     format = lspkind.cmp_format({
@@ -62,8 +61,10 @@ cmp.setup.cmdline('/', {
 
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources(
-    {{ name = 'path' }},
-    {{ name = 'cmdline' }}
-  )
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+      { name = 'cmdline' }
+    })
 })
+

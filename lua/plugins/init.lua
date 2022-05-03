@@ -1,5 +1,37 @@
 return require('packer').startup({function(use)
   use {
+    'wbthomason/packer.nvim',
+    'neovim/nvim-lspconfig',
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-cmdline',
+    'L3MON4D3/LuaSnip',
+    'saadparwaiz1/cmp_luasnip',
+    'onsails/lspkind-nvim',
+    'williamboman/nvim-lsp-installer',
+    'famiu/bufdelete.nvim',
+    'fladson/vim-kitty',
+    'google/vim-jsonnet',
+    'towolf/vim-helm',
+    'lambdalisue/suda.vim',
+    'rebelot/kanagawa.nvim',
+    'RRethy/nvim-treesitter-endwise',
+    'lewis6991/impatient.nvim',
+    'mrjones2014/smart-splits.nvim',
+    'gbprod/cutlass.nvim',
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    'sindrets/diffview.nvim',
+    'ray-x/lsp_signature.nvim',
+    'simrat39/symbols-outline.nvim',
+  }
+
+  use {
+    'hrsh7th/nvim-cmp',
+    config = function() require('plugins.configs.cmp') end
+  }
+
+  use {
     'nvim-treesitter/nvim-treesitter',
     config = function() require('plugins.configs.treesitter') end
   }
@@ -16,21 +48,6 @@ return require('packer').startup({function(use)
   }
 
   use {
-    'hrsh7th/nvim-cmp',
-    config = function() require('plugins.configs.cmp') end
-  }
-
-  use {
-    'hrsh7th/cmp-nvim-lsp',
-    'onsails/lspkind-nvim',
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
-    'L3MON4D3/LuaSnip',
-    'saadparwaiz1/cmp_luasnip',
-  }
-
-  use {
     'windwp/nvim-autopairs',
     config = function() require('plugins.configs.autopairs') end
   }
@@ -43,11 +60,6 @@ return require('packer').startup({function(use)
   use {
     'folke/which-key.nvim',
     config = function() require('which-key').setup() end
-  }
-
-  use {
-    'kevinhwang91/nvim-hlslens',
-    config = function() require('plugins.configs.hlslens') end
   }
 
   use {
@@ -130,37 +142,6 @@ return require('packer').startup({function(use)
   use {
     'kdheepak/lazygit.nvim',
     config = function() require('plugins.configs.lazygit') end
-  }
-
-  use {
-    'dstein64/nvim-scrollview',
-    config = function() require('scrollview').setup({
-      current_only = true,
-      winblend = 100
-    })
-    end
-  }
-
-  use { 'ray-x/lsp_signature.nvim' }
-
-  use { 'simrat39/symbols-outline.nvim' }
-
-  use {
-    'wbthomason/packer.nvim',
-    'neovim/nvim-lspconfig',
-    'williamboman/nvim-lsp-installer',
-    'famiu/bufdelete.nvim',
-    'fladson/vim-kitty',
-    'google/vim-jsonnet',
-    'towolf/vim-helm',
-    'lambdalisue/suda.vim',
-    'rebelot/kanagawa.nvim',
-    'RRethy/nvim-treesitter-endwise',
-    'lewis6991/impatient.nvim',
-    'mrjones2014/smart-splits.nvim',
-    'gbprod/cutlass.nvim',
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    'sindrets/diffview.nvim',
   }
 end,
 
