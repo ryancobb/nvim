@@ -125,28 +125,44 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-vim.keymap.set('n', '<leader><space>', function()
-	require('fzf-lua').buffers({ fzf_opts = { ['--keep-right'] = '' } })
-end)
-vim.keymap.set('n', '<leader>?', function()
-	require('fzf-lua').oldfiles({ fzf_opts = { ['--keep-right'] = '' } })
-end)
-vim.keymap.set('n', '<leader>f', require('fzf-lua').files)
-vim.keymap.set('n', '<leader>st', require('fzf-lua').live_grep_glob)
-vim.keymap.set('n', '<leader>sc', require('fzf-lua').grep_cword)
-vim.keymap.set('n', '<leader>sr', require('fzf-lua').resume)
-vim.keymap.set('n', '<leader>sa', function()
-  require('fzf-lua').files({fzf_opts = { ['--query'] = vim.fn.expand('%:t:r'):gsub('_spec', '')}})
-end)
+local wk = require('which-key')
+wk.register({
+  ['<leader>'] = {
+    ['<space>'] = {
+      function() require('fzf-lua').buffers({ fzf_opts = { ['--keep-right'] = '' } }) end,
+      'buffers'
+    },
+    ['?'] = {
+      function() require('fzf-lua').oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end,
+      'old files'
+    },
+    f = { require('fzf-lua').files, 'find files' },
+    c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
+    q = { '<C-w>q', 'quit window'},
+    e = { ':NeoTreeShowToggle<CR>', 'neotree'},
+    r = { ':Neotree reveal<CR>', 'reveal file'}
 
-vim.keymap.set('n', '<leader>c', function() require('bufdelete').bufdelete(0, true) end)
-vim.keymap.set('n', '<leader>q', '<C-w>q')
-
-vim.keymap.set('n', '<leader>yf', ':let @+=fnamemodify(expand("%"), ":~:.")<CR>', { silent = true }) -- yank file path
-vim.keymap.set('n', '<leader>yl', ':let @+=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>', { silent = true}) -- yank path with line
-
-vim.keymap.set('n', '<leader>e', ':Neotree<CR>', { silent = true })
-vim.keymap.set('n', '<leader>r', ':Neotree reveal<CR>', { silent = true})
+  },
+  ['<leader>s'] = {
+    name = 'search',
+    t = { require('fzf-lua').live_grep_glob, 'text' },
+    c = { require('fzf-lua').grep_cword, 'cursor word' },
+    r = { require('fzf-lua').resume, 'resume' },
+    a = {
+      function()
+        require('fzf-lua').files({fzf_opts = { ['--query'] = vim.fn.expand('%:t:r'):gsub('_spec', '')}})
+      end,
+      'alternate files'
+    }
+  },
+  ['<leader>y'] = {
+    name = 'yank',
+    f = { ':let @+=fnamemodify(expand("%"), ":~:.")<CR>', 'file path' },
+    l = { ':let @+=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>', 'path w/ line'}
+  },
+  ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
+  [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
+})
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
@@ -159,9 +175,6 @@ vim.keymap.set('n', '<C-left>', require('smart-splits').resize_left)
 vim.keymap.set('n', '<C-right>', require('smart-splits').resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd> :noh <cr>', { silent = true })
-
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
 vim.keymap.set('v', '<s-k>', ":m-2<CR>gv=gv")
@@ -197,10 +210,15 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.g.terminal_direction='horizontal'
 
+wk.register({
+  ['<leader>t'] = {
+    name = 'toggle',
+    v = { function() vim.g.terminal_direction='vertical' end, 'term vertical' },
+    h = { function() vim.g.terminal_direction='horizontal' end, 'term horizontal' },
+    f = { function() vim.g.terminal_direction='float' end, 'term float' }
+  }
+})
 vim.keymap.set('n', '<c-\\>', '<cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>')
-vim.keymap.set('n', '<leader>tv', function() vim.g.terminal_direction='vertical' end)
-vim.keymap.set('n', '<leader>th', function() vim.g.terminal_direction='horizontal' end)
-vim.keymap.set('n', '<leader>tf', function() vim.g.terminal_direction='float' end)
 
 vim.api.nvim_command('autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-\\> <Cmd>exe v:count1 . "ToggleTerm"<CR>')
 
@@ -343,6 +361,26 @@ require('gitsigns').setup{
       vim.keymap.set(mode, l, r, opts)
     end
 
+    wk.register({
+      ['<leader>h'] = {
+        name = 'hunk (git)',
+        s = { ':Gitsigns stage_hunk<CR>', 'stage hunk' },
+        r = { ':Gitsigns reset_hunk<CR>', 'reset hunk' },
+        S = { gs.stage_buffer, 'stage buffer' },
+        u = { gs.undo_stage_hunk, 'undo stage hunk' },
+        R = { gs.reset_buffer, 'reset buffer' },
+        p = { gs.preview_hunk, 'preview hunk' },
+        b = { function() gs.blame_line{full=true} end, 'blame line'},
+        d = { gs.diffthis, 'diff' },
+        D = { function() gs.diffthis('~') end, 'diff (~)'}
+      },
+      ['<leader>t'] = {
+        name = 'toggle',
+        b = { gs.toggle_current_line_blame, 'line blame' },
+        d = { gs.toggle_deleted, 'deleted' }
+      }
+    })
+
     -- Navigation
     map('n', ']c', function()
       if vim.wo.diff then return ']c' end
@@ -355,19 +393,6 @@ require('gitsigns').setup{
       vim.schedule(function() gs.prev_hunk() end)
       return '<Ignore>'
     end, {expr=true})
-
-    -- Actions
-    map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>')
-    map({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>')
-    map('n', '<leader>hS', gs.stage_buffer)
-    map('n', '<leader>hu', gs.undo_stage_hunk)
-    map('n', '<leader>hR', gs.reset_buffer)
-    map('n', '<leader>hp', gs.preview_hunk)
-    map('n', '<leader>hb', function() gs.blame_line{full=true} end)
-    map('n', '<leader>tb', gs.toggle_current_line_blame)
-    map('n', '<leader>hd', gs.diffthis)
-    map('n', '<leader>hD', function() gs.diffthis('~') end)
-    map('n', '<leader>td', gs.toggle_deleted)
 
     -- Text object
     map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
@@ -494,19 +519,26 @@ require("nvim-lsp-installer").setup {}
 local lspconfig = require 'lspconfig'
 local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+
+  wk.register({
+    ['gD'] = { vim.lsp.buf.declaration, 'declaration' },
+    ['gd'] = { vim.lsp.buf.definition, 'definition' },
+    K = { vim.lsp.buf.hover, 'hover' },
+    ['gi'] = { vim.lsp.buf.implementation, 'implementation' },
+    ['<leader>D'] = { vim.lsp.buf.type_definition, 'type definition' },
+    ['<leader>rn'] = { vim.lsp.buf.rename, 'rename' },
+    ['gr'] = { vim.lsp.buf.references, 'references' },
+    ['<leader>ca'] = { vim.lsp.buf.code_action, 'code action' },
+    ['<leader>so'] = {
+      function()
+        require('fzf-lua').lsp_document_symbols({fzf_cli_args='--with-nth=2..'})
+      end,
+      'symbols'
+    }
+  }, opts)
+
   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
   vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
-	vim.keymap.set('n', '<leader>so', function()
-		require('fzf-lua').lsp_document_symbols({fzf_cli_args='--with-nth=2..'})
-	end, opts)
 
   require('lsp_signature').on_attach()
 end
