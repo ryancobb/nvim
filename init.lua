@@ -10,9 +10,10 @@ pcall(require, 'impatient')
 -- options -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
+vim.g.Illuminate_delay = 1000
 vim.g.did_load_filetypes = 0
 vim.g.do_filetype_lua = 1
-vim.g.Illuminate_delay = 1000
+vim.g.ruby_indent_assignment_style = 'variable'
 
 vim.opt.autoread = true
 vim.opt.clipboard = 'unnamedplus'
@@ -20,15 +21,16 @@ vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.hidden = true
-vim.opt.incsearch = true
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
+vim.opt.incsearch = true
 vim.opt.modeline = false
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.numberwidth = 2
 vim.opt.pumheight = 10
 vim.opt.ruler = false
+vim.opt.scrolloff = 20
 vim.opt.shiftwidth = 2
 vim.opt.shortmess = 'IFa'
 vim.opt.showcmd = false
@@ -36,6 +38,7 @@ vim.opt.showmatch = true
 vim.opt.showmode = false
 vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
+vim.opt.smartindent = false
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.tabstop = 2
@@ -46,7 +49,6 @@ vim.opt.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 vim.opt.undofile = true
 vim.opt.updatetime = 250
 vim.opt.wrap = false
-
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -92,17 +94,17 @@ require('packer').startup(function(use)
   use 'andymass/vim-matchup'
   use 'ibhagwan/fzf-lua'
   use 'kdheepak/lazygit.nvim'
-  use {'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
+  use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('Comment').setup{}
-require('which-key').setup{}
-require('nvim-autopairs').setup{}
-require('fidget').setup{}
+require('Comment').setup {}
+require('which-key').setup {}
+require('nvim-autopairs').setup {}
+require('fidget').setup {}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- theme ---------------------------------------------------------------------------------------------------------------------------
@@ -138,9 +140,9 @@ wk.register({
     },
     f = { require('fzf-lua').files, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
-    q = { '<C-w>q', 'quit window'},
-    e = { ':NeoTreeShowToggle<CR>', 'neotree'},
-    r = { ':Neotree reveal<CR>', 'reveal file'}
+    q = { '<C-w>q', 'quit window' },
+    e = { ':NeoTreeShowToggle<CR>', 'neotree' },
+    r = { ':Neotree reveal<CR>', 'reveal file' }
 
   },
   ['<leader>s'] = {
@@ -150,7 +152,7 @@ wk.register({
     r = { require('fzf-lua').resume, 'resume' },
     a = {
       function()
-        require('fzf-lua').files({fzf_opts = { ['--query'] = vim.fn.expand('%:t:r'):gsub('_spec', '')}})
+        require('fzf-lua').files({ fzf_opts = { ['--query'] = vim.fn.expand('%:t:r'):gsub('_spec', '') } })
       end,
       'alternate files'
     }
@@ -158,7 +160,7 @@ wk.register({
   ['<leader>y'] = {
     name = 'yank',
     f = { ':let @+=fnamemodify(expand("%"), ":~:.")<CR>', 'file path' },
-    l = { ':let @+=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>', 'path w/ line'}
+    l = { ':let @+=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>', 'path w/ line' }
   },
   ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
@@ -200,7 +202,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'gitcommit', 'gitrebase', 'gitconfig'},
+  pattern = { 'gitcommit', 'gitrebase', 'gitconfig' },
   command = 'set bufhidden=delete'
 })
 
@@ -208,14 +210,14 @@ vim.api.nvim_create_autocmd('FileType', {
 -- toggleterm ----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-vim.g.terminal_direction='horizontal'
+vim.g.terminal_direction = 'horizontal'
 
 wk.register({
   ['<leader>t'] = {
     name = 'toggle',
-    v = { function() vim.g.terminal_direction='vertical' end, 'term vertical' },
-    h = { function() vim.g.terminal_direction='horizontal' end, 'term horizontal' },
-    f = { function() vim.g.terminal_direction='float' end, 'term float' }
+    v = { function() vim.g.terminal_direction = 'vertical' end, 'term vertical' },
+    h = { function() vim.g.terminal_direction = 'horizontal' end, 'term horizontal' },
+    f = { function() vim.g.terminal_direction = 'float' end, 'term float' }
   }
 })
 vim.keymap.set('n', '<c-\\>', '<cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>')
@@ -261,11 +263,11 @@ local function diff_source()
 end
 
 local function lsp_client_names()
-	local client_names = {}
-	for _, client in ipairs(vim.lsp.get_active_clients()) do
-		table.insert(client_names, client.name)
-	end
-	return table.concat(client_names, ",")
+  local client_names = {}
+  for _, client in ipairs(vim.lsp.get_active_clients()) do
+    table.insert(client_names, client.name)
+  end
+  return table.concat(client_names, ",")
 end
 
 local treesitter = {
@@ -294,10 +296,10 @@ require('lualine').setup {
   },
   sections = {
     lualine_a = {
-      { function() return ' ' end, padding = { left = 0, right = 0} },
+      { function() return ' ' end, padding = { left = 0, right = 0 } },
     },
     lualine_b = {
-      {'b:gitsigns_head', icon = ''},
+      { 'b:gitsigns_head', icon = '' },
     },
     lualine_c = {
       filename,
@@ -312,7 +314,7 @@ require('lualine').setup {
     lualine_z = {
       {
         function() return ' ' end,
-        padding = { left = 0, right = 0}
+        padding = { left = 0, right = 0 }
       }
     },
   },
@@ -351,7 +353,7 @@ require('indent_blankline').setup {
 -- gitsigns ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('gitsigns').setup{
+require('gitsigns').setup {
   on_attach = function(bufnr)
     local gs = package.loaded.gitsigns
 
@@ -370,9 +372,9 @@ require('gitsigns').setup{
         u = { gs.undo_stage_hunk, 'undo stage hunk' },
         R = { gs.reset_buffer, 'reset buffer' },
         p = { gs.preview_hunk, 'preview hunk' },
-        b = { function() gs.blame_line{full=true} end, 'blame line'},
+        b = { function() gs.blame_line { full = true } end, 'blame line' },
         d = { gs.diffthis, 'diff' },
-        D = { function() gs.diffthis('~') end, 'diff (~)'}
+        D = { function() gs.diffthis('~') end, 'diff (~)' }
       },
       ['<leader>t'] = {
         name = 'toggle',
@@ -386,16 +388,16 @@ require('gitsigns').setup{
       if vim.wo.diff then return ']c' end
       vim.schedule(function() gs.next_hunk() end)
       return '<Ignore>'
-    end, {expr=true})
+    end, { expr = true })
 
     map('n', '[c', function()
       if vim.wo.diff then return '[c' end
       vim.schedule(function() gs.prev_hunk() end)
       return '<Ignore>'
-    end, {expr=true})
+    end, { expr = true })
 
     -- Text object
-    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+    map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
   end
 }
 
@@ -437,7 +439,7 @@ require('fzf-lua').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('nvim-treesitter.configs').setup {
-  highlight = {
+  highlight             = {
     enable = true, -- false will disable the whole extension
   },
   incremental_selection = {
@@ -449,17 +451,17 @@ require('nvim-treesitter.configs').setup {
       node_decremental = 'grm',
     },
   },
-  indent = {
+  indent                = {
     enable = true,
     disable = { 'ruby' }
   },
-  matchup = {
+  matchup               = {
     enable = true
   },
-  endwise  = {
+  endwise               = {
     enable = true
   },
-  textobjects = {
+  textobjects           = {
     select = {
       enable = true,
       lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
@@ -503,15 +505,15 @@ vim.diagnostic.config({
 })
 
 local signs = {
-    Error = " ",
-    Warn = " ",
-    Hint = " ",
-    Info = " "
+  Error = " ",
+  Warn = " ",
+  Hint = " ",
+  Info = " "
 }
 
 for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = hl})
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
 require("nvim-lsp-installer").setup {}
@@ -531,14 +533,17 @@ local on_attach = function(_, bufnr)
     ['<leader>ca'] = { vim.lsp.buf.code_action, 'code action' },
     ['<leader>so'] = {
       function()
-        require('fzf-lua').lsp_document_symbols({fzf_cli_args='--with-nth=2..'})
+        require('fzf-lua').lsp_document_symbols({ fzf_cli_args = '--with-nth=2..' })
       end,
       'symbols'
+    },
+    ['<leader>l'] = {
+      name = 'lsp',
+      f = { vim.lsp.buf.formatting, 'format' }
     }
   }, opts)
 
   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-  vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
 
   require('lsp_signature').on_attach()
 end
@@ -602,7 +607,7 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local lspkind = require('lspkind')
 local luasnip = require 'luasnip'
 
-cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({  map_char = { tex = '' } }))
+cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done({ map_char = { tex = '' } }))
 
 cmp.setup {
   formatting = {
@@ -654,15 +659,15 @@ cmp.setup {
 cmp.setup.cmdline('/', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
-    { name = 'buffer'}
+    { name = 'buffer' }
   })
 })
 
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources(
-    {{ name = 'path' }},
-    {{ name = 'cmdline' }}
+    { { name = 'path' } },
+    { { name = 'cmdline' } }
   )
 })
 
@@ -680,31 +685,31 @@ require('neo-tree').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 local default_plugins = {
-   "2html_plugin",
-   "getscript",
-   "getscriptPlugin",
-   "gzip",
-   "logipat",
-   "netrw",
-   "netrwPlugin",
-   "netrwSettings",
-   "netrwFileHandlers",
-   "matchit",
-   "tar",
-   "tarPlugin",
-   "rrhelper",
-   "spellfile_plugin",
-   "vimball",
-   "vimballPlugin",
-   "zip",
-   "zipPlugin",
+  "2html_plugin",
+  "getscript",
+  "getscriptPlugin",
+  "gzip",
+  "logipat",
+  "netrw",
+  "netrwPlugin",
+  "netrwSettings",
+  "netrwFileHandlers",
+  "matchit",
+  "tar",
+  "tarPlugin",
+  "rrhelper",
+  "spellfile_plugin",
+  "vimball",
+  "vimballPlugin",
+  "zip",
+  "zipPlugin",
 }
 
 for _, plugin in pairs(default_plugins) do
-   vim.g["loaded_" .. plugin] = 1
+  vim.g["loaded_" .. plugin] = 1
 end
 
 vim.schedule(function()
-   vim.opt.shadafile = vim.fn.expand "$HOME" .. "/.local/share/nvim/shada/main.shada"
-   vim.cmd [[ silent! rsh ]]
+  vim.opt.shadafile = vim.fn.expand "$HOME" .. "/.local/share/nvim/shada/main.shada"
+  vim.cmd [[ silent! rsh ]]
 end)
