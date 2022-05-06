@@ -30,7 +30,7 @@ vim.opt.number = true
 vim.opt.numberwidth = 2
 vim.opt.pumheight = 10
 vim.opt.ruler = false
-vim.opt.scrolloff = 20
+vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 2
 vim.opt.shortmess = 'IFa'
 vim.opt.showcmd = false
@@ -95,6 +95,7 @@ require('packer').startup(function(use)
   use 'ibhagwan/fzf-lua'
   use 'kdheepak/lazygit.nvim'
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
+  use 'vim-test/vim-test'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -152,15 +153,15 @@ wk.register({
     r = { require('fzf-lua').resume, 'resume' },
     a = {
       function()
-        require('fzf-lua').files({ fzf_opts = { ['--query'] = vim.fn.expand('%:t:r'):gsub('_spec', '') } })
+        require('fzf-lua').files({ fzf_opts = { ['--query'] = '"'..vim.fn.expand('%:t:r'):gsub('_spec', '')..' !'..vim.fn.expand('%t:r')..'"' } })
       end,
       'alternate files'
     }
   },
   ['<leader>y'] = {
     name = 'yank',
-    f = { ':let @+=fnamemodify(expand("%"), ":~:.")<CR>', 'file path' },
-    l = { ':let @+=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>', 'path w/ line' }
+    f = { ':TestFile', '(test) file' },
+    l = { ':TestNearest', '(test) nearest' }
   },
   ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
@@ -175,6 +176,9 @@ vim.keymap.set('n', '<C-up>', require('smart-splits').resize_up)
 vim.keymap.set('n', '<C-down>', require('smart-splits').resize_down)
 vim.keymap.set('n', '<C-left>', require('smart-splits').resize_left)
 vim.keymap.set('n', '<C-right>', require('smart-splits').resize_right)
+
+vim.keymap.set('n', '<tab>', ':bnext<cr>')
+vim.keymap.set('n', '<s-tab>', ':bprevious<cr>')
 
 vim.keymap.set('n', '<Esc>', '<cmd> :noh <cr>', { silent = true })
 
@@ -201,10 +205,32 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
+------------------------------------------------------------------------------------------------------------------------------------
+-- nvr -----------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'gitcommit', 'gitrebase', 'gitconfig' },
   command = 'set bufhidden=delete'
 })
+
+vim.cmd [[ 
+  if has('nvim') && executable('nvr')
+    let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  endif
+]]
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- vim-test ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+vim.g['test#custom_strategies'] = {
+  yank = function(cmd)
+    vim.cmd('let @+="'..cmd..'"')
+  end
+}
+
+vim.g['test#strategy'] = 'yank'
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- toggleterm ----------------------------------------------------------------------------------------------------------------------
@@ -543,7 +569,7 @@ local on_attach = function(_, bufnr)
     }
   }, opts)
 
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+  -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
 
   require('lsp_signature').on_attach()
 end
