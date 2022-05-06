@@ -161,7 +161,7 @@ wk.register({
   ['<leader>y'] = {
     name = 'yank',
     f = { ':TestFile', '(test) file' },
-    l = { ':TestNearest', '(test) nearest' }
+    n = { ':TestNearest', '(test) nearest' }
   },
   ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
