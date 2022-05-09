@@ -71,6 +71,7 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
+  use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'williamboman/nvim-lsp-installer'
@@ -83,7 +84,6 @@ require('packer').startup(function(use)
   use 'lewis6991/impatient.nvim'
   use 'mrjones2014/smart-splits.nvim'
   use 'sindrets/diffview.nvim'
-  use 'ray-x/lsp_signature.nvim'
   use 'simrat39/symbols-outline.nvim'
   use 'onsails/lspkind.nvim'
   use 'windwp/nvim-autopairs'
@@ -499,6 +499,15 @@ require('nvim-treesitter.configs').setup {
         ['ic'] = '@class.inner',
       },
     },
+    swap = {
+      enable = true,
+      swap_next = {
+        ['<leader>a'] = '@parameter.inner',
+      },
+      swap_previous = {
+        ['<leader>A'] = '@parameter.inner',
+      }
+    },
     move = {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist
@@ -568,10 +577,6 @@ local on_attach = function(_, bufnr)
       f = { vim.lsp.buf.formatting, 'format' }
     }
   }, opts)
-
-  -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-
-  require('lsp_signature').on_attach()
 end
 
 -- nvim-cmp supports additional completion capabilities
@@ -678,7 +683,8 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
-    { name = 'buffer' }
+    { name = 'buffer' },
+    { name = 'nvim_lsp_signature_help' }
   },
 }
 
