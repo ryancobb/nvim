@@ -96,6 +96,7 @@ require('packer').startup(function(use)
   use 'kdheepak/lazygit.nvim'
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
   use 'vim-test/vim-test'
+  use "folke/lua-dev.nvim"
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -153,7 +154,7 @@ wk.register({
     r = { require('fzf-lua').resume, 'resume' },
     a = {
       function()
-        require('fzf-lua').files({ fzf_opts = { ['--query'] = '"'..vim.fn.expand('%:t:r'):gsub('_spec', '')..' !'..vim.fn.expand('%t:r')..'"' } })
+        require('fzf-lua').files({ fzf_opts = { ['--query'] = '"' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. ' !' .. vim.fn.expand('%t:r') .. '"' } })
       end,
       'alternate files'
     }
@@ -162,6 +163,10 @@ wk.register({
     name = 'yank',
     f = { ':TestFile<CR>', '(test) file' },
     n = { ':TestNearest<CR>', '(test) nearest' }
+  },
+  ['<leader>h'] = {
+    name = 'hunk (git)',
+    g = { ':LazyGit<CR>', 'lazygit' }
   },
   ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
@@ -214,7 +219,7 @@ vim.api.nvim_create_autocmd('FileType', {
   command = 'set bufhidden=delete'
 })
 
-vim.cmd [[ 
+vim.cmd [[
   if has('nvim') && executable('nvr')
     let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
   endif
@@ -226,7 +231,7 @@ vim.cmd [[
 
 vim.g['test#custom_strategies'] = {
   yank = function(cmd)
-    vim.cmd('let @+="'..cmd..'"')
+    vim.cmd('let @+="' .. cmd .. '"')
   end
 }
 
@@ -551,9 +556,11 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-require("nvim-lsp-installer").setup {}
-
+local lspinstaller = require 'nvim-lsp-installer'
 local lspconfig = require 'lspconfig'
+
+lspinstaller.setup {}
+
 local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
 
@@ -565,7 +572,12 @@ local on_attach = function(_, bufnr)
     ['<leader>D'] = { vim.lsp.buf.type_definition, 'type definition' },
     ['<leader>rn'] = { vim.lsp.buf.rename, 'rename' },
     ['gr'] = { vim.lsp.buf.references, 'references' },
-    ['<leader>ca'] = { vim.lsp.buf.code_action, 'code action' },
+    ['<leader>la'] = {
+      function()
+        require('fzf-lua').lsp_code_actions({ winopts = { height = 0.15, width = 0.30 } })
+      end,
+      'code actions'
+    },
     ['<leader>so'] = {
       function()
         require('fzf-lua').lsp_document_symbols({ fzf_cli_args = '--with-nth=2..' })
@@ -583,51 +595,27 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
--- Enable the following language servers
-local servers = { 'html', 'tsserver', 'vuels', 'gopls', 'yamlls' }
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-  }
+for _, server in ipairs(lspinstaller.get_installed_servers()) do
+  if server.name == 'sumneko_lua' then
+    lspconfig.sumneko_lua.setup(require('lua-dev').setup {
+      lspconfig = {
+        on_attach = on_attach,
+        capabilities = capabilities
+      }
+    })
+  elseif server.name == 'solargraph' then
+    lspconfig.solargraph.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      cmd = { '/Users/ryancobb/.asdf/shims/solargraph', 'stdio' }
+    }
+  else
+    lspconfig[server.name].setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+    }
+  end
 end
-
-local runtime_path = vim.split(package.path, ';')
-table.insert(runtime_path, 'lua/?.lua')
-table.insert(runtime_path, 'lua/?/init.lua')
-
-lspconfig.sumneko_lua.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    Lua = {
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT',
-        -- Setup your lua path
-        path = runtime_path,
-      },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = { 'vim' },
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = vim.api.nvim_get_runtime_file('', true),
-      },
-      -- Do not send telemetry data containing a randomized but unique identifier
-      telemetry = {
-        enable = false,
-      },
-    },
-  },
-}
-
-lspconfig.solargraph.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  cmd = { '/Users/ryancobb/.asdf/shims/solargraph', 'stdio' }
-}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- cmp -----------------------------------------------------------------------------------------------------------------------------
