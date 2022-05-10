@@ -210,6 +210,19 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
+local cursorline_group = vim.api.nvim_create_augroup('CursorLine', { clear = true })
+vim.api.nvim_create_autocmd({'VimEnter', 'WinEnter', 'BufWinEnter'}, {
+  command = 'setlocal cursorline',
+  group = cursorline_group,
+  pattern = '*'
+})
+
+vim.api.nvim_create_autocmd('WinLeave', {
+  command = 'setlocal nocursorline',
+  group = cursorline_group,
+  pattern = '*'
+})
+
 ------------------------------------------------------------------------------------------------------------------------------------
 -- nvr -----------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -265,9 +278,7 @@ require('toggleterm').setup {
   end,
   open_mapping = nil,
   hide_numbers = true,
-  shade_filetypes = {},
   shade_terminals = false,
-  shading_factor = 0.5,
   start_in_insert = false,
   insert_mappings = true, -- whether or not the open mapping applies in insert mode
   persist_size = true,
@@ -275,6 +286,11 @@ require('toggleterm').setup {
   close_on_exit = false, -- close the terminal window when the process exits
   float_opts = {
     border = 'curved'
+  },
+  highlights = {
+    NormalNC = {
+      link = 'NormalNC'
+    }
   }
 }
 
