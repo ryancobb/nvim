@@ -603,12 +603,6 @@ for _, server in ipairs(lspinstaller.get_installed_servers()) do
         capabilities = capabilities
       }
     })
-  elseif server.name == 'solargraph' then
-    lspconfig.solargraph.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      cmd = { '/Users/ryancobb/.asdf/shims/solargraph', 'stdio' }
-    }
   else
     lspconfig[server.name].setup {
       on_attach = on_attach,
@@ -616,6 +610,12 @@ for _, server in ipairs(lspinstaller.get_installed_servers()) do
     }
   end
 end
+
+lspconfig.solargraph.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = { '/Users/ryancobb/.asdf/shims/solargraph', 'stdio' }
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- cmp -----------------------------------------------------------------------------------------------------------------------------
