@@ -95,6 +95,7 @@ require('packer').startup(function(use)
   use 'ibhagwan/fzf-lua'
   use 'kdheepak/lazygit.nvim'
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
+  use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'vim-test/vim-test'
   use "folke/lua-dev.nvim"
 end)
@@ -716,9 +717,26 @@ cmp.setup.cmdline(':', {
 -- neotree -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
+require('window-picker').setup {
+  autoselect_one = true,
+  include_current = false,
+  filter_rules = {
+    bo = {
+      filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix' },
+      buftype = { 'toggleterm' }
+    }
+  },
+  other_win_hl_color = '#2D4F67'
+}
+
 require('neo-tree').setup {
   enable_diagnostics = false,
-  filesystem = { filtered_items = { visible = true } }
+  filesystem = { filtered_items = { visible = true } },
+  window = {
+    mappings = {
+      ['<cr>'] = 'open_with_window_picker'
+    }
+  }
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
