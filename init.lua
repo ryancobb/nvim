@@ -97,7 +97,7 @@ require('packer').startup(function(use)
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'vim-test/vim-test'
-  use "folke/lua-dev.nvim"
+  use 'folke/lua-dev.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -109,6 +109,7 @@ require('which-key').setup {}
 require('nvim-autopairs').setup {}
 require('fidget').setup {}
 
+local fzflua = require('fzf-lua')
 ------------------------------------------------------------------------------------------------------------------------------------
 -- theme ---------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -133,15 +134,9 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = {
-      function() require('fzf-lua').buffers({ fzf_opts = { ['--keep-right'] = '' } }) end,
-      'buffers'
-    },
-    ['?'] = {
-      function() require('fzf-lua').oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end,
-      'old files'
-    },
-    f = { require('fzf-lua').files, 'find files' },
+    ['<space>'] = { function() fzflua.buffers({ fzf_opts = { ['--keep-right'] = '' } }) end, 'buffers' },
+    ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
+    f = { fzflua.files, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
     q = { '<C-w>q', 'quit window' },
     e = { ':NeoTreeShowToggle<CR>', 'neotree' },
@@ -150,15 +145,10 @@ wk.register({
   },
   ['<leader>s'] = {
     name = 'search',
-    t = { require('fzf-lua').live_grep_glob, 'text' },
-    c = { require('fzf-lua').grep_cword, 'cursor word' },
-    r = { require('fzf-lua').resume, 'resume' },
-    a = {
-      function()
-        require('fzf-lua').files({ fzf_opts = { ['--query'] = '"' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. ' !' .. vim.fn.expand('%t:r') .. '"' } })
-      end,
-      'alternate files'
-    }
+    t = { fzflua.live_grep_glob, 'text' },
+    c = { fzflua.grep_cword, 'cursor word' },
+    r = { fzflua.resume, 'resume' },
+    a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. ' !' .. vim.fn.expand('%') .. '"' } }) end, 'alternate files' }
   },
   ['<leader>y'] = {
     name = 'yank',
@@ -212,7 +202,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 local cursorline_group = vim.api.nvim_create_augroup('CursorLine', { clear = true })
-vim.api.nvim_create_autocmd({'VimEnter', 'WinEnter', 'BufWinEnter'}, {
+vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
   command = 'setlocal cursorline',
   group = cursorline_group,
   pattern = '*'
@@ -458,7 +448,7 @@ require('gitsigns').setup {
 -- fzflua --------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('fzf-lua').setup {
+fzflua.setup {
   keymap = {
     fzf = {
       ['tab'] = 'down',
@@ -471,10 +461,12 @@ require('fzf-lua').setup {
     height = 0.90,
     width = 0.90,
     col = 0.50,
-    preview = { default = 'bat_native' }
   },
   files = {
     fd_opts = "--color=never --type f --hidden --follow --no-ignore --exclude .git --exclude public --exclude node_modules --exclude tmp --exclude spec/fixtures/vcr_cassettes",
+    git_icons = false
+  },
+  lsp = {
     git_icons = false
   },
   buffers = {
@@ -482,7 +474,8 @@ require('fzf-lua').setup {
       height = 0.15,
       width = 0.30,
     },
-    previewer = false
+    previewer = false,
+    git_icons = false
   }
 }
 
@@ -587,29 +580,15 @@ local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
 
   wk.register({
-    ['gD'] = { vim.lsp.buf.declaration, 'declaration' },
-    ['gd'] = { vim.lsp.buf.definition, 'definition' },
+    ['gd'] = { function() fzflua.lsp_definitions({ jump_to_single_result = true }) end, 'definition' },
+    ['gr'] = { function() fzflua.lsp_references({ jump_to_single_result = true }) end, 'references' },
     K = { vim.lsp.buf.hover, 'hover' },
-    ['gi'] = { vim.lsp.buf.implementation, 'implementation' },
-    ['<leader>D'] = { vim.lsp.buf.type_definition, 'type definition' },
+    ['<leader>D'] = { fzflua.lsp_typedefs, 'type definition' },
     ['<leader>rn'] = { vim.lsp.buf.rename, 'rename' },
-    ['gr'] = { vim.lsp.buf.references, 'references' },
-    ['<leader>la'] = {
-      function()
-        require('fzf-lua').lsp_code_actions({ winopts = { height = 0.15, width = 0.30 } })
-      end,
-      'code actions'
-    },
-    ['<leader>so'] = {
-      function()
-        require('fzf-lua').lsp_document_symbols({ fzf_cli_args = '--with-nth=2..' })
-      end,
-      'symbols'
-    },
-    ['<leader>l'] = {
-      name = 'lsp',
-      f = { vim.lsp.buf.formatting, 'format' }
-    }
+    ['<leader>la'] = { function() fzflua.lsp_code_actions({ winopts = { height = 0.15, width = 0.30 } }) end, 'code actions' },
+    ['<leader>so'] = { function() fzflua.lsp_document_symbols({ fzf_cli_args = '--with-nth=2..' }) end, 'document symbols' },
+    ['<leader>sO'] = { function() fzflua.lsp_workspace_symbols({ fzf_cli_args = '--with-nth=2..' }) end, 'workspace symbols' },
+    ['<leader>l'] = { name = 'lsp', f = { vim.lsp.buf.formatting, 'format' } }
   }, opts)
 end
 
