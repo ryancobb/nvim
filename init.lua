@@ -93,7 +93,6 @@ require('packer').startup(function(use)
   use 'j-hui/fidget.nvim'
   use 'andymass/vim-matchup'
   use 'ibhagwan/fzf-lua'
-  use 'kdheepak/lazygit.nvim'
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'vim-test/vim-test'
@@ -155,9 +154,9 @@ wk.register({
     f = { ':TestFile<CR>', '(test) file' },
     n = { ':TestNearest<CR>', '(test) nearest' }
   },
-  ['<leader>h'] = {
-    name = 'hunk (git)',
-    g = { ':LazyGit<CR>', 'lazygit' }
+  ['<leader>g'] = {
+    name = 'git',
+    s = { fzflua.git_status, 'status' }
   },
   ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
@@ -476,6 +475,11 @@ fzflua.setup {
     },
     previewer = false,
     git_icons = false
+  },
+  previewers = {
+    git_diff = {
+      pager = 'delta --width $FZF_PREVIEW_COLUMNS'
+    }
   }
 }
 
@@ -701,8 +705,8 @@ require('window-picker').setup {
   include_current = false,
   filter_rules = {
     bo = {
-      filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix' },
-      buftype = { 'toggleterm' }
+      filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix', 'toggleterm' },
+      buftype = {}
     }
   },
   other_win_hl_color = '#2D4F67'
