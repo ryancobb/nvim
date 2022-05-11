@@ -156,7 +156,8 @@ wk.register({
   },
   ['<leader>g'] = {
     name = 'git',
-    s = { fzflua.git_status, 'status' }
+    s = { fzflua.git_status, 'status' },
+    b = { fzflua.git_branches, 'branches' }
   },
   ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
@@ -475,6 +476,11 @@ fzflua.setup {
     },
     previewer = false,
     git_icons = false
+  },
+  git = {
+    branches = {
+      cmd = "git branch --color --sort=-committerdate"
+    }
   },
   previewers = {
     git_diff = {
