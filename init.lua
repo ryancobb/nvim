@@ -93,6 +93,8 @@ require('packer').startup(function(use)
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'vim-test/vim-test'
   use 'folke/lua-dev.nvim'
+  use 'petertriho/nvim-scrollbar'
+  use 'kevinhwang91/nvim-hlslens'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -179,7 +181,7 @@ vim.keymap.set('n', '<C-right>', require('smart-splits').resize_right)
 vim.keymap.set('n', '<tab>', ':bnext<cr>')
 vim.keymap.set('n', '<s-tab>', ':bprevious<cr>')
 
-vim.keymap.set('n', '<Esc>', '<cmd> :noh <cr>', { silent = true })
+vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
 vim.keymap.set('v', '<s-k>', ":m-2<CR>gv=gv")
@@ -236,6 +238,32 @@ vim.cmd [[
     let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
   endif
 ]]
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- hlslens -------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('hlslens').setup {
+  nearest_only = true
+}
+
+vim.keymap.set('n', 'n', [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]])
+vim.keymap.set('n', 'N', [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]])
+vim.keymap.set('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]])
+vim.keymap.set('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]])
+vim.keymap.set('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]])
+vim.keymap.set('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]])
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- scrollbar -----------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('scrollbar').setup {
+  handlers = {
+    diagnostic = false,
+    search = true
+  }
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- vim-test ------------------------------------------------------------------------------------------------------------------------
@@ -340,7 +368,7 @@ require('lualine').setup {
   options = {
     component_separators = '|',
     section_separators = '',
-    disabled_filetypes = { 'neo-tree', 'DiffviewFiles' }
+    disabled_filetypes = { 'neo-tree', 'DiffviewFiles' },
   },
   sections = {
     lualine_a = { padding },
