@@ -57,13 +57,9 @@ require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
-  -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
-  -- Add git related info in the signs columns and popups
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  -- Highlight, edit, and navigate code using a fast incremental parsing library
   use 'nvim-treesitter/nvim-treesitter'
-  -- Additional textobjects for treesitter
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
@@ -109,6 +105,7 @@ require('nvim-autopairs').setup {}
 require('fidget').setup {}
 
 local fzflua = require('fzf-lua')
+
 ------------------------------------------------------------------------------------------------------------------------------------
 -- theme ---------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -157,7 +154,9 @@ wk.register({
   ['<leader>g'] = {
     name = 'git',
     s = { fzflua.git_status, 'status' },
-    b = { fzflua.git_branches, 'branches' }
+    b = { fzflua.git_branches, 'branches' },
+    l = { fzflua.git_commits, 'log' },
+    L = { fzflua.git_bcommits, 'log (buffer)' }
   },
   ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
@@ -324,6 +323,8 @@ local treesitter = {
   color = { fg = '#76946A' }
 }
 
+local padding = { function() return ' ' end, padding = { left = 0, right = 0 } }
+
 local filename = {
   'filename',
   file_status = true,
@@ -338,9 +339,7 @@ require('lualine').setup {
     disabled_filetypes = { 'neo-tree', 'DiffviewFiles' }
   },
   sections = {
-    lualine_a = {
-      { function() return ' ' end, padding = { left = 0, right = 0 } },
-    },
+    lualine_a = { padding },
     lualine_b = {
       { 'b:gitsigns_head', icon = '' },
     },
@@ -354,12 +353,7 @@ require('lualine').setup {
       'filetype'
     },
     lualine_y = {},
-    lualine_z = {
-      {
-        function() return ' ' end,
-        padding = { left = 0, right = 0 }
-      }
-    },
+    lualine_z = { padding },
   },
   inactive_sections = {
     lualine_a = {},
@@ -501,10 +495,10 @@ require('nvim-treesitter.configs').setup {
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = 'gnn',
-      node_incremental = 'grn',
-      scope_incremental = 'grc',
-      node_decremental = 'grm',
+      init_selection = '<CR>',
+      node_incremental = '<CR>',
+      scope_incremental = '<TAB>',
+      node_decremental = '<S-TAB>',
     },
   },
   indent                = {
