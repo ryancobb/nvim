@@ -348,7 +348,7 @@ require('lualine').setup {
     lualine_c = { filename, { 'diff', source = diff_source } },
     lualine_x = { lsp_client_names, treesitter, 'filetype' },
     lualine_y = {},
-    lualine_z = { padding },
+    lualine_z = {},
   },
   inactive_sections = {
     lualine_a = {},
