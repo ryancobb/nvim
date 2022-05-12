@@ -110,10 +110,14 @@ local fzflua = require('fzf-lua')
 -- theme ---------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
+local colors = require('kanagawa.colors').setup()
 require('kanagawa').setup {
   dimInactive = true,
   overrides = {
     Boolean = { link = 'Special' },
+  },
+  colors = {
+    bg_status = colors.sumiInk2
   }
 }
 
@@ -320,7 +324,7 @@ local treesitter = {
     end
     return ""
   end,
-  color = { fg = '#76946A' }
+  color = { fg = colors.springGreen }
 }
 
 local padding = { function() return ' ' end, padding = { left = 0, right = 0 } }
@@ -340,18 +344,9 @@ require('lualine').setup {
   },
   sections = {
     lualine_a = { padding },
-    lualine_b = {
-      { 'b:gitsigns_head', icon = '' },
-    },
-    lualine_c = {
-      filename,
-      { 'diff', source = diff_source },
-    },
-    lualine_x = {
-      lsp_client_names,
-      treesitter,
-      'filetype'
-    },
+    lualine_b = { { 'b:gitsigns_head', icon = '' }, },
+    lualine_c = { filename, { 'diff', source = diff_source } },
+    lualine_x = { lsp_client_names, treesitter, 'filetype' },
     lualine_y = {},
     lualine_z = { padding },
   },
