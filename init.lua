@@ -95,6 +95,7 @@ require('packer').startup(function(use)
   use 'folke/lua-dev.nvim'
   use 'petertriho/nvim-scrollbar'
   use 'kevinhwang91/nvim-hlslens'
+  use 'phaazon/hop.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -181,6 +182,8 @@ vim.keymap.set('n', '<C-right>', require('smart-splits').resize_right)
 vim.keymap.set('n', '<tab>', ':bnext<cr>')
 vim.keymap.set('n', '<s-tab>', ':bprevious<cr>')
 
+vim.keymap.set('n', 'p', "p=`]") -- paste formatting
+
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
@@ -196,7 +199,6 @@ vim.keymap.set('t', '<c-n>', '<c-\\><c-n>')
 -- autocmds ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
--- Highlight on yank
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -238,6 +240,15 @@ vim.cmd [[
     let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
   endif
 ]]
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- hop -----------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require 'hop'.setup()
+
+vim.keymap.set('n', 'f', function() require 'hop'.hint_char1({ direction = require 'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true }) end)
+vim.keymap.set('n', 'F', function() require 'hop'.hint_char1({ direction = require 'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true }) end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- hlslens -------------------------------------------------------------------------------------------------------------------------
@@ -478,6 +489,10 @@ fzflua.setup {
     height = 0.90,
     width = 0.90,
     col = 0.50,
+    preview = {
+      -- default = 'bat_native'
+      delay = 250
+    }
   },
   files = {
     fd_opts = "--color=never --type f --hidden --follow --no-ignore --exclude .git --exclude public --exclude node_modules --exclude tmp --exclude spec/fixtures/vcr_cassettes",
