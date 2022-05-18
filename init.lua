@@ -24,6 +24,7 @@ vim.opt.hidden = true
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.incsearch = true
+vim.opt.laststatus = 3
 vim.opt.modeline = false
 vim.opt.mouse = 'a'
 vim.opt.number = true
@@ -48,7 +49,9 @@ vim.opt.title = true
 vim.opt.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 vim.opt.undofile = true
 vim.opt.updatetime = 250
+vim.opt.winbar = '%f'
 vim.opt.wrap = false
+
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -116,12 +119,10 @@ local fzflua = require('fzf-lua')
 local colors = require('kanagawa.colors').setup()
 require('kanagawa').setup {
   dimInactive = true,
+  globalStatus = true,
   overrides = {
     Boolean = { link = 'Special' },
   },
-  colors = {
-    bg_status = colors.sumiInk2
-  }
 }
 
 vim.cmd [[colorscheme kanagawa]]
@@ -162,8 +163,8 @@ wk.register({
     name = 'git',
     s = { fzflua.git_status, 'status' },
     b = { fzflua.git_branches, 'branches' },
-    l = { fzflua.git_commits, 'log' },
-    L = { fzflua.git_bcommits, 'log (buffer)' }
+    L = { fzflua.git_commits, 'log' },
+    l = { fzflua.git_bcommits, 'log (buffer)' }
   },
   ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
@@ -384,7 +385,7 @@ require('lualine').setup {
   sections = {
     lualine_a = { padding },
     lualine_b = { { 'b:gitsigns_head', icon = '' }, },
-    lualine_c = { filename, { 'diff', source = diff_source } },
+    lualine_c = { { 'diff', source = diff_source } },
     lualine_x = { lsp_client_names, treesitter, 'filetype' },
     lualine_y = {},
     lualine_z = {},
@@ -392,7 +393,7 @@ require('lualine').setup {
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
-    lualine_c = { filename },
+    lualine_c = {},
     lualine_x = {},
     lualine_y = {},
     lualine_z = {}
@@ -490,7 +491,7 @@ fzflua.setup {
     width = 0.90,
     col = 0.50,
     preview = {
-      -- default = 'bat_native'
+      default = 'bat_native',
       delay = 250
     }
   },
@@ -512,6 +513,9 @@ fzflua.setup {
   git = {
     branches = {
       cmd = "git branch --color --sort=-committerdate"
+    },
+    bcommits = {
+      preview = 'git show --color {1}'
     }
   },
   previewers = {
@@ -630,7 +634,7 @@ local on_attach = function(_, bufnr)
     ['<leader>la'] = { function() fzflua.lsp_code_actions({ winopts = { height = 0.15, width = 0.30 } }) end, 'code actions' },
     ['<leader>so'] = { function() fzflua.lsp_document_symbols({ fzf_cli_args = '--with-nth=2..' }) end, 'document symbols' },
     ['<leader>sO'] = { function() fzflua.lsp_workspace_symbols({ fzf_cli_args = '--with-nth=2..' }) end, 'workspace symbols' },
-    ['<leader>l'] = { name = 'lsp', f = { vim.lsp.buf.formatting, 'format' } }
+    ['<leader>l'] = { name = 'lsp', f = { function() vim.lsp.buf.format({ async = true }) end, 'format' } }
   }, opts)
 end
 
