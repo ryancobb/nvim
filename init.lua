@@ -49,8 +49,20 @@ vim.opt.title = true
 vim.opt.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 vim.opt.undofile = true
 vim.opt.updatetime = 250
-vim.opt.winbar = '%= %#WinBarContent# %{fnamemodify(expand("%"), ":.")} %*'
 vim.opt.wrap = false
+
+function Winbar()
+  local filename = vim.fn.fnamemodify(vim.fn.expand('%'), ':.')
+
+  filename = string.gsub(filename, 'term://.*;#', '')
+
+  return "%="
+      .. "%#WinBarContent# "
+      .. filename
+      .. " %*"
+end
+
+vim.opt.winbar = "%{%v:lua.Winbar()%}"
 
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
