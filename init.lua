@@ -49,14 +49,9 @@ vim.opt.title = true
 vim.opt.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 vim.opt.undofile = true
 vim.opt.updatetime = 250
-vim.opt.winbar = '%!luaeval("winbar()")'
+vim.opt.winbar = '%= %#WinBarContent# %{fnamemodify(expand("%"), ":.")} %*'
 vim.opt.wrap = false
 
-function winbar()
-  local filename = vim.fn.expand('%')
-
-  return string.gsub(filename, 'term://.*;#', '')
-end
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -101,7 +96,6 @@ require('packer').startup(function(use)
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'vim-test/vim-test'
   use 'folke/lua-dev.nvim'
-  use 'petertriho/nvim-scrollbar'
   use 'kevinhwang91/nvim-hlslens'
   use 'phaazon/hop.nvim'
 end)
@@ -132,6 +126,8 @@ require('kanagawa').setup {
 
 vim.cmd [[colorscheme kanagawa]]
 
+vim.api.nvim_set_hl(0, 'WinBarContent', { bg = colors.waveBlue2 })
+
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -157,7 +153,9 @@ wk.register({
     t = { fzflua.live_grep_glob, 'text' },
     c = { fzflua.grep_cword, 'cursor word' },
     r = { fzflua.resume, 'resume' },
-    a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. ' !' .. vim.fn.expand('%') .. '"' } }) end, 'alternate files' }
+    a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. ' !' .. vim.fn.expand('%') .. '"' } }) end, 'alternate files' },
+    s = { fzflua.tagstack, 'stack (tags)' },
+    j = { fzflua.jumps, 'jumps' }
   },
   ['<leader>y'] = {
     name = 'yank',
@@ -232,6 +230,11 @@ vim.api.nvim_create_autocmd('TermOpen', {
   pattern = '*'
 })
 
+vim.api.nvim_create_autocmd('FocusGained', {
+  command = 'checktime',
+  pattern = '*'
+})
+
 ------------------------------------------------------------------------------------------------------------------------------------
 -- nvr -----------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -243,7 +246,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.cmd [[
   if has('nvim') && executable('nvr')
-    let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
+    let $GIT_EDITOR = "nvr -cc split --remote-wait"
   endif
 ]]
 
@@ -261,7 +264,8 @@ vim.keymap.set('n', 'F', function() require 'hop'.hint_char1({ direction = requi
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('hlslens').setup {
-  nearest_only = true
+  nearest_only = true,
+  calm_down = true
 }
 
 vim.keymap.set('n', 'n', [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]])
@@ -270,17 +274,6 @@ vim.keymap.set('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]])
 vim.keymap.set('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]])
 vim.keymap.set('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]])
 vim.keymap.set('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]])
-
-------------------------------------------------------------------------------------------------------------------------------------
--- scrollbar -----------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('scrollbar').setup {
-  handlers = {
-    diagnostic = false,
-    search = true
-  }
-}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- vim-test ------------------------------------------------------------------------------------------------------------------------
@@ -389,9 +382,9 @@ require('lualine').setup {
   },
   sections = {
     lualine_a = { padding },
-    lualine_b = { { 'b:gitsigns_head', icon = '' }, },
-    lualine_c = { { 'diff', source = diff_source } },
-    lualine_x = { lsp_client_names, treesitter, 'filetype' },
+    lualine_b = { { 'b:gitsigns_head', icon = '' } },
+    lualine_c = {},
+    lualine_x = { { 'diff', source = diff_source }, 'diagnostics', lsp_client_names, treesitter, 'filetype' },
     lualine_y = {},
     lualine_z = {},
   },
