@@ -57,7 +57,7 @@ function Winbar()
   filename = string.gsub(filename, 'term://.*;#', '')
 
   return "%="
-      .. "%#WinBarContent# "
+      .. "%#WildMenu# "
       .. filename
       .. " %*"
 end
@@ -109,7 +109,9 @@ require('packer').startup(function(use)
   use 'vim-test/vim-test'
   use 'folke/lua-dev.nvim'
   use 'kevinhwang91/nvim-hlslens'
-  use 'phaazon/hop.nvim'
+  use 'norcalli/nvim-colorizer.lua'
+  use 'ggandor/lightspeed.nvim'
+  use 'olimorris/onedarkpro.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -127,18 +129,14 @@ local fzflua = require('fzf-lua')
 -- theme ---------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-local colors = require('kanagawa.colors').setup()
-require('kanagawa').setup {
-  dimInactive = true,
-  globalStatus = true,
-  overrides = {
-    Boolean = { link = 'Special' },
-  },
+vim.o.background = 'dark'
+local onedarkpro = require('onedarkpro')
+onedarkpro.setup {
+  options = {
+    cursorline = true
+  }
 }
-
-vim.cmd [[colorscheme kanagawa]]
-
-vim.api.nvim_set_hl(0, 'WinBarContent', { bg = colors.waveBlue2 })
+onedarkpro.load()
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
@@ -242,11 +240,6 @@ vim.api.nvim_create_autocmd('TermOpen', {
   pattern = '*'
 })
 
-vim.api.nvim_create_autocmd('FocusGained', {
-  command = 'checktime',
-  pattern = '*'
-})
-
 ------------------------------------------------------------------------------------------------------------------------------------
 -- nvr -----------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -261,15 +254,6 @@ vim.cmd [[
     let $GIT_EDITOR = "nvr -cc split --remote-wait"
   endif
 ]]
-
-------------------------------------------------------------------------------------------------------------------------------------
--- hop -----------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require 'hop'.setup()
-
-vim.keymap.set('n', 'f', function() require 'hop'.hint_char1({ direction = require 'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true }) end)
-vim.keymap.set('n', 'F', function() require 'hop'.hint_char1({ direction = require 'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true }) end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- hlslens -------------------------------------------------------------------------------------------------------------------------
@@ -374,17 +358,9 @@ local treesitter = {
     end
     return ""
   end,
-  color = { fg = colors.springGreen }
 }
 
 local padding = { function() return ' ' end, padding = { left = 0, right = 0 } }
-
-local filename = {
-  'filename',
-  file_status = true,
-  path = 1,
-  icons_enabled = true,
-}
 
 require('lualine').setup {
   options = {
@@ -393,12 +369,12 @@ require('lualine').setup {
     disabled_filetypes = { 'neo-tree', 'DiffviewFiles' },
   },
   sections = {
-    lualine_a = { padding },
-    lualine_b = { { 'b:gitsigns_head', icon = '' } },
+    lualine_a = {},
+    lualine_b = {},
     lualine_c = {},
     lualine_x = { { 'diff', source = diff_source }, 'diagnostics', lsp_client_names, treesitter, 'filetype' },
     lualine_y = {},
-    lualine_z = {},
+    lualine_z = { padding },
   },
   inactive_sections = {
     lualine_a = {},
