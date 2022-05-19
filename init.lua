@@ -51,19 +51,6 @@ vim.opt.undofile = true
 vim.opt.updatetime = 250
 vim.opt.wrap = false
 
-function Winbar()
-  local filename = vim.fn.fnamemodify(vim.fn.expand('%'), ':.')
-
-  filename = string.gsub(filename, 'term://.*;#', '')
-
-  return "%="
-      .. "%#WildMenu# "
-      .. filename
-      .. " %*"
-end
-
-vim.opt.winbar = "%{%v:lua.Winbar()%}"
-
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -110,8 +97,8 @@ require('packer').startup(function(use)
   use 'folke/lua-dev.nvim'
   use 'kevinhwang91/nvim-hlslens'
   use 'norcalli/nvim-colorizer.lua'
-  use 'ggandor/lightspeed.nvim'
   use 'olimorris/onedarkpro.nvim'
+  use "b0o/incline.nvim"
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -132,11 +119,30 @@ local fzflua = require('fzf-lua')
 vim.o.background = 'dark'
 local onedarkpro = require('onedarkpro')
 onedarkpro.setup {
+  hlgroups = {
+    TermCursor = { bg = '${fg}' },
+    TermCursorNC = { bg = 'NONE' }
+  },
   options = {
     cursorline = true
   }
 }
 onedarkpro.load()
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- incline -------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('incline').setup {
+  ignore = {
+    buftypes = {},
+    filetypes = {},
+    unlisted_buffers = false,
+    wintypes = {}
+  }
+}
+
+vim.cmd [[ highlight InclineNormal guifg=#282c34 guibg=#61afef]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
