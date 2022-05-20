@@ -37,7 +37,7 @@ vim.opt.shortmess = 'IFa'
 vim.opt.showcmd = false
 vim.opt.showmatch = true
 vim.opt.showmode = false
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = 'number'
 vim.opt.smartcase = true
 vim.opt.smartindent = false
 vim.opt.splitbelow = true
@@ -120,8 +120,27 @@ vim.o.background = 'dark'
 local onedarkpro = require('onedarkpro')
 onedarkpro.setup {
   hlgroups = {
+    CursorLineNr = { fg = '${fg}' },
+    FloatBorder = { bg = '#1f2329' },
+    LineNr = { bg = 'NONE' },
+    NormalFloat = { bg = '#1f2329' },
+    NormalNC = { bg = '#1f2329' },
+    Pmenu = { bg = '#1f2329' },
     TermCursor = { bg = '${fg}' },
-    TermCursorNC = { bg = 'NONE' }
+    TermCursorNC = { bg = 'NONE' },
+    WinSeparator = { bg = '#1f2329' },
+  },
+  colors = {
+    onedark = {
+      bg_statusline = '#282c34',
+      blue = '#579dd7',
+      green = '#88af6c',
+      purple = '#b26cc6',
+      yellow = '#ceac6e',
+      orange = '#bc8a5b',
+      cyan = '#4da3ae',
+      red = '#e06c75'
+    }
   },
   options = {
     cursorline = true
@@ -185,8 +204,8 @@ wk.register({
     L = { fzflua.git_commits, 'log' },
     l = { fzflua.git_bcommits, 'log (buffer)' }
   },
-  ['[d'] = { vim.diagnostic.goto_prev, 'previous diagnostic' },
-  [']d'] = { vim.diagnostic.goto_next, 'next diagnostic' }
+  ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } }) end, 'previous diagnostic' },
+  [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end, 'next diagnostic' }
 })
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
