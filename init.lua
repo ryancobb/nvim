@@ -164,6 +164,8 @@ require('incline').setup {
   render = function(opts)
     local path = vim.api.nvim_buf_get_name(opts['buf'])
 
+    path = string.gsub(path, 'term://.*;#', '' )
+
     return vim.fn.fnamemodify(path, ':.')
   end
 }
@@ -738,6 +740,10 @@ cmp.setup {
     { name = 'buffer' },
     { name = 'nvim_lsp_signature_help' }
   },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered()
+  }
 }
 
 cmp.setup.cmdline('/', {
