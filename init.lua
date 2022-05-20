@@ -129,17 +129,19 @@ onedarkpro.setup {
     TermCursor = { bg = '${fg}' },
     TermCursorNC = { bg = 'NONE' },
     WinSeparator = { bg = '#1f2329' },
+    NeoTreeDirectoryIcon = { fg = '${fg}' },
+    NeoTreeNormalNC = { bg = '#1f2329' }
   },
   colors = {
     onedark = {
       bg_statusline = '#282c34',
-      blue = '#579dd7',
-      green = '#88af6c',
-      purple = '#b26cc6',
-      yellow = '#ceac6e',
-      orange = '#bc8a5b',
-      cyan = '#4da3ae',
-      red = '#e06c75'
+      blue = '#5f9ccf',
+      green = '#89a675',
+      purple = '#ae74be',
+      yellow = '#c7aa75',
+      orange = '#b38a64',
+      cyan = '#579ca4',
+      red = '#d9737b'
     }
   },
   options = {
@@ -158,10 +160,15 @@ require('incline').setup {
     filetypes = {},
     unlisted_buffers = false,
     wintypes = {}
-  }
+  },
+  render = function(opts)
+    local path = vim.api.nvim_buf_get_name(opts['buf'])
+
+    return vim.fn.fnamemodify(path, ':.')
+  end
 }
 
-vim.cmd [[ highlight InclineNormal guifg=#282c34 guibg=#61afef]]
+vim.cmd [[ highlight InclineNormal guifg=#282c34 guibg=#5f9ccf ]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
