@@ -58,7 +58,6 @@ vim.opt.wrap = false
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
-  use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim'
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use 'nvim-treesitter/nvim-treesitter'
@@ -98,7 +97,7 @@ require('packer').startup(function(use)
   use 'kevinhwang91/nvim-hlslens'
   use 'norcalli/nvim-colorizer.lua'
   use 'olimorris/onedarkpro.nvim'
-  use "b0o/incline.nvim"
+  use "rebelot/heirline.nvim"
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -130,7 +129,8 @@ onedarkpro.setup {
     TermCursorNC = { bg = 'NONE' },
     WinSeparator = { bg = '#1f2329' },
     NeoTreeDirectoryIcon = { fg = '${fg}' },
-    NeoTreeNormalNC = { bg = '#1f2329' }
+    NeoTreeNormalNC = { bg = '#1f2329' },
+    WinBarNC = { bg = '#1f2329' }
   },
   colors = {
     onedark = {
@@ -149,28 +149,6 @@ onedarkpro.setup {
   }
 }
 onedarkpro.load()
-
-------------------------------------------------------------------------------------------------------------------------------------
--- incline -------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('incline').setup {
-  ignore = {
-    buftypes = {},
-    filetypes = {},
-    unlisted_buffers = false,
-    wintypes = {}
-  },
-  render = function(opts)
-    local path = vim.api.nvim_buf_get_name(opts['buf'])
-
-    path = string.gsub(path, 'term://.*;#', '' )
-
-    return vim.fn.fnamemodify(path, ':.')
-  end
-}
-
-vim.cmd [[ highlight InclineNormal guifg=#282c34 guibg=#5f9ccf ]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
@@ -361,64 +339,252 @@ require('toggleterm').setup {
   }
 }
 
+
 ------------------------------------------------------------------------------------------------------------------------------------
--- lualine -------------------------------------------------------------------------------------------------------------------------
+-- heirline ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-local function diff_source()
-  local gitsigns = vim.b.gitsigns_status_dict
-  if gitsigns then
-    return {
-      added = gitsigns.added,
-      modified = gitsigns.changed,
-      removed = gitsigns.removed
+local conditions = require('heirline.conditions')
+local utils = require('heirline.utils')
+local colors = require('onedarkpro').get_colors(vim.g.onedarkpro_style)
+
+local ViMode = {
+  -- get vim current mode, this information will be required by the provider
+  -- and the highlight functions, so we compute it only once per component
+  -- evaluation and store it as a component attribute
+  init = function(self)
+    self.mode = vim.fn.mode(1) -- :h mode()
+  end,
+  -- Now we define some dictionaries to map the output of mode() to the
+  -- corresponding string and color. We can put these into `static` to compute
+  -- them at initialisation time.
+  static = {
+    mode_colors = {
+      n = colors.blue,
+      i = colors.green,
+      v = colors.cyan,
+      V = colors.cyan,
+      ["\22"] = colors.cyan,
+      c = colors.orange,
+      s = colors.purple,
+      S = colors.purple,
+      ["\19"] = colors.purple,
+      R = colors.orange,
+      r = colors.orange,
+      ["!"] = colors.red,
+      t = colors.red,
     }
-  end
-end
-
-local function lsp_client_names()
-  local client_names = {}
-  for _, client in ipairs(vim.lsp.get_active_clients()) do
-    table.insert(client_names, client.name)
-  end
-  return table.concat(client_names, ",")
-end
-
-local treesitter = {
-  function()
-    local b = vim.api.nvim_get_current_buf()
-    if next(vim.treesitter.highlighter.active[b]) then
-      return ""
-    end
-    return ""
+  },
+  -- We can now access the value of mode() that, by now, would have been
+  -- computed by `init()` and use it to index our strings dictionary.
+  -- note how `static` fields become just regular attributes once the
+  -- component is instantiated.
+  -- To be extra meticulous, we can also add some vim statusline syntax to
+  -- control the padding and make sure our string is always at least 2
+  -- characters long. Plus a nice Icon.
+  provider = function(self)
+    return " %2(%)"
+  end,
+  -- Same goes for the highlight. Now the foreground will change according to the current mode.
+  hl = function(self)
+    local mode = self.mode:sub(1, 1) -- get only the first mode character
+    return { fg = self.mode_colors[mode], bold = true, }
   end,
 }
 
-local padding = { function() return ' ' end, padding = { left = 0, right = 0 } }
+local FileIcon = {
+  init = function(self)
+    local filename = self.filename
+    local extension = vim.fn.fnamemodify(filename, ":e")
+    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+  end,
+  provider = function(self)
+    return self.icon and (self.icon .. " ")
+  end,
+  hl = function(self)
+    return { fg = self.icon_color }
+  end
+}
 
-require('lualine').setup {
-  options = {
-    component_separators = '|',
-    section_separators = '',
-    disabled_filetypes = { 'neo-tree', 'DiffviewFiles' },
+local FileName = {
+  provider = function(self)
+    local filename = vim.fn.fnamemodify(self.filename, ":.")
+    if filename == "" then return "[No Name]" end
+    -- now, if the filename would occupy more than 1/4th of the available
+    -- space, we trim the file path to its initials
+    -- See Flexible Components section below for dynamic truncation
+    if not conditions.width_percent_below(#filename, 0.25) then
+      filename = vim.fn.pathshorten(filename)
+    end
+    return filename
+  end,
+  hl = function()
+    if vim.bo.modified then
+      return { fg = colors.cyan, bold = true }
+    end
+  end
+}
+
+local FileFlags = {
+  {
+    provider = function() if vim.bo.modified then return "[+]" end end,
+    hl = { fg = colors.green }
+
+  }, {
+    provider = function() if (not vim.bo.modifiable) or vim.bo.readonly then return "" end end,
+    hl = { fg = colors.orange }
+  }
+}
+
+local FileNameBlock = {
+  init = function(self)
+    self.filename = vim.api.nvim_buf_get_name(0)
+  end,
+  FileIcon,
+  FileName,
+  FileFlags
+}
+
+local FileType = {
+  condition = function()
+    return not conditions.buffer_matches({ buftype = { "terminal" } })
+  end,
+  provider = function()
+    return vim.bo.filetype
+  end,
+  hl = { fg = colors.white, bold = true },
+}
+
+local LSPActive = {
+  condition = conditions.lsp_attached,
+
+  -- You can keep it simple,
+  -- provider = " [LSP]",
+
+  -- Or complicate things a bit and get the servers names
+  provider = function()
+    local names = {}
+    for i, server in pairs(vim.lsp.buf_get_clients(0)) do
+      table.insert(names, server.name)
+    end
+    return "  [" .. table.concat(names, " ") .. "] "
+  end,
+  hl       = { fg = colors.white, bold = true },
+}
+
+local Git = {
+  condition = conditions.is_git_repo,
+
+  init = function(self)
+    self.status_dict = vim.b.gitsigns_status_dict
+    self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
+  end,
+
+  hl = { fg = colors.orange },
+
+
+  { -- git branch name
+    provider = function(self)
+      return " " .. self.status_dict.head .. " "
+    end,
+    hl = { bold = true }
   },
-  sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {},
-    lualine_x = { { 'diff', source = diff_source }, 'diagnostics', lsp_client_names, treesitter, 'filetype' },
-    lualine_y = {},
-    lualine_z = { padding },
+  -- You could handle delimiters, icons and counts similar to Diagnostics
+  {
+    condition = function(self)
+      return self.has_changes
+    end,
+    provider = "("
   },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {},
-    lualine_x = {},
-    lualine_y = {},
-    lualine_z = {}
+  {
+    provider = function(self)
+      local count = self.status_dict.added or 0
+      return count > 0 and ("+" .. count .. " ")
+    end,
+    hl = { fg = colors.green },
+  },
+  {
+    provider = function(self)
+      local count = self.status_dict.removed or 0
+      return count > 0 and ("-" .. count .. " ")
+    end,
+    hl = { fg = colors.red },
+  },
+  {
+    provider = function(self)
+      local count = self.status_dict.changed or 0
+      return count > 0 and ("~" .. count)
+    end,
+    hl = { fg = colors.yellow },
+  },
+  {
+    condition = function(self)
+      return self.has_changes
+    end,
+    provider = ")",
   },
 }
+
+local Treesitter = {
+  condition = function()
+    local b = vim.api.nvim_get_current_buf()
+    return vim.treesitter.highlighter.active[b]
+  end,
+  provider = " ",
+  hl = { fg = colors.green }
+}
+
+local TerminalName = {
+  -- we could add a condition to check that buftype == 'terminal'
+  -- or we could do that later (see #conditional-statuslines below)
+  provider = function()
+    local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*;#", "")
+    return " " .. tname
+  end,
+  hl = { fg = colors.blue, bold = true },
+}
+
+local Space = { provider = " " }
+
+local winbar = {
+  init = utils.pick_child_on_condition,
+  { -- Hide the winbar for special buffers
+    condition = function()
+      return conditions.buffer_matches({
+        buftype = { "nofile", "prompt", "help", "quickfix" },
+        filetype = { "^git.*" },
+      })
+    end,
+    provider = "",
+  },
+  { -- A special winbar for terminals
+    condition = function()
+      return conditions.buffer_matches({ buftype = { "terminal" } })
+    end,
+    utils.surround({ "", "" }, colors.menu, { TerminalName }),
+  },
+  { -- An inactive winbar for regular files
+    condition = function()
+      return not conditions.is_active()
+    end,
+    utils.surround({ "", "" }, colors.bg, { hl = { fg = "gray", force = true }, FileNameBlock }),
+  },
+  -- A winbar for regular files
+  utils.surround({ "", "" }, colors.menu, FileNameBlock),
+  provider = '%='
+}
+
+local statusline = {
+  ViMode,
+  {
+    Git,
+    LSPActive,
+    Treesitter,
+    FileType,
+    provider = '%=' }
+}
+
+require('heirline').setup(statusline, winbar)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- indent blankline ----------------------------------------------------------------------------------------------------------------
