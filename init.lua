@@ -139,7 +139,6 @@ onedarkpro.setup {
       green = '#89a675',
       purple = '#ae74be',
       yellow = '#c7aa75',
-      orange = '#b38a64',
       cyan = '#579ca4',
       red = '#d9737b'
     }
@@ -348,19 +347,13 @@ local conditions = require('heirline.conditions')
 local utils = require('heirline.utils')
 local colors = require('onedarkpro').get_colors(vim.g.onedarkpro_style)
 
-local ViMode = {
-  -- get vim current mode, this information will be required by the provider
-  -- and the highlight functions, so we compute it only once per component
-  -- evaluation and store it as a component attribute
+local ViModeLeft = {
   init = function(self)
     self.mode = vim.fn.mode(1) -- :h mode()
   end,
-  -- Now we define some dictionaries to map the output of mode() to the
-  -- corresponding string and color. We can put these into `static` to compute
-  -- them at initialisation time.
   static = {
     mode_colors = {
-      n = colors.blue,
+      n = colors.bg,
       i = colors.green,
       v = colors.cyan,
       V = colors.cyan,
@@ -375,22 +368,46 @@ local ViMode = {
       t = colors.red,
     }
   },
-  -- We can now access the value of mode() that, by now, would have been
-  -- computed by `init()` and use it to index our strings dictionary.
-  -- note how `static` fields become just regular attributes once the
-  -- component is instantiated.
-  -- To be extra meticulous, we can also add some vim statusline syntax to
-  -- control the padding and make sure our string is always at least 2
-  -- characters long. Plus a nice Icon.
   provider = function(self)
-    return " %2(%)"
+    return "█"
   end,
-  -- Same goes for the highlight. Now the foreground will change according to the current mode.
   hl = function(self)
     local mode = self.mode:sub(1, 1) -- get only the first mode character
     return { fg = self.mode_colors[mode], bold = true, }
   end,
 }
+
+local ViModeRight = {
+  init = function(self)
+    self.mode = vim.fn.mode(1) -- :h mode()
+  end,
+  static = {
+    mode_colors = {
+      n = colors.bg,
+      i = colors.green,
+      v = colors.cyan,
+      V = colors.cyan,
+      ["\22"] = colors.cyan,
+      c = colors.orange,
+      s = colors.purple,
+      S = colors.purple,
+      ["\19"] = colors.purple,
+      R = colors.orange,
+      r = colors.orange,
+      ["!"] = colors.red,
+      t = colors.red,
+    }
+  },
+  provider = function(self)
+    return "█"
+  end,
+  hl = function(self)
+    local mode = self.mode:sub(1, 1) -- get only the first mode character
+    return { fg = self.mode_colors[mode], bold = true, }
+  end,
+}
+
+local Space = { provider = " " }
 
 local FileIcon = {
   init = function(self)
@@ -467,9 +484,10 @@ local LSPActive = {
     for i, server in pairs(vim.lsp.buf_get_clients(0)) do
       table.insert(names, server.name)
     end
-    return "  [" .. table.concat(names, " ") .. "] "
+    return "  [" .. table.concat(names, " ") .. "]"
   end,
   hl       = { fg = colors.white, bold = true },
+  Space
 }
 
 local Git = {
@@ -499,16 +517,18 @@ local Git = {
   {
     provider = function(self)
       local count = self.status_dict.added or 0
-      return count > 0 and ("+" .. count .. " ")
+      return count > 0 and ("+" .. count)
     end,
     hl = { fg = colors.green },
+    Space
   },
   {
     provider = function(self)
       local count = self.status_dict.removed or 0
-      return count > 0 and ("-" .. count .. " ")
+      return count > 0 and ("-" .. count)
     end,
     hl = { fg = colors.red },
+    Space 
   },
   {
     provider = function(self)
@@ -530,8 +550,9 @@ local Treesitter = {
     local b = vim.api.nvim_get_current_buf()
     return vim.treesitter.highlighter.active[b]
   end,
-  provider = " ",
-  hl = { fg = colors.green }
+  provider = "",
+  hl = { fg = colors.green },
+  Space
 }
 
 local TerminalName = {
@@ -543,8 +564,6 @@ local TerminalName = {
   end,
   hl = { fg = colors.blue, bold = true },
 }
-
-local Space = { provider = " " }
 
 local winbar = {
   init = utils.pick_child_on_condition,
@@ -575,12 +594,14 @@ local winbar = {
 }
 
 local statusline = {
-  ViMode,
+  ViModeLeft,
   {
     Git,
     LSPActive,
     Treesitter,
     FileType,
+    Space,
+    ViModeRight,
     provider = '%=' }
 }
 
