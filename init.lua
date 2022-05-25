@@ -37,7 +37,7 @@ vim.opt.shortmess = 'IFa'
 vim.opt.showcmd = false
 vim.opt.showmatch = true
 vim.opt.showmode = false
-vim.opt.signcolumn = 'number'
+vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
 vim.opt.smartindent = false
 vim.opt.splitbelow = true
@@ -50,6 +50,8 @@ vim.opt.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 vim.opt.undofile = true
 vim.opt.updatetime = 250
 vim.opt.wrap = false
+
+vim.cmd [[ set formatoptions-=cro ]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -98,6 +100,7 @@ require('packer').startup(function(use)
   use 'norcalli/nvim-colorizer.lua'
   use 'olimorris/onedarkpro.nvim'
   use "rebelot/heirline.nvim"
+  use { 'nvim-neorg/neorg', requires = 'nvim-lua/plenary.nvim' }
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -120,21 +123,27 @@ local onedarkpro = require('onedarkpro')
 onedarkpro.setup {
   hlgroups = {
     CursorLineNr = { fg = '${fg}' },
-    FloatBorder = { bg = '#1f2329' },
+    DiagnosticUnderlineError = { fg = 'NONE' },
+    DiagnosticUnderlineHint = { fg = 'NONE' },
+    DiagnosticUnderlineInfo = { fg = 'NONE' },
+    DiagnosticUnderlineWarn = { fg = 'NONE' },
+    FloatBorder = { bg = '${bg_dark}' },
+    IndentBlanklineContextChar = { fg = '${fg}' },
     LineNr = { bg = 'NONE' },
-    NormalFloat = { bg = '#1f2329' },
-    NormalNC = { bg = '#1f2329' },
-    Pmenu = { bg = '#1f2329' },
-    TermCursor = { bg = '${fg}' },
-    TermCursorNC = { bg = 'NONE' },
-    WinSeparator = { bg = '#1f2329' },
     NeoTreeDirectoryIcon = { fg = '${fg}' },
-    NeoTreeNormalNC = { bg = '#1f2329' },
-    WinBarNC = { bg = '#1f2329' }
+    NeoTreeNormalNC = { bg = '${bg_dark}' },
+    NormalFloat = { bg = '${bg_dark}' },
+    NormalNC = { bg = '${bg_dark}' },
+    Pmenu = { bg = '${bg_dark}' },
+    SignColumn = { bg = 'NONE' },
+    TermCursor = { bg = '${bg_dark}' },
+    TermCursorNC = { bg = 'NONE' },
+    WinBarNC = { bg = '${bg_dark}' },
+    WinSeparator = { bg = '${bg_dark}' },
   },
   colors = {
     onedark = {
-      bg_statusline = '#282c34',
+      bg_dark = '#1f2329',
       blue = '#5f9ccf',
       green = '#89a675',
       purple = '#ae74be',
@@ -144,7 +153,7 @@ onedarkpro.setup {
     }
   },
   options = {
-    cursorline = true
+    cursorline = true,
   }
 }
 onedarkpro.load()
@@ -300,14 +309,14 @@ vim.g['test#strategy'] = 'yank'
 
 vim.g.terminal_direction = 'horizontal'
 
-wk.register({
-  ['<leader>t'] = {
-    name = 'toggle',
-    v = { function() vim.g.terminal_direction = 'vertical' end, 'term vertical' },
-    h = { function() vim.g.terminal_direction = 'horizontal' end, 'term horizontal' },
-    f = { function() vim.g.terminal_direction = 'float' end, 'term float' }
-  }
-})
+-- wk.register({
+--   ['<leader>t'] = {
+--     name = 'toggle',
+--     v = { function() vim.g.terminal_direction = 'vertical' end, 'term vertical' },
+--     h = { function() vim.g.terminal_direction = 'horizontal' end, 'term horizontal' },
+--     f = { function() vim.g.terminal_direction = 'float' end, 'term float' }
+--   }
+-- })
 vim.keymap.set('n', '<c-\\>', '<cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>')
 
 vim.api.nvim_command('autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-\\> <Cmd>exe v:count1 . "ToggleTerm"<CR>')
@@ -353,7 +362,7 @@ local ViModeLeft = {
   end,
   static = {
     mode_colors = {
-      n = colors.bg,
+      n = colors.bg_dark,
       i = colors.green,
       v = colors.cyan,
       V = colors.cyan,
@@ -383,7 +392,7 @@ local ViModeRight = {
   end,
   static = {
     mode_colors = {
-      n = colors.bg,
+      n = colors.bg_dark,
       i = colors.green,
       v = colors.cyan,
       V = colors.cyan,
@@ -437,7 +446,7 @@ local FileName = {
   end,
   hl = function()
     if vim.bo.modified then
-      return { fg = colors.cyan, bold = true }
+      return { fg = colors.yellow, bold = true }
     end
   end
 }
@@ -520,7 +529,6 @@ local Git = {
       return count > 0 and ("+" .. count)
     end,
     hl = { fg = colors.green },
-    Space
   },
   {
     provider = function(self)
@@ -528,7 +536,6 @@ local Git = {
       return count > 0 and ("-" .. count)
     end,
     hl = { fg = colors.red },
-    Space 
   },
   {
     provider = function(self)
@@ -602,7 +609,9 @@ local statusline = {
     FileType,
     Space,
     ViModeRight,
-    provider = '%=' }
+    provider = '%=' 
+  },
+  hl = { bg = colors.bg_dark }
 }
 
 require('heirline').setup(statusline, winbar)
@@ -702,7 +711,7 @@ fzflua.setup {
     }
   },
   files = {
-    fd_opts = "--color=never --type f --hidden --follow --no-ignore --exclude .git --exclude public --exclude node_modules --exclude tmp --exclude spec/fixtures/vcr_cassettes",
+    -- fd_opts = "--color=never --type f --hidden --follow --no-ignore --exclude .git --exclude public --exclude node_modules --exclude tmp --exclude spec/fixtures/vcr_cassettes",
     git_icons = false
   },
   lsp = {
@@ -728,6 +737,10 @@ fzflua.setup {
     git_diff = {
       pager = 'delta --width $FZF_PREVIEW_COLUMNS'
     }
+  },
+  oldfiles = {
+    cwd_only = true,
+    include_current_session = true
   }
 }
 
@@ -801,6 +814,29 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
+}
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- neorg ---------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('neorg').setup {
+  load = {
+    ['core.defaults'] = {},
+    ['core.norg.concealer'] = {},
+    ['core.norg.dirman'] = {
+      config = {
+        workspaces = {
+          work = '~/notes/work'
+        }
+      }
+    },
+    ['core.gtd.base'] = {
+      config = {
+        workspace = 'work'
+      }
+    },
+  }
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -1002,8 +1038,3 @@ local default_plugins = {
 for _, plugin in pairs(default_plugins) do
   vim.g["loaded_" .. plugin] = 1
 end
-
-vim.schedule(function()
-  vim.opt.shadafile = vim.fn.expand "$HOME" .. "/.local/share/nvim/shada/main.shada"
-  vim.cmd [[ silent! rsh ]]
-end)
