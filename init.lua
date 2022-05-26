@@ -20,6 +20,9 @@ vim.opt.clipboard = 'unnamedplus'
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldlevel = 99
+vim.opt.foldmethod = 'expr'
 vim.opt.hidden = true
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
@@ -50,8 +53,6 @@ vim.opt.titlestring = [[ %{substitute(getcwd(), $HOME, '~', ' ')} - NVIM ]]
 vim.opt.undofile = true
 vim.opt.updatetime = 250
 vim.opt.wrap = false
-
-vim.cmd [[ set formatoptions-=cro ]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -101,6 +102,7 @@ require('packer').startup(function(use)
   use 'olimorris/onedarkpro.nvim'
   use "rebelot/heirline.nvim"
   use { 'nvim-neorg/neorg', requires = 'nvim-lua/plenary.nvim' }
+  use { 'petertriho/cmp-git', requires = 'nvim-lua/plenary.nvim' }
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -127,17 +129,16 @@ onedarkpro.setup {
     DiagnosticUnderlineHint = { fg = 'NONE' },
     DiagnosticUnderlineInfo = { fg = 'NONE' },
     DiagnosticUnderlineWarn = { fg = 'NONE' },
-    FloatBorder = { bg = '${bg_dark}' },
     IndentBlanklineContextChar = { fg = '${fg}' },
     LineNr = { bg = 'NONE' },
+    ModeMsg = { bg = '${bg_dark}' },
     NeoTreeDirectoryIcon = { fg = '${fg}' },
     NeoTreeNormalNC = { bg = '${bg_dark}' },
-    NormalFloat = { bg = '${bg_dark}' },
     NormalNC = { bg = '${bg_dark}' },
-    Pmenu = { bg = '${bg_dark}' },
     SignColumn = { bg = 'NONE' },
-    TermCursor = { bg = '${bg_dark}' },
+    TermCursor = { bg = '${fg}' },
     TermCursorNC = { bg = 'NONE' },
+    WhichKeyFloat = { bg = '${bg_dark}' },
     WinBarNC = { bg = '${bg_dark}' },
     WinSeparator = { bg = '${bg_dark}' },
   },
@@ -212,9 +213,6 @@ vim.keymap.set('n', '<C-up>', require('smart-splits').resize_up)
 vim.keymap.set('n', '<C-down>', require('smart-splits').resize_down)
 vim.keymap.set('n', '<C-left>', require('smart-splits').resize_left)
 vim.keymap.set('n', '<C-right>', require('smart-splits').resize_right)
-
-vim.keymap.set('n', '<tab>', ':bnext<cr>')
-vim.keymap.set('n', '<s-tab>', ':bprevious<cr>')
 
 vim.keymap.set('n', 'p', "p=`]") -- paste formatting
 
@@ -352,266 +350,53 @@ require('toggleterm').setup {
 -- heirline ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
+local hl = require('heirline_components')
 local conditions = require('heirline.conditions')
 local utils = require('heirline.utils')
 local colors = require('onedarkpro').get_colors(vim.g.onedarkpro_style)
 
-local ViModeLeft = {
-  init = function(self)
-    self.mode = vim.fn.mode(1) -- :h mode()
-  end,
-  static = {
-    mode_colors = {
-      n = colors.bg_dark,
-      i = colors.green,
-      v = colors.cyan,
-      V = colors.cyan,
-      ["\22"] = colors.cyan,
-      c = colors.orange,
-      s = colors.purple,
-      S = colors.purple,
-      ["\19"] = colors.purple,
-      R = colors.orange,
-      r = colors.orange,
-      ["!"] = colors.red,
-      t = colors.red,
-    }
-  },
-  provider = function(self)
-    return "█"
-  end,
-  hl = function(self)
-    local mode = self.mode:sub(1, 1) -- get only the first mode character
-    return { fg = self.mode_colors[mode], bold = true, }
-  end,
-}
-
-local ViModeRight = {
-  init = function(self)
-    self.mode = vim.fn.mode(1) -- :h mode()
-  end,
-  static = {
-    mode_colors = {
-      n = colors.bg_dark,
-      i = colors.green,
-      v = colors.cyan,
-      V = colors.cyan,
-      ["\22"] = colors.cyan,
-      c = colors.orange,
-      s = colors.purple,
-      S = colors.purple,
-      ["\19"] = colors.purple,
-      R = colors.orange,
-      r = colors.orange,
-      ["!"] = colors.red,
-      t = colors.red,
-    }
-  },
-  provider = function(self)
-    return "█"
-  end,
-  hl = function(self)
-    local mode = self.mode:sub(1, 1) -- get only the first mode character
-    return { fg = self.mode_colors[mode], bold = true, }
-  end,
-}
-
-local Space = { provider = " " }
-
-local FileIcon = {
-  init = function(self)
-    local filename = self.filename
-    local extension = vim.fn.fnamemodify(filename, ":e")
-    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-  end,
-  provider = function(self)
-    return self.icon and (self.icon .. " ")
-  end,
-  hl = function(self)
-    return { fg = self.icon_color }
-  end
-}
-
-local FileName = {
-  provider = function(self)
-    local filename = vim.fn.fnamemodify(self.filename, ":.")
-    if filename == "" then return "[No Name]" end
-    -- now, if the filename would occupy more than 1/4th of the available
-    -- space, we trim the file path to its initials
-    -- See Flexible Components section below for dynamic truncation
-    if not conditions.width_percent_below(#filename, 0.25) then
-      filename = vim.fn.pathshorten(filename)
-    end
-    return filename
-  end,
-  hl = function()
-    if vim.bo.modified then
-      return { fg = colors.yellow, bold = true }
-    end
-  end
-}
-
-local FileFlags = {
+local statusline = {
+  hl = { bg = colors.bg_dark },
+  hl.vi_mode,
+  hl.space,
+  hl.git,
   {
-    provider = function() if vim.bo.modified then return "[+]" end end,
-    hl = { fg = colors.green }
-
-  }, {
-    provider = function() if (not vim.bo.modifiable) or vim.bo.readonly then return "" end end,
-    hl = { fg = colors.orange }
-  }
-}
-
-local FileNameBlock = {
-  init = function(self)
-    self.filename = vim.api.nvim_buf_get_name(0)
-  end,
-  FileIcon,
-  FileName,
-  FileFlags
-}
-
-local FileType = {
-  condition = function()
-    return not conditions.buffer_matches({ buftype = { "terminal" } })
-  end,
-  provider = function()
-    return vim.bo.filetype
-  end,
-  hl = { fg = colors.white, bold = true },
-}
-
-local LSPActive = {
-  condition = conditions.lsp_attached,
-
-  -- You can keep it simple,
-  -- provider = " [LSP]",
-
-  -- Or complicate things a bit and get the servers names
-  provider = function()
-    local names = {}
-    for i, server in pairs(vim.lsp.buf_get_clients(0)) do
-      table.insert(names, server.name)
-    end
-    return "  [" .. table.concat(names, " ") .. "]"
-  end,
-  hl       = { fg = colors.white, bold = true },
-  Space
-}
-
-local Git = {
-  condition = conditions.is_git_repo,
-
-  init = function(self)
-    self.status_dict = vim.b.gitsigns_status_dict
-    self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
-  end,
-
-  hl = { fg = colors.orange },
-
-
-  { -- git branch name
-    provider = function(self)
-      return " " .. self.status_dict.head .. " "
-    end,
-    hl = { bold = true }
+    provider = '%=',
+    hl.lsp_active,
+    hl.space,
+    hl.treesitter,
+    hl.space,
+    hl.file_type,
+    hl.space,
+    hl.vi_mode,
   },
-  -- You could handle delimiters, icons and counts similar to Diagnostics
-  {
-    condition = function(self)
-      return self.has_changes
-    end,
-    provider = "("
-  },
-  {
-    provider = function(self)
-      local count = self.status_dict.added or 0
-      return count > 0 and ("+" .. count)
-    end,
-    hl = { fg = colors.green },
-  },
-  {
-    provider = function(self)
-      local count = self.status_dict.removed or 0
-      return count > 0 and ("-" .. count)
-    end,
-    hl = { fg = colors.red },
-  },
-  {
-    provider = function(self)
-      local count = self.status_dict.changed or 0
-      return count > 0 and ("~" .. count)
-    end,
-    hl = { fg = colors.yellow },
-  },
-  {
-    condition = function(self)
-      return self.has_changes
-    end,
-    provider = ")",
-  },
-}
-
-local Treesitter = {
-  condition = function()
-    local b = vim.api.nvim_get_current_buf()
-    return vim.treesitter.highlighter.active[b]
-  end,
-  provider = "",
-  hl = { fg = colors.green },
-  Space
-}
-
-local TerminalName = {
-  -- we could add a condition to check that buftype == 'terminal'
-  -- or we could do that later (see #conditional-statuslines below)
-  provider = function()
-    local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*;#", "")
-    return " " .. tname
-  end,
-  hl = { fg = colors.blue, bold = true },
 }
 
 local winbar = {
   init = utils.pick_child_on_condition,
-  { -- Hide the winbar for special buffers
+  provider = '%=',
+  { -- hide the winbar for special buffers
     condition = function()
       return conditions.buffer_matches({
         buftype = { "nofile", "prompt", "help", "quickfix" },
         filetype = { "^git.*" },
       })
     end,
-    provider = "",
+    provider = '',
   },
-  { -- A special winbar for terminals
+  { -- terminals
     condition = function()
-      return conditions.buffer_matches({ buftype = { "terminal" } })
+      return conditions.buffer_matches({ buftype = { 'terminal' } })
     end,
-    utils.surround({ "", "" }, colors.menu, { TerminalName }),
+    hl.terminal_name
   },
-  { -- An inactive winbar for regular files
+  { -- inactive windows
     condition = function()
       return not conditions.is_active()
     end,
-    utils.surround({ "", "" }, colors.bg, { hl = { fg = "gray", force = true }, FileNameBlock }),
+    utils.surround({ "", "" }, colors.bg_dark, { hl = { fg = "gray", force = true }, hl.file_name_block }),
   },
-  -- A winbar for regular files
-  utils.surround({ "", "" }, colors.menu, FileNameBlock),
-  provider = '%='
-}
-
-local statusline = {
-  ViModeLeft,
-  {
-    Git,
-    LSPActive,
-    Treesitter,
-    FileType,
-    Space,
-    ViModeRight,
-    provider = '%=' 
-  },
-  hl = { bg = colors.bg_dark }
+  utils.surround({ "", "" }, colors.bg_dark, { hl = { fg = colors.fg, bg = colors.bg_dark }, hl.file_name_block }),
 }
 
 require('heirline').setup(statusline, winbar)
@@ -739,8 +524,8 @@ fzflua.setup {
     }
   },
   oldfiles = {
+    cwd = vim.loop.cwd(),
     cwd_only = true,
-    include_current_session = true
   }
 }
 
@@ -751,7 +536,7 @@ fzflua.setup {
 
 require('nvim-treesitter.configs').setup {
   highlight             = {
-    enable = true, -- false will disable the whole extension
+    enable = true,
   },
   incremental_selection = {
     enable = true,
@@ -824,6 +609,7 @@ require('neorg').setup {
   load = {
     ['core.defaults'] = {},
     ['core.norg.concealer'] = {},
+    ['core.norg.completion'] = { config = { engine = 'nvim-cmp' } },
     ['core.norg.dirman'] = {
       config = {
         workspaces = {
@@ -960,8 +746,9 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
-    { name = 'buffer' },
-    { name = 'nvim_lsp_signature_help' }
+    -- { name = 'buffer' },
+    { name = 'nvim_lsp_signature_help' },
+    { name = 'neorg' }
   },
   window = {
     completion = cmp.config.window.bordered(),
