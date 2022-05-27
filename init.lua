@@ -9,7 +9,6 @@ pcall(require, 'impatient')
 ------------------------------------------------------------------------------------------------------------------------------------
 -- options -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-
 vim.g.Illuminate_delay = 1000
 vim.g.did_load_filetypes = 0
 vim.g.do_filetype_lua = 1
@@ -71,6 +70,7 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
+  use 'cmp-cmdline-history'
   use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
@@ -144,7 +144,8 @@ onedarkpro.setup {
   },
   colors = {
     onedark = {
-      bg_dark = '#1f2329',
+      bg = '#1f2329',
+      bg_dark = '#17191e',
       blue = '#5f9ccf',
       green = '#89a675',
       purple = '#ae74be',
@@ -363,11 +364,8 @@ local statusline = {
   {
     provider = '%=',
     hl.lsp_active,
-    hl.space,
     hl.treesitter,
-    hl.space,
     hl.file_type,
-    hl.space,
     hl.vi_mode,
   },
 }
@@ -396,7 +394,7 @@ local winbar = {
     end,
     utils.surround({ "", "" }, colors.bg_dark, { hl = { fg = "gray", force = true }, hl.file_name_block }),
   },
-  utils.surround({ "", "" }, colors.bg_dark, { hl = { fg = colors.fg, bg = colors.bg_dark }, hl.file_name_block }),
+  utils.surround({ "", "" }, colors.blue, { hl = { fg = colors.bg_dark, bg = colors.blue }, hl.file_name_block }),
 }
 
 require('heirline').setup(statusline, winbar)
@@ -552,7 +550,8 @@ require('nvim-treesitter.configs').setup {
     disable = { 'ruby' }
   },
   matchup               = {
-    enable = true
+    enable = true,
+    disable_virtual_text = true
   },
   endwise               = {
     enable = true
@@ -696,10 +695,10 @@ lspconfig.solargraph.setup {
 -- cmp -----------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-local cmp = require 'cmp'
+local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local lspkind = require('lspkind')
-local luasnip = require 'luasnip'
+local luasnip = require('luasnip')
 
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done({ map_char = { tex = '' } }))
 
@@ -751,24 +750,30 @@ cmp.setup {
     { name = 'neorg' }
   },
   window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered()
+    completion = cmp.config.window.bordered({
+      winhighlight = 'Normal:Pmenu'
+    }),
+    documentation = cmp.config.window.bordered({
+      winhighlight = 'Normal:Pmenu'
+    })
   }
 }
 
 cmp.setup.cmdline('/', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
-    { name = 'buffer' }
+    { name = 'buffer' },
+    { name = 'cmdline_history'}
   })
 })
 
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources(
-    { { name = 'path' } },
-    { { name = 'cmdline' } }
-  )
+  sources = cmp.config.sources({ 
+    { name = 'path' },
+    { name = 'cmdline' },
+    { name = 'cmdline_history'}
+  })
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------

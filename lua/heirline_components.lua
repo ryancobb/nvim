@@ -54,9 +54,6 @@ M.file_name = {
   provider = function(self)
     local filename = vim.fn.fnamemodify(self.filename, ":.")
     if filename == "" then return "[No Name]" end
-    -- now, if the filename would occupy more than 1/4th of the available
-    -- space, we trim the file path to its initials
-    -- See Flexible Components section below for dynamic truncation
     if not conditions.width_percent_below(#filename, 0.25) then
       filename = vim.fn.pathshorten(filename)
     end
@@ -93,24 +90,19 @@ M.file_type = {
     return not conditions.buffer_matches({ buftype = { "terminal" } })
   end,
   provider = function()
-    return vim.bo.filetype
+    return " " .. vim.bo.filetype .. " " 
   end,
   hl = { fg = colors.white },
 }
 
 M.lsp_active = {
   condition = conditions.lsp_attached,
-
-  -- You can keep it simple,
-  -- provider = " [LSP]",
-
-  -- Or complicate things a bit and get the servers names
   provider = function()
     local names = {}
     for i, server in pairs(vim.lsp.buf_get_clients(0)) do
       table.insert(names, server.name)
     end
-    return "  [" .. table.concat(names, " ") .. "]"
+    return "%( [" .. table.concat(names, " ") .. "]%)"
   end,
   hl       = { fg = colors.white },
 }
@@ -128,42 +120,29 @@ M.git = {
 
   { -- git branch name
     provider = function(self)
-      return " " .. self.status_dict.head .. " "
+      return " " .. self.status_dict.head
     end,
-  },
-  -- You could handle delimiters, icons and counts similar to Diagnostics
-  {
-    condition = function(self)
-      return self.has_changes
-    end,
-    provider = "("
   },
   {
     provider = function(self)
       local count = self.status_dict.added or 0
-      return count > 0 and ("+" .. count)
+      return count > 0 and (" +" .. count)
     end,
     hl = { fg = colors.green },
   },
   {
     provider = function(self)
       local count = self.status_dict.removed or 0
-      return count > 0 and ("-" .. count)
+      return count > 0 and (" -" .. count)
     end,
     hl = { fg = colors.red },
   },
   {
     provider = function(self)
       local count = self.status_dict.changed or 0
-      return count > 0 and ("~" .. count)
+      return count > 0 and (" ~" .. count)
     end,
     hl = { fg = colors.yellow },
-  },
-  {
-    condition = function(self)
-      return self.has_changes
-    end,
-    provider = ")",
   },
 }
 
@@ -172,13 +151,11 @@ M.treesitter = {
     local b = vim.api.nvim_get_current_buf()
     return vim.treesitter.highlighter.active[b]
   end,
-  provider = "",
+  provider = " ",
   hl = { fg = colors.green },
 }
 
 M.terminal_name = {
-  -- we could add a condition to check that buftype == 'terminal'
-  -- or we could do that later (see #conditional-statuslines below)
   provider = function()
     local tname, _ = vim.api.nvim_buf_get_name(0):gsub(".*;#", "")
     return " " .. tname
