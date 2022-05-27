@@ -98,7 +98,7 @@ require('packer').startup(function(use)
   use 'olimorris/onedarkpro.nvim'
   use "rebelot/heirline.nvim"
   use { 'nvim-neorg/neorg', requires = 'nvim-lua/plenary.nvim' }
-  use { 'petertriho/cmp-git', requires = 'nvim-lua/plenary.nvim' }
+  use 'karb94/neoscroll.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -109,6 +109,7 @@ require('Comment').setup {}
 require('which-key').setup {}
 require('nvim-autopairs').setup {}
 require('fidget').setup {}
+require('neoscroll').setup {}
 
 local fzflua = require('fzf-lua')
 
