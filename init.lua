@@ -9,7 +9,6 @@ pcall(require, 'impatient')
 ------------------------------------------------------------------------------------------------------------------------------------
 -- options -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-vim.g.Illuminate_delay = 1000
 vim.g.did_load_filetypes = 0
 vim.g.do_filetype_lua = 1
 vim.g.ruby_indent_assignment_style = 'variable'
@@ -70,7 +69,6 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
-  use 'cmp-cmdline-history'
   use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
@@ -84,12 +82,10 @@ require('packer').startup(function(use)
   use 'lewis6991/impatient.nvim'
   use 'mrjones2014/smart-splits.nvim'
   use 'sindrets/diffview.nvim'
-  use 'simrat39/symbols-outline.nvim'
   use 'onsails/lspkind.nvim'
   use 'windwp/nvim-autopairs'
   use 'akinsho/toggleterm.nvim'
   use 'folke/which-key.nvim'
-  use 'RRethy/vim-illuminate'
   use 'j-hui/fidget.nvim'
   use 'andymass/vim-matchup'
   use 'ibhagwan/fzf-lua'
@@ -531,7 +527,6 @@ fzflua.setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 -- treesitter ----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-
 require('nvim-treesitter.configs').setup {
   highlight             = {
     enable = true,
@@ -551,7 +546,6 @@ require('nvim-treesitter.configs').setup {
   },
   matchup               = {
     enable = true,
-    disable_virtual_text = true
   },
   endwise               = {
     enable = true
