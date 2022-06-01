@@ -63,6 +63,7 @@ require('packer').startup(function(use)
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use 'nvim-treesitter/nvim-treesitter'
   use 'nvim-treesitter/nvim-treesitter-textobjects'
+  use 'nvim-treesitter/nvim-treesitter-refactor'
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'
@@ -77,7 +78,6 @@ require('packer').startup(function(use)
   use 'famiu/bufdelete.nvim'
   use 'fladson/vim-kitty'
   use 'google/vim-jsonnet'
-  use 'rebelot/kanagawa.nvim'
   use 'RRethy/nvim-treesitter-endwise'
   use 'lewis6991/impatient.nvim'
   use 'mrjones2014/smart-splits.nvim'
@@ -98,7 +98,7 @@ require('packer').startup(function(use)
   use 'olimorris/onedarkpro.nvim'
   use "rebelot/heirline.nvim"
   use { 'nvim-neorg/neorg', requires = 'nvim-lua/plenary.nvim' }
-  use 'karb94/neoscroll.nvim'
+  use 'shatur/neovim-session-manager'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -109,7 +109,6 @@ require('Comment').setup {}
 require('which-key').setup {}
 require('nvim-autopairs').setup {}
 require('fidget').setup {}
-require('neoscroll').setup {}
 
 local fzflua = require('fzf-lua')
 
@@ -133,6 +132,9 @@ onedarkpro.setup {
     NeoTreeNormalNC = { bg = '${bg_dark}' },
     NormalNC = { bg = '${bg_dark}' },
     SignColumn = { bg = 'NONE' },
+    TabLine = { bg = '${bg_dark}', fg = 'gray' },
+    TabLineFill = { bg = '${bg_dark}' },
+    TabLineSel = { bg = '${bg}', fg = '${fg}' },
     TermCursor = { bg = '${fg}' },
     TermCursorNC = { bg = 'NONE' },
     WhichKeyFloat = { bg = '${bg_dark}' },
@@ -141,8 +143,7 @@ onedarkpro.setup {
   },
   colors = {
     onedark = {
-      bg = '#1f2329',
-      bg_dark = '#17191e',
+      bg_dark = '#1f2329',
       blue = '#5f9ccf',
       green = '#89a675',
       purple = '#ae74be',
@@ -153,6 +154,20 @@ onedarkpro.setup {
   },
   options = {
     cursorline = true,
+  },
+  plugins = {
+    aerial = false,
+    barbar = false,
+    dashboard = false,
+    hop = false,
+    lsp_saga = false,
+    nvim_tree = false,
+    nvim_ts_rainbow = false,
+    polygot = false,
+    startify = false,
+    telescope = false,
+    trouble_nvim = false,
+    vim_ultest = false
   }
 }
 onedarkpro.load()
@@ -212,8 +227,6 @@ vim.keymap.set('n', '<C-down>', require('smart-splits').resize_down)
 vim.keymap.set('n', '<C-left>', require('smart-splits').resize_left)
 vim.keymap.set('n', '<C-right>', require('smart-splits').resize_right)
 
-vim.keymap.set('n', 'p', "p=`]") -- paste formatting
-
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
@@ -224,6 +237,8 @@ vim.keymap.set('t', '<c-j>', '<c-\\><c-n><c-w>j')
 vim.keymap.set('t', '<c-k>', '<c-\\><c-n><c-w>k')
 vim.keymap.set('t', '<c-l>', '<c-\\><c-n><c-w>l')
 vim.keymap.set('t', '<c-n>', '<c-\\><c-n>')
+
+vim.keymap.set('v', 'p', '"_dP')
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- autocmds ------------------------------------------------------------------------------------------------------------------------
@@ -368,30 +383,32 @@ local statusline = {
 }
 
 local winbar = {
-  init = utils.pick_child_on_condition,
-  provider = '%=',
-  { -- hide the winbar for special buffers
-    condition = function()
-      return conditions.buffer_matches({
-        buftype = { "nofile", "prompt", "help", "quickfix" },
-        filetype = { "^git.*" },
-      })
-    end,
-    provider = '',
-  },
-  { -- terminals
-    condition = function()
-      return conditions.buffer_matches({ buftype = { 'terminal' } })
-    end,
-    hl.terminal_name
-  },
-  { -- inactive windows
-    condition = function()
-      return not conditions.is_active()
-    end,
-    utils.surround({ "", "" }, colors.bg_dark, { hl = { fg = "gray", force = true }, hl.file_name_block }),
-  },
-  utils.surround({ "", "" }, colors.blue, { hl = { fg = colors.bg_dark, bg = colors.blue }, hl.file_name_block }),
+  {
+    init = utils.pick_child_on_condition,
+    { -- hide the winbar for special buffers
+      condition = function()
+        return conditions.buffer_matches({
+          buftype = { "nofile", "prompt", "help", "quickfix" },
+          filetype = { "^git.*" },
+        })
+      end,
+      provider = '',
+    },
+    { -- terminals
+      provider = '%=',
+      condition = function()
+        return conditions.buffer_matches({ buftype = { 'terminal' } })
+      end,
+      hl.terminal_name
+    },
+    { -- inactive windows
+      condition = function()
+        return not conditions.is_active()
+      end,
+      utils.surround({ "", "" }, colors.bg_dark, { hl = { fg = "gray", force = true }, hl.file_name_block }),
+    },
+    utils.surround({ "", "" }, colors.blue, { hl = { fg = colors.bg_dark, bg = colors.blue }, hl.file_name_block }),
+  }
 }
 
 require('heirline').setup(statusline, winbar)
@@ -540,6 +557,9 @@ require('nvim-treesitter.configs').setup {
       scope_incremental = '<TAB>',
       node_decremental = '<S-TAB>',
     },
+  },
+  refactor              = {
+    highlight_definitions = { enable = true }
   },
   indent                = {
     enable = true,
@@ -700,7 +720,7 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done({ map_char = { tex = 
 cmp.setup {
   formatting = {
     format = lspkind.cmp_format({
-      mode = 'symbol',
+      mode = 'symbol_text',
       maxwidth = 50
     })
   },
@@ -758,16 +778,14 @@ cmp.setup.cmdline('/', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
     { name = 'buffer' },
-    { name = 'cmdline_history'}
   })
 })
 
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({ 
+  sources = cmp.config.sources({
     { name = 'path' },
     { name = 'cmdline' },
-    { name = 'cmdline_history'}
   })
 })
 
