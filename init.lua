@@ -183,7 +183,7 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { function() fzflua.buffers({ fzf_opts = { ['--keep-right'] = '' } }) end, 'buffers' },
+    ['<space>'] = { function() fzflua.buffers({ global_resume = false, fzf_opts = { ['--keep-right'] = '' } }) end, 'buffers' },
     ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
     f = { fzflua.files, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
@@ -253,19 +253,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
-local cursorline_group = vim.api.nvim_create_augroup('CursorLine', { clear = true })
-vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
-  command = 'setlocal cursorline',
-  group = cursorline_group,
-  pattern = '*'
-})
-
-vim.api.nvim_create_autocmd('WinLeave', {
-  command = 'setlocal nocursorline',
-  group = cursorline_group,
-  pattern = '*'
-})
-
 vim.api.nvim_create_autocmd('TermOpen', {
   command = 'setlocal signcolumn=no',
   pattern = '*'
@@ -285,6 +272,14 @@ vim.cmd [[
     let $GIT_EDITOR = "nvr -cc split --remote-wait"
   endif
 ]]
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- neovim-session-manager ----------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('session_manager').setup {
+  autoload_mode = require('session_manager.config').AutoloadMode.CurrentDir
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- hlslens -------------------------------------------------------------------------------------------------------------------------
@@ -627,13 +622,14 @@ require('neorg').setup {
     ['core.norg.dirman'] = {
       config = {
         workspaces = {
-          work = '~/notes/work'
+          todo = '~/notes/work/todo',
+          notes = '~/notes/work/notes'
         }
       }
     },
     ['core.gtd.base'] = {
       config = {
-        workspace = 'work'
+        workspace = 'todo'
       }
     },
   }
@@ -807,7 +803,13 @@ require('window-picker').setup {
 
 require('neo-tree').setup {
   enable_diagnostics = false,
-  filesystem = { filtered_items = { visible = true } },
+  close_if_last_window = true,
+  filesystem = {
+    filtered_items = {
+      visible = true
+    },
+    never_show = { '.DS_Store' }
+  },
   window = {
     mappings = {
       ['<cr>'] = 'open_with_window_picker'
