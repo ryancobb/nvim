@@ -135,7 +135,7 @@ onedarkpro.setup {
     TabLine = { bg = '${bg_dark}', fg = 'gray' },
     TabLineFill = { bg = '${bg_dark}' },
     TabLineSel = { bg = '${bg}', fg = '${fg}' },
-    TermCursor = { bg = '${fg}' },
+    TermCursor = { bg = '${fg}', fg = '${bg}' },
     TermCursorNC = { bg = 'NONE' },
     WhichKeyFloat = { bg = '${bg_dark}' },
     WinBarNC = { bg = '${bg_dark}' },
