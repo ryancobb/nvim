@@ -4,36 +4,6 @@ local colors = require('onedarkpro').get_colors(vim.g.onedarkpro_style)
 
 local M = {}
 
-M.vi_mode = {
-  init = function(self)
-    self.mode = vim.fn.mode(1) -- :h mode()
-  end,
-  static = {
-    mode_colors = {
-      n = colors.bg_dark,
-      i = colors.green,
-      v = colors.cyan,
-      V = colors.cyan,
-      ["\22"] = colors.cyan,
-      c = colors.orange,
-      s = colors.purple,
-      S = colors.purple,
-      ["\19"] = colors.purple,
-      R = colors.orange,
-      r = colors.orange,
-      ["!"] = colors.red,
-      t = colors.red,
-    }
-  },
-  provider = function(self)
-    return "█"
-  end,
-  hl = function(self)
-    local mode = self.mode:sub(1, 1) -- get only the first mode character
-    return { fg = self.mode_colors[mode] }
-  end,
-}
-
 M.space = { provider = ' ' }
 
 M.file_icon = {
@@ -90,21 +60,21 @@ M.file_type = {
     return not conditions.buffer_matches({ buftype = { "terminal" } })
   end,
   provider = function()
-    return " " .. vim.bo.filetype .. " " 
+    return " " .. vim.bo.filetype .. " "
   end,
   hl = { fg = colors.white },
 }
 
 M.lsp_active = {
   condition = conditions.lsp_attached,
-  provider = function()
+  provider  = function()
     local names = {}
     for i, server in pairs(vim.lsp.buf_get_clients(0)) do
       table.insert(names, server.name)
     end
     return "%( [" .. table.concat(names, " ") .. "]%)"
   end,
-  hl       = { fg = colors.white },
+  hl        = { fg = colors.white },
 }
 
 M.git = {

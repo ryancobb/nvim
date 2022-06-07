@@ -11,6 +11,7 @@ pcall(require, 'impatient')
 ------------------------------------------------------------------------------------------------------------------------------------
 vim.g.did_load_filetypes = 0
 vim.g.do_filetype_lua = 1
+vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
 
 vim.opt.autoread = true
@@ -349,10 +350,12 @@ require('toggleterm').setup {
   highlights = {
     NormalNC = {
       link = 'NormalNC'
+    },
+    StatusLine = {
+      link = 'StatusLine'
     }
   }
 }
-
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- heirline ------------------------------------------------------------------------------------------------------------------------
@@ -363,17 +366,34 @@ local conditions = require('heirline.conditions')
 local utils = require('heirline.utils')
 local colors = require('onedarkpro').get_colors(vim.g.onedarkpro_style)
 
+vim.cmd [[ set fillchars=stl:─ ]]
+vim.cmd [[ highlight! link StatusLine WinSeparator ]]
+
+vim.api.nvim_create_autocmd({ 'InsertEnter', 'TermEnter' }, {
+  command = 'highlight StatusLine guibg=' .. colors.bg_dark .. ' guifg=' .. colors.red,
+  pattern = '*'
+})
+
+vim.api.nvim_create_autocmd({ 'InsertLeave', 'TermLeave' }, {
+  command = 'highlight! link StatusLine WinSeparator',
+  pattern = '*'
+})
+
 local statusline = {
-  hl = { bg = colors.bg_dark },
-  hl.vi_mode,
-  hl.space,
-  hl.git,
+  {
+    hl = { bg = colors.bg_dark },
+    hl.git,
+    hl.space,
+  },
   {
     provider = '%=',
-    hl.lsp_active,
-    hl.treesitter,
-    hl.file_type,
-    hl.vi_mode,
+    {
+      hl = { bg = colors.bg_dark },
+      hl.space,
+      hl.lsp_active,
+      hl.treesitter,
+      hl.file_type,
+    }
   },
 }
 
@@ -808,7 +828,7 @@ require('neo-tree').setup {
     filtered_items = {
       visible = true
     },
-    never_show = { '.DS_Store' }
+    never_show = { '.DS_Store', '.git' }
   },
   window = {
     mappings = {
