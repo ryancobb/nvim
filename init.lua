@@ -223,10 +223,10 @@ vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 
-vim.keymap.set('n', '<C-up>', require('smart-splits').resize_up)
-vim.keymap.set('n', '<C-down>', require('smart-splits').resize_down)
-vim.keymap.set('n', '<C-left>', require('smart-splits').resize_left)
-vim.keymap.set('n', '<C-right>', require('smart-splits').resize_right)
+vim.keymap.set('n', '<a-k>', require('smart-splits').resize_up)
+vim.keymap.set('n', '<a-j>', require('smart-splits').resize_down)
+vim.keymap.set('n', '<a-h>', require('smart-splits').resize_left)
+vim.keymap.set('n', '<a-l>', require('smart-splits').resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 
@@ -254,10 +254,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
-vim.api.nvim_create_autocmd('TermOpen', {
-  command = 'setlocal signcolumn=no',
-  pattern = '*'
-})
+------------------------------------------------------------------------------------------------------------------------------------
+-- diffview ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+local actions = require('diffview.actions')
+
+require('diffview').setup {
+  keymaps = {
+    view = {
+      ['gf'] = actions.goto_file_edit
+    },
+    file_panel = {
+      ['gf'] = actions.goto_file_edit
+    }
+  }
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- nvr -----------------------------------------------------------------------------------------------------------------------------
@@ -370,7 +382,7 @@ vim.cmd [[ set fillchars=stl:─ ]]
 vim.cmd [[ highlight! link StatusLine WinSeparator ]]
 
 vim.api.nvim_create_autocmd({ 'InsertEnter', 'TermEnter' }, {
-  command = 'highlight StatusLine guibg=' .. colors.bg_dark .. ' guifg=' .. colors.red,
+  command = 'highlight StatusLine guibg=' .. colors.bg_dark .. ' guifg=' .. colors.blue,
   pattern = '*'
 })
 
