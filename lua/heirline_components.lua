@@ -28,18 +28,11 @@ M.file_name = {
       filename = vim.fn.pathshorten(filename)
     end
     return filename
-  end,
-  hl = function()
-    if vim.bo.modified then
-      -- return { fg = colors.red, bold = true }
-    end
   end
 }
 
 M.file_flags = {
-  {
-    provider = function() if vim.bo.modified then return "[+]" end end,
-  },
+  { provider = function() if vim.bo.modified then return "[+]" end end, },
   {
     provider = function() if (not vim.bo.modifiable) or vim.bo.readonly then return "" end end,
     hl = { fg = colors.orange }
@@ -50,9 +43,30 @@ M.file_name_block = {
   init = function(self)
     self.filename = vim.api.nvim_buf_get_name(0)
   end,
-  M.file_icon,
-  M.file_name,
-  M.file_flags,
+  hl = function()
+    if vim.bo.modified then
+      return { fg = colors.bg_dark }
+    else
+      return { fg = colors.bg_dark }
+    end
+  end,
+  utils.surround({ "", "" }, 
+    function() 
+      if conditions.is_active() then
+        if vim.bo.modified then
+          return colors.yellow
+        else
+          return colors.blue
+        end
+      else -- inactive
+        return colors.gray
+      end
+    end, 
+    {
+      M.file_icon,
+      M.file_name,
+      M.file_flags,
+    }),
 }
 
 M.file_type = {

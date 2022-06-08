@@ -100,6 +100,7 @@ require('packer').startup(function(use)
   use "rebelot/heirline.nvim"
   use { 'nvim-neorg/neorg', requires = 'nvim-lua/plenary.nvim' }
   use 'shatur/neovim-session-manager'
+  use 'rmagatti/alternate-toggler'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -213,6 +214,10 @@ wk.register({
     b = { fzflua.git_branches, 'branches' },
     L = { fzflua.git_commits, 'log' },
     l = { fzflua.git_bcommits, 'log (buffer)' }
+  },
+  ['<leader>t'] = {
+    name = 'toggle',
+    a = { ':ToggleAlternate<CR>', 'alternate' }
   },
   ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } }) end, 'previous diagnostic' },
   [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end, 'next diagnostic' }
@@ -391,6 +396,21 @@ vim.api.nvim_create_autocmd({ 'InsertLeave', 'TermLeave' }, {
   pattern = '*'
 })
 
+vim.api.nvim_create_autocmd("User", {
+  pattern = 'HeirlineInitWinbar',
+  callback = function(args)
+    local buf = args.buf
+    local buftype = vim.tbl_contains(
+      { "prompt", "nofile", "help", "quickfix" },
+      vim.bo[buf].buftype
+    )
+    local filetype = vim.tbl_contains({ "gitcommit" }, vim.bo[buf].filetype)
+    if buftype or filetype then
+      vim.opt_local.winbar = nil
+    end
+  end,
+})
+
 local statusline = {
   {
     hl = { bg = colors.bg_dark },
@@ -415,11 +435,13 @@ local winbar = {
     { -- hide the winbar for special buffers
       condition = function()
         return conditions.buffer_matches({
-          buftype = { "nofile", "prompt", "help", "quickfix" },
-          filetype = { "^git.*" },
+          buftype = { 'nofile', 'prompt', 'help', 'quickfix' },
+          filetype = { 'fzf', '^git.*' },
         })
       end,
-      provider = '',
+      init = function()
+        vim.opt_local.winbar = nil
+      end
     },
     { -- terminals
       provider = '%=',
@@ -428,13 +450,7 @@ local winbar = {
       end,
       hl.terminal_name
     },
-    { -- inactive windows
-      condition = function()
-        return not conditions.is_active()
-      end,
-      utils.surround({ "", "" }, colors.bg_dark, { hl = { fg = "gray", force = true }, hl.file_name_block }),
-    },
-    utils.surround({ "", "" }, colors.blue, { hl = { fg = colors.bg_dark, bg = colors.blue }, hl.file_name_block }),
+    hl.file_name_block,
   }
 }
 
