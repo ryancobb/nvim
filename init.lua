@@ -13,6 +13,7 @@ vim.g.did_load_filetypes = 0
 vim.g.do_filetype_lua = 1
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
+vim.g.test = { ruby = { rspec = { options = '--color' } } }
 
 vim.opt.autoread = true
 vim.opt.clipboard = 'unnamedplus'
@@ -102,6 +103,7 @@ require('packer').startup(function(use)
   use { 'nvim-neorg/neorg', requires = 'nvim-lua/plenary.nvim' }
   use 'shatur/neovim-session-manager'
   use 'rmagatti/alternate-toggler'
+  use { "rcarriga/vim-ultest", requires = { "vim-test/vim-test" }, run = ":UpdateRemotePlugins" }
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -109,9 +111,9 @@ end)
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('Comment').setup {}
-require('which-key').setup {}
-require('nvim-autopairs').setup {}
 require('fidget').setup {}
+require('nvim-autopairs').setup {}
+require('which-key').setup {}
 
 local fzflua = require('fzf-lua')
 
@@ -143,6 +145,7 @@ onedarkpro.setup {
     WhichKeyFloat = { bg = '${bg_dark}' },
     WinBarNC = { bg = '${bg_dark}' },
     WinSeparator = { bg = '${bg_dark}' },
+    UltestSummaryInfo = { fg = '${purple}', style = 'bold' }
   },
   colors = {
     onedark = {
@@ -170,7 +173,6 @@ onedarkpro.setup {
     startify = false,
     telescope = false,
     trouble_nvim = false,
-    vim_ultest = false
   }
 }
 onedarkpro.load()
@@ -220,11 +222,15 @@ wk.register({
     l = { fzflua.git_bcommits, 'log (buffer)' }
   },
   ['<leader>t'] = {
-    name = 'toggle',
-    a = { ':ToggleAlternate<CR>', 'alternate' }
+    a = { ':ToggleAlternate<CR>', 'alternate' },
+    f = { ':Ultest<cr>', 'test file' },
+    n = { ':UltestNearest<cr>', 'test nearest' },
+    t = { ':UltestSummary<cr>', 'test summary' }
   },
   ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } }) end, 'previous diagnostic' },
-  [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end, 'next diagnostic' }
+  [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end, 'next diagnostic' },
+  [']t'] = { '<Plug>(ultest-next-fail)' },
+  ['[t'] = { '<Plug>(ultest-prev-fail)' }
 })
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -508,7 +514,7 @@ require('gitsigns').setup {
         D = { function() gs.diffthis('~') end, 'diff (~)' }
       },
       ['<leader>t'] = {
-        name = 'toggle',
+        name = 'toggle/test',
         b = { gs.toggle_current_line_blame, 'line blame' },
         d = { gs.toggle_deleted, 'deleted' }
       }
@@ -565,7 +571,7 @@ fzflua.setup {
   buffers = {
     winopts = {
       height = 0.15,
-      width = 0.30,
+      width = 0.50,
     },
     previewer = false,
     git_icons = false
