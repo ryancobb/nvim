@@ -90,7 +90,8 @@ require('packer').startup(function(use)
   use 'j-hui/fidget.nvim'
   use 'andymass/vim-matchup'
   use 'ibhagwan/fzf-lua'
-  use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
+  use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x',
+    requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'vim-test/vim-test'
   use 'folke/lua-dev.nvim'
@@ -185,7 +186,8 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { function() fzflua.buffers({ global_resume = false, fzf_opts = { ['--keep-right'] = '' } }) end, 'buffers' },
+    ['<space>'] = { function() fzflua.buffers({ global_resume = false, fzf_opts = { ['--keep-right'] = '' } }) end,
+      'buffers' },
     ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
     f = { fzflua.files, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
@@ -199,7 +201,9 @@ wk.register({
     t = { fzflua.live_grep_glob, 'text' },
     c = { fzflua.grep_cword, 'cursor word' },
     r = { fzflua.resume, 'resume' },
-    a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. ' !' .. vim.fn.expand('%') .. '"' } }) end, 'alternate files' },
+    a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' ..
+          vim.fn.expand('%:t:r'):gsub('_spec', '') .. ' !' .. vim.fn.expand('%') .. '"' } })
+    end, 'alternate files' },
     s = { fzflua.tagstack, 'stack (tags)' },
     j = { fzflua.jumps, 'jumps' }
   },
@@ -537,8 +541,6 @@ fzflua.setup {
     fzf = {
       ['tab'] = 'down',
       ['btab'] = 'up',
-      ['J'] = 'down',
-      ['K'] = 'up'
     }
   },
   winopts = {
@@ -548,10 +550,13 @@ fzflua.setup {
     preview = {
       default = 'bat_native',
       delay = 250
-    }
+    },
+    window_on_create = function()
+      vim.keymap.set('t', '<c-j>', '<down>', { buffer = true })
+      vim.keymap.set('t', '<c-k>', '<up>', { buffer = true })
+    end
   },
   files = {
-    -- fd_opts = "--color=never --type f --hidden --follow --no-ignore --exclude .git --exclude public --exclude node_modules --exclude tmp --exclude spec/fixtures/vcr_cassettes",
     git_icons = false
   },
   lsp = {
@@ -717,9 +722,12 @@ local on_attach = function(_, bufnr)
     K = { vim.lsp.buf.hover, 'hover' },
     ['<leader>D'] = { fzflua.lsp_typedefs, 'type definition' },
     ['<leader>rn'] = { vim.lsp.buf.rename, 'rename' },
-    ['<leader>la'] = { function() fzflua.lsp_code_actions({ winopts = { height = 0.15, width = 0.30 } }) end, 'code actions' },
-    ['<leader>so'] = { function() fzflua.lsp_document_symbols({ fzf_cli_args = '--with-nth=2..' }) end, 'document symbols' },
-    ['<leader>sO'] = { function() fzflua.lsp_workspace_symbols({ fzf_cli_args = '--with-nth=2..' }) end, 'workspace symbols' },
+    ['<leader>la'] = { function() fzflua.lsp_code_actions({ winopts = { height = 0.15, width = 0.30 } }) end,
+      'code actions' },
+    ['<leader>so'] = { function() fzflua.lsp_document_symbols({ fzf_cli_args = '--with-nth=2..' }) end,
+      'document symbols' },
+    ['<leader>sO'] = { function() fzflua.lsp_workspace_symbols({ fzf_cli_args = '--with-nth=2..' }) end,
+      'workspace symbols' },
     ['<leader>l'] = { name = 'lsp', f = { function() vim.lsp.buf.format({ async = true }) end, 'format' } }
   }, opts)
 end
@@ -759,6 +767,33 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local lspkind = require('lspkind')
 local luasnip = require('luasnip')
 
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local down = cmp.mapping(function(fallback)
+  if cmp.visible() then
+    cmp.select_next_item()
+  elseif luasnip.expand_or_jumpable() then
+    luasnip.expand_or_jump()
+  elseif has_words_before() then
+    cmp.complete()
+  else
+    fallback()
+  end
+end, { 'i', 's', 'c' })
+
+local up = cmp.mapping(function(fallback)
+  if cmp.visible() then
+    cmp.select_prev_item()
+  elseif luasnip.jumpable(-1) then
+    luasnip.jump(-1)
+  else
+    fallback()
+  end
+end, { 'i', 's', 'c' })
+
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done({ map_char = { tex = '' } }))
 
 cmp.setup {
@@ -781,24 +816,10 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = false,
     },
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
+    ['<c-j>'] = down,
+    ['<tab>'] = down,
+    ['<c-k>'] = up,
+    ['<s-tab>'] = up,
   }),
   sources = {
     { name = 'nvim_lsp' },
