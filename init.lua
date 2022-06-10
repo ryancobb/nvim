@@ -104,6 +104,7 @@ require('packer').startup(function(use)
   use 'shatur/neovim-session-manager'
   use 'rmagatti/alternate-toggler'
   use { "rcarriga/vim-ultest", requires = { "vim-test/vim-test" }, run = ":UpdateRemotePlugins" }
+  use 'antoinemadec/FixCursorHold.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
