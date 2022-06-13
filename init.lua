@@ -14,9 +14,11 @@ vim.g.do_filetype_lua = 1
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
 vim.g.test = { ruby = { rspec = { options = '--color' } } }
+vim.g.ultest_running_sign = "-"
 
 vim.opt.autoread = true
 vim.opt.clipboard = 'unnamedplus'
+vim.opt.cmdheight = 0
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
@@ -36,7 +38,7 @@ vim.opt.pumheight = 10
 vim.opt.ruler = false
 vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 2
-vim.opt.shortmess = 'IFa'
+vim.opt.shortmess:append('IFa')
 vim.opt.showcmd = false
 vim.opt.showmatch = true
 vim.opt.showmode = false
@@ -105,6 +107,8 @@ require('packer').startup(function(use)
   use 'rmagatti/alternate-toggler'
   use { "rcarriga/vim-ultest", requires = { "vim-test/vim-test" }, run = ":UpdateRemotePlugins" }
   use 'antoinemadec/FixCursorHold.nvim'
+  use 'akinsho/git-conflict.nvim'
+  use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec' } }
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -183,13 +187,14 @@ onedarkpro.load()
 ------------------------------------------------------------------------------------------------------------------------------------
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+vim.keymap.set({ 'n', 'v' }, 'q', '<nop>', { silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { function() fzflua.buffers({ global_resume = false, fzf_opts = { ['--keep-right'] = '' } }) end,
+    ['<space>'] = { function() fzflua.buffers({ fzf_opts = { ['--keep-right'] = '' } }) end,
       'buffers' },
     ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
     f = { fzflua.files, 'find files' },
@@ -217,7 +222,7 @@ wk.register({
   },
   ['<leader>g'] = {
     name = 'git',
-    s = { fzflua.git_status, 'status' },
+    s = { ':Neotree git_status toggle<cr>', 'status' },
     b = { fzflua.git_branches, 'branches' },
     L = { fzflua.git_commits, 'log' },
     l = { fzflua.git_bcommits, 'log (buffer)' }
@@ -228,6 +233,7 @@ wk.register({
     n = { ':UltestNearest<cr>', 'test nearest' },
     t = { ':UltestSummary<cr>', 'test summary' }
   },
+  ['<leader>b'] = { ':Neotree buffers toggle<cr>', 'buffers' },
   ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } }) end, 'previous diagnostic' },
   [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end, 'next diagnostic' },
   [']t'] = { '<Plug>(ultest-next-fail)' },
@@ -271,6 +277,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
+-- neotest -------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('neotest').setup {
+  adapters = {
+    require('neotest-rspec')
+  }
+}
+
+------------------------------------------------------------------------------------------------------------------------------------
 -- diffview ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -284,6 +300,19 @@ require('diffview').setup {
     file_panel = {
       ['gf'] = actions.goto_file_edit
     }
+  }
+}
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- git-conflict --------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('git-conflict').setup {
+  default_mappings = true, -- disable buffer local mapping created by this plugin
+  disable_diagnostics = false, -- This will disable the diagnostics in a buffer whilst it is conflicted
+  highlights = { -- They must have background color, otherwise the default color will be used
+    incoming = 'DiffText',
+    current = 'DiffAdd',
   }
 }
 
@@ -581,9 +610,12 @@ fzflua.setup {
     branches = {
       cmd = "git branch --color --sort=-committerdate"
     },
+    commits = {
+      preview = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1} | delta --width $FZF_PREVIEW_COLUMNS",
+    },
     bcommits = {
-      preview = 'git show --color {1}'
-    }
+      preview = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1} | delta --width $FZF_PREVIEW_COLUMNS",
+    },
   },
   previewers = {
     git_diff = {
