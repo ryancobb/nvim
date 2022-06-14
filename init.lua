@@ -9,12 +9,13 @@ pcall(require, 'impatient')
 ------------------------------------------------------------------------------------------------------------------------------------
 -- options -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-vim.g.did_load_filetypes = 0
 vim.g.do_filetype_lua = 1
+vim.g.did_load_filetypes = 0
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
 vim.g.test = { ruby = { rspec = { options = '--color' } } }
-vim.g.ultest_running_sign = "-"
+
+vim.cmd [[ set formatoptions-=cro ]]
 
 vim.opt.autoread = true
 vim.opt.clipboard = 'unnamedplus'
@@ -65,7 +66,7 @@ require('packer').startup(function(use)
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'lukas-reineke/indent-blankline.nvim'
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  use 'nvim-treesitter/nvim-treesitter'
+  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'nvim-treesitter/nvim-treesitter-refactor'
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
@@ -105,10 +106,12 @@ require('packer').startup(function(use)
   use { 'nvim-neorg/neorg', requires = 'nvim-lua/plenary.nvim' }
   use 'shatur/neovim-session-manager'
   use 'rmagatti/alternate-toggler'
-  use { "rcarriga/vim-ultest", requires = { "vim-test/vim-test" }, run = ":UpdateRemotePlugins" }
   use 'antoinemadec/FixCursorHold.nvim'
   use 'akinsho/git-conflict.nvim'
+  use 'vim-test/vim-test'
   use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec' } }
+  use 'nvim-neotest/neotest-vim-test'
+  use { 'VonHeikemen/searchbox.nvim', requires = { 'MunifTanjim/nui.nvim' } }
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -150,7 +153,6 @@ onedarkpro.setup {
     WhichKeyFloat = { bg = '${bg_dark}' },
     WinBarNC = { bg = '${bg_dark}' },
     WinSeparator = { bg = '${bg_dark}' },
-    UltestSummaryInfo = { fg = '${purple}', style = 'bold' }
   },
   colors = {
     onedark = {
@@ -200,6 +202,7 @@ wk.register({
     f = { fzflua.files, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
     q = { '<C-w>q', 'quit window' },
+    Q = { ':bd<cr>', 'quit window and close buffer' },
     e = { ':NeoTreeShowToggle<CR>', 'neotree' },
     r = { ':Neotree reveal<CR>', 'reveal file' }
 
@@ -229,15 +232,11 @@ wk.register({
   },
   ['<leader>t'] = {
     a = { ':ToggleAlternate<CR>', 'alternate' },
-    f = { ':Ultest<cr>', 'test file' },
-    n = { ':UltestNearest<cr>', 'test nearest' },
-    t = { ':UltestSummary<cr>', 'test summary' }
   },
   ['<leader>b'] = { ':Neotree buffers toggle<cr>', 'buffers' },
   ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } }) end, 'previous diagnostic' },
   [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end, 'next diagnostic' },
-  [']t'] = { '<Plug>(ultest-next-fail)' },
-  ['[t'] = { '<Plug>(ultest-prev-fail)' }
+  ['.'] = { function() require('searchbox').replace({ confirm = 'menu' }) end, 'replace' },
 })
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -252,8 +251,12 @@ vim.keymap.set('n', '<a-l>', require('smart-splits').resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 
+vim.keymap.set('n', '/', require('searchbox').match_all)
+vim.keymap.set('n', '?', function() require('searchbox').match_all({ reverse = true }) end)
+
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
 vim.keymap.set('v', '<s-k>', ":m-2<CR>gv=gv")
+vim.keymap.set('v', 'p', '"_dP')
 
 vim.keymap.set('t', '<c-h>', '<c-\\><c-n><c-w>h')
 vim.keymap.set('t', '<c-j>', '<c-\\><c-n><c-w>j')
@@ -261,7 +264,6 @@ vim.keymap.set('t', '<c-k>', '<c-\\><c-n><c-w>k')
 vim.keymap.set('t', '<c-l>', '<c-\\><c-n><c-w>l')
 vim.keymap.set('t', '<c-n>', '<c-\\><c-n>')
 
-vim.keymap.set('v', 'p', '"_dP')
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- autocmds ------------------------------------------------------------------------------------------------------------------------
@@ -276,13 +278,32 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   pattern = '*',
 })
 
+vim.api.nvim_create_autocmd('TermOpen', {
+  pattern = '*',
+  callback = function() vim.cmd [[ setlocal nonumber signcolumn=no ]] end
+})
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- neotest -------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('searchbox').setup {
+  popup = {
+    position = {
+      row = '0%',
+      col = '100%'
+    }
+  }
+}
+
 ------------------------------------------------------------------------------------------------------------------------------------
 -- neotest -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('neotest').setup {
   adapters = {
-    require('neotest-rspec')
+    -- require('neotest-rspec'),
+    require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),
   }
 }
 
@@ -573,12 +594,6 @@ require('gitsigns').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 fzflua.setup {
-  keymap = {
-    fzf = {
-      ['tab'] = 'down',
-      ['btab'] = 'up',
-    }
-  },
   winopts = {
     height = 0.90,
     width = 0.90,
@@ -601,7 +616,7 @@ fzflua.setup {
   buffers = {
     winopts = {
       height = 0.15,
-      width = 0.50,
+      width = 0.75,
     },
     previewer = false,
     git_icons = false
