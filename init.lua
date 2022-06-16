@@ -112,6 +112,8 @@ require('packer').startup(function(use)
   use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec' } }
   use 'nvim-neotest/neotest-vim-test'
   use { 'VonHeikemen/searchbox.nvim', requires = { 'MunifTanjim/nui.nvim' } }
+  use 'p00f/nvim-ts-rainbow'
+  use 'matbme/JABS.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -157,12 +159,12 @@ onedarkpro.setup {
   colors = {
     onedark = {
       bg_dark = '#1f2329',
-      blue = '#5f9ccf',
-      green = '#89a675',
-      purple = '#ae74be',
+      blue = '#6FA5D3',
+      green = '#94ae82',
+      purple = '#B681C4',
       yellow = '#c7aa75',
-      cyan = '#579ca4',
-      red = '#d9737b'
+      cyan = '#67A5AD',
+      red = '#dc8188'
     }
   },
   options = {
@@ -196,8 +198,7 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { function() fzflua.buffers({ fzf_opts = { ['--keep-right'] = '' } }) end,
-      'buffers' },
+    ['<space>'] = { ':JABSOpen<cr>', 'buffers' },
     ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
     f = { fzflua.files, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
@@ -228,15 +229,19 @@ wk.register({
     s = { ':Neotree git_status toggle<cr>', 'status' },
     b = { fzflua.git_branches, 'branches' },
     L = { fzflua.git_commits, 'log' },
-    l = { fzflua.git_bcommits, 'log (buffer)' }
+    l = { fzflua.git_bcommits, 'log (buffer)' },
+  },
+  ['<leader>d'] = {
+    name = 'diff',
+    c = { ':DiffviewClose<cr>', 'close' }
   },
   ['<leader>t'] = {
     a = { ':ToggleAlternate<CR>', 'alternate' },
   },
   ['<leader>b'] = { ':Neotree buffers toggle<cr>', 'buffers' },
+  ['<leader>.'] = { function() require('searchbox').replace({ confirm = 'menu' }) end, 'replace' },
   ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } }) end, 'previous diagnostic' },
   [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end, 'next diagnostic' },
-  ['.'] = { function() require('searchbox').replace({ confirm = 'menu' }) end, 'replace' },
 })
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -284,7 +289,17 @@ vim.api.nvim_create_autocmd('TermOpen', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- neotest -------------------------------------------------------------------------------------------------------------------------
+-- JABS ----------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('jabs').setup {
+  position = 'center',
+  width = 80,
+  border = 'single'
+}
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- searchbox -----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('searchbox').setup {
@@ -302,8 +317,8 @@ require('searchbox').setup {
 
 require('neotest').setup {
   adapters = {
-    -- require('neotest-rspec'),
-    require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),
+    require('neotest-rspec'),
+    -- require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),
   }
 }
 
@@ -314,6 +329,7 @@ require('neotest').setup {
 local actions = require('diffview.actions')
 
 require('diffview').setup {
+  enhanced_diff_hl = true,
   keymaps = {
     view = {
       ['gf'] = actions.goto_file_edit
@@ -650,6 +666,14 @@ fzflua.setup {
 require('nvim-treesitter.configs').setup {
   highlight             = {
     enable = true,
+  },
+  rainbow = {
+    enable = true,
+    extended_mode = true,
+    max_file_lines = nil,
+    colors = {
+      colors.blue, colors.green, colors.orange, colors.purple, colors.yellow
+    }
   },
   incremental_selection = {
     enable = true,

@@ -32,7 +32,6 @@ M.file_name = {
 }
 
 M.file_flags = {
-  { provider = function() if vim.bo.modified then return "[+]" end end, },
   {
     provider = function() if (not vim.bo.modifiable) or vim.bo.readonly then return "" end end,
     hl = { fg = colors.orange }
@@ -43,29 +42,32 @@ M.file_name_block = {
   init = function(self)
     self.filename = vim.api.nvim_buf_get_name(0)
   end,
+  provider = '%=',
   hl = function()
-    if vim.bo.modified then
-      return { fg = colors.bg_dark }
+    local bg
+    if conditions.is_active() then
+      bg = colors.bg
     else
-      return { fg = colors.bg_dark }
+      bg = colors.bg_dark
     end
+
+    local fg
+    if vim.bo.modified then
+      fg = colors.yellow
+    else
+      fg = colors.gray
+    end
+
+    return { bg = bg, fg = fg }
   end,
-  utils.surround({ "", "" }, 
-    function() 
-      if conditions.is_active() then
-        if vim.bo.modified then
-          return colors.yellow
-        else
-          return colors.blue
-        end
-      else -- inactive
-        return colors.gray
-      end
-    end, 
+  utils.surround({ "", "" },
+    colors.bg_dark,
     {
-      M.file_icon,
-      M.file_name,
-      M.file_flags,
+      {
+        M.file_icon,
+        M.file_name,
+        M.file_flags,
+      }
     }),
 }
 
