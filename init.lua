@@ -113,7 +113,6 @@ require('packer').startup(function(use)
   use 'nvim-neotest/neotest-vim-test'
   use { 'VonHeikemen/searchbox.nvim', requires = { 'MunifTanjim/nui.nvim' } }
   use 'p00f/nvim-ts-rainbow'
-  use 'matbme/JABS.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -198,7 +197,8 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { ':JABSOpen<cr>', 'buffers' },
+    ['<space>'] = { function() fzflua.buffers({ fzf_opts = { ['--keep-right'] = '' } }) end,
+      'buffers' },
     ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
     f = { fzflua.files, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
@@ -227,13 +227,8 @@ wk.register({
   ['<leader>g'] = {
     name = 'git',
     s = { ':Neotree git_status toggle<cr>', 'status' },
-    b = { fzflua.git_branches, 'branches' },
     L = { fzflua.git_commits, 'log' },
     l = { fzflua.git_bcommits, 'log (buffer)' },
-  },
-  ['<leader>d'] = {
-    name = 'diff',
-    c = { ':DiffviewClose<cr>', 'close' }
   },
   ['<leader>t'] = {
     a = { ':ToggleAlternate<CR>', 'alternate' },
@@ -317,8 +312,8 @@ require('searchbox').setup {
 
 require('neotest').setup {
   adapters = {
-    require('neotest-rspec'),
-    -- require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),
+    -- require('neotest-rspec'),
+    require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),
   }
 }
 
@@ -568,17 +563,20 @@ require('gitsigns').setup {
     end
 
     wk.register({
-      ['<leader>h'] = {
-        name = 'hunk (git)',
-        s = { ':Gitsigns stage_hunk<CR>', 'stage hunk' },
-        r = { ':Gitsigns reset_hunk<CR>', 'reset hunk' },
+      ['<leader>g'] = {
+        name = 'git',
         S = { gs.stage_buffer, 'stage buffer' },
-        u = { gs.undo_stage_hunk, 'undo stage hunk' },
         R = { gs.reset_buffer, 'reset buffer' },
-        p = { gs.preview_hunk, 'preview hunk' },
         b = { function() gs.blame_line { full = true } end, 'blame line' },
         d = { gs.diffthis, 'diff' },
         D = { function() gs.diffthis('~') end, 'diff (~)' }
+      },
+      ['<leader>h'] = {
+        name = 'hunk',
+        s = { ':Gitsigns stage_hunk<CR>', 'stage hunk' },
+        r = { ':Gitsigns reset_hunk<CR>', 'reset hunk' },
+        u = { gs.undo_stage_hunk, 'undo stage hunk' },
+        p = { gs.preview_hunk, 'preview hunk' },
       },
       ['<leader>t'] = {
         name = 'toggle/test',
@@ -623,6 +621,12 @@ fzflua.setup {
       vim.keymap.set('t', '<c-k>', '<up>', { buffer = true })
     end
   },
+  keymap = {
+    fzf = {
+      ['alt-j'] = 'preview-page-down',
+      ['alt-k'] = 'preview-page-up'
+    }
+  },
   files = {
     git_icons = false
   },
@@ -635,7 +639,7 @@ fzflua.setup {
       width = 0.75,
     },
     previewer = false,
-    git_icons = false
+    git_icons = true
   },
   git = {
     branches = {
@@ -667,7 +671,7 @@ require('nvim-treesitter.configs').setup {
   highlight             = {
     enable = true,
   },
-  rainbow = {
+  rainbow               = {
     enable = true,
     extended_mode = true,
     max_file_lines = nil,
