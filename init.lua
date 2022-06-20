@@ -23,6 +23,7 @@ vim.opt.cmdheight = 0
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
+vim.opt.fillchars = { stl = '─' }
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldlevel = 99
 vim.opt.foldmethod = 'expr'
@@ -99,11 +100,9 @@ require('packer').startup(function(use)
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'vim-test/vim-test'
   use 'folke/lua-dev.nvim'
-  use 'kevinhwang91/nvim-hlslens'
   use 'norcalli/nvim-colorizer.lua'
   use 'olimorris/onedarkpro.nvim'
   use "rebelot/heirline.nvim"
-  use { 'nvim-neorg/neorg', requires = 'nvim-lua/plenary.nvim' }
   use 'shatur/neovim-session-manager'
   use 'rmagatti/alternate-toggler'
   use 'antoinemadec/FixCursorHold.nvim'
@@ -113,6 +112,9 @@ require('packer').startup(function(use)
   use 'nvim-neotest/neotest-vim-test'
   use { 'VonHeikemen/searchbox.nvim', requires = { 'MunifTanjim/nui.nvim' } }
   use 'p00f/nvim-ts-rainbow'
+  use 'hrsh7th/nvim-pasta'
+  use 'lewis6991/satellite.nvim'
+  use 'chentoast/marks.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -123,6 +125,8 @@ require('Comment').setup {}
 require('fidget').setup {}
 require('nvim-autopairs').setup {}
 require('which-key').setup {}
+require('satellite').setup {} 
+require('marks').setup {}
 
 local fzflua = require('fzf-lua')
 
@@ -141,7 +145,6 @@ onedarkpro.setup {
     DiagnosticUnderlineWarn = { fg = 'NONE' },
     IndentBlanklineContextChar = { fg = '${fg}' },
     LineNr = { bg = 'NONE' },
-    ModeMsg = { bg = '${bg_dark}' },
     NeoTreeDirectoryIcon = { fg = '${fg}' },
     NeoTreeNormalNC = { bg = '${bg_dark}' },
     NormalNC = { bg = '${bg_dark}' },
@@ -176,7 +179,6 @@ onedarkpro.setup {
     hop = false,
     lsp_saga = false,
     nvim_tree = false,
-    nvim_ts_rainbow = false,
     polygot = false,
     startify = false,
     telescope = false,
@@ -184,6 +186,8 @@ onedarkpro.setup {
   }
 }
 onedarkpro.load()
+
+local colors = require('onedarkpro').get_colors(vim.g.onedarkpro_style)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
@@ -251,19 +255,16 @@ vim.keymap.set('n', '<a-l>', require('smart-splits').resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 
-vim.keymap.set('n', '/', require('searchbox').match_all)
-vim.keymap.set('n', '?', function() require('searchbox').match_all({ reverse = true }) end)
-
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
 vim.keymap.set('v', '<s-k>', ":m-2<CR>gv=gv")
-vim.keymap.set('v', 'p', '"_dP')
+vim.keymap.set({ 'n', 'x' }, 'p', require('pasta.mappings').p)
+vim.keymap.set({ 'n', 'x' }, 'P', require('pasta.mappings').P)
 
 vim.keymap.set('t', '<c-h>', '<c-\\><c-n><c-w>h')
 vim.keymap.set('t', '<c-j>', '<c-\\><c-n><c-w>j')
 vim.keymap.set('t', '<c-k>', '<c-\\><c-n><c-w>k')
 vim.keymap.set('t', '<c-l>', '<c-\\><c-n><c-w>l')
 vim.keymap.set('t', '<c-n>', '<c-\\><c-n>')
-
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- autocmds ------------------------------------------------------------------------------------------------------------------------
@@ -283,14 +284,15 @@ vim.api.nvim_create_autocmd('TermOpen', {
   callback = function() vim.cmd [[ setlocal nonumber signcolumn=no ]] end
 })
 
+
 ------------------------------------------------------------------------------------------------------------------------------------
--- JABS ----------------------------------------------------------------------------------------------------------------------------
+-- satellite -----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('jabs').setup {
-  position = 'center',
-  width = 80,
-  border = 'single'
+require('satellite').setup {
+  handlers = {
+    enable = false
+  }
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -372,22 +374,6 @@ require('session_manager').setup {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- hlslens -------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('hlslens').setup {
-  nearest_only = true,
-  calm_down = true
-}
-
-vim.keymap.set('n', 'n', [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]])
-vim.keymap.set('n', 'N', [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]])
-vim.keymap.set('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]])
-vim.keymap.set('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]])
-vim.keymap.set('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]])
-vim.keymap.set('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]])
-
-------------------------------------------------------------------------------------------------------------------------------------
 -- vim-test ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -405,14 +391,6 @@ vim.g['test#strategy'] = 'yank'
 
 vim.g.terminal_direction = 'horizontal'
 
--- wk.register({
---   ['<leader>t'] = {
---     name = 'toggle',
---     v = { function() vim.g.terminal_direction = 'vertical' end, 'term vertical' },
---     h = { function() vim.g.terminal_direction = 'horizontal' end, 'term horizontal' },
---     f = { function() vim.g.terminal_direction = 'float' end, 'term float' }
---   }
--- })
 vim.keymap.set('n', '<c-\\>', '<cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>')
 
 vim.api.nvim_command('autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-\\> <Cmd>exe v:count1 . "ToggleTerm"<CR>')
@@ -453,9 +431,7 @@ require('toggleterm').setup {
 local hl = require('heirline_components')
 local conditions = require('heirline.conditions')
 local utils = require('heirline.utils')
-local colors = require('onedarkpro').get_colors(vim.g.onedarkpro_style)
 
-vim.cmd [[ set fillchars=stl:─ ]]
 vim.cmd [[ highlight! link StatusLine WinSeparator ]]
 
 vim.api.nvim_create_autocmd({ 'InsertEnter', 'TermEnter' }, {
@@ -674,10 +650,6 @@ require('nvim-treesitter.configs').setup {
   rainbow               = {
     enable = true,
     extended_mode = true,
-    max_file_lines = nil,
-    colors = {
-      colors.blue, colors.green, colors.orange, colors.purple, colors.yellow
-    }
   },
   incremental_selection = {
     enable = true,
@@ -743,31 +715,6 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
-}
-
-------------------------------------------------------------------------------------------------------------------------------------
--- neorg ---------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('neorg').setup {
-  load = {
-    ['core.defaults'] = {},
-    ['core.norg.concealer'] = {},
-    ['core.norg.completion'] = { config = { engine = 'nvim-cmp' } },
-    ['core.norg.dirman'] = {
-      config = {
-        workspaces = {
-          todo = '~/notes/work/todo',
-          notes = '~/notes/work/notes'
-        }
-      }
-    },
-    ['core.gtd.base'] = {
-      config = {
-        workspace = 'todo'
-      }
-    },
-  }
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -907,9 +854,7 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
-    -- { name = 'buffer' },
     { name = 'nvim_lsp_signature_help' },
-    { name = 'neorg' }
   },
   window = {
     completion = cmp.config.window.bordered({

@@ -55,7 +55,7 @@ M.file_name_block = {
     if vim.bo.modified then
       fg = colors.yellow
     else
-      fg = colors.gray
+      fg = colors.fg
     end
 
     return { bg = bg, fg = fg }
