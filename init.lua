@@ -248,10 +248,10 @@ vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 
-vim.keymap.set('n', '<a-k>', require('smart-splits').resize_up)
-vim.keymap.set('n', '<a-j>', require('smart-splits').resize_down)
-vim.keymap.set('n', '<a-h>', require('smart-splits').resize_left)
-vim.keymap.set('n', '<a-l>', require('smart-splits').resize_right)
+vim.keymap.set('n', '<c-s-k>', require('smart-splits').resize_up)
+vim.keymap.set('n', '<c-s-j>', require('smart-splits').resize_down)
+vim.keymap.set('n', '<c-s-h>', require('smart-splits').resize_left)
+vim.keymap.set('n', '<c-s-l>', require('smart-splits').resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 
@@ -313,6 +313,7 @@ require('searchbox').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('neotest').setup {
+  discovery = false,
   adapters = {
     -- require('neotest-rspec'),
     require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),

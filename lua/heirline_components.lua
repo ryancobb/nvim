@@ -45,23 +45,40 @@ M.file_name_block = {
   provider = '%=',
   hl = function()
     local bg
+    local fg
+
     if conditions.is_active() then
       bg = colors.bg
+
+      if vim.bo.modified then
+        fg = colors.bg_dark
+      else
+        fg = colors.bg
+      end
     else
       bg = colors.bg_dark
-    end
 
-    local fg
-    if vim.bo.modified then
-      fg = colors.yellow
-    else
-      fg = colors.fg
+      if vim.bo.modified then
+        fg = colors.orange
+      else
+        fg = colors.grey
+      end
     end
 
     return { bg = bg, fg = fg }
   end,
   utils.surround({ "", "" },
-    colors.bg_dark,
+    function() 
+      if conditions.is_active() then
+        if vim.bo.modified then
+          return colors.yellow
+        else 
+          return colors.blue
+        end
+      else
+        return colors.bg
+      end
+    end,
     {
       {
         M.file_icon,
