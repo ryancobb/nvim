@@ -39,6 +39,7 @@ vim.opt.numberwidth = 2
 vim.opt.pumheight = 10
 vim.opt.ruler = false
 vim.opt.scrolloff = 10
+vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
 vim.opt.shiftwidth = 2
 vim.opt.shortmess:append('IFa')
 vim.opt.showcmd = false
@@ -103,7 +104,6 @@ require('packer').startup(function(use)
   use 'norcalli/nvim-colorizer.lua'
   use 'olimorris/onedarkpro.nvim'
   use "rebelot/heirline.nvim"
-  use 'shatur/neovim-session-manager'
   use 'rmagatti/alternate-toggler'
   use 'antoinemadec/FixCursorHold.nvim'
   use 'akinsho/git-conflict.nvim'
@@ -113,8 +113,10 @@ require('packer').startup(function(use)
   use { 'VonHeikemen/searchbox.nvim', requires = { 'MunifTanjim/nui.nvim' } }
   use 'p00f/nvim-ts-rainbow'
   use 'hrsh7th/nvim-pasta'
-  use 'lewis6991/satellite.nvim'
-  use 'chentoast/marks.nvim'
+  use { "SmiteshP/nvim-gps", requires = "nvim-treesitter/nvim-treesitter" }
+  use 'rmagatti/auto-session'
+  use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install",
+    setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -125,10 +127,10 @@ require('Comment').setup {}
 require('fidget').setup {}
 require('nvim-autopairs').setup {}
 require('which-key').setup {}
-require('satellite').setup {} 
-require('marks').setup {}
+require("nvim-gps").setup()
 
 local fzflua = require('fzf-lua')
+local gps = require('nvim-gps')
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- theme ---------------------------------------------------------------------------------------------------------------------------
@@ -204,7 +206,7 @@ wk.register({
     ['<space>'] = { function() fzflua.buffers({ fzf_opts = { ['--keep-right'] = '' } }) end,
       'buffers' },
     ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
-    f = { fzflua.files, 'find files' },
+    f = { function() fzflua.files({ fzf_opts = { ['--tiebreak'] = 'begin ' } }) end, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
     q = { '<C-w>q', 'quit window' },
     Q = { ':bd<cr>', 'quit window and close buffer' },
@@ -233,9 +235,14 @@ wk.register({
     s = { ':Neotree git_status toggle<cr>', 'status' },
     L = { fzflua.git_commits, 'log' },
     l = { fzflua.git_bcommits, 'log (buffer)' },
+    d = { ':DiffviewOpen<cr>', 'diff' }
   },
   ['<leader>t'] = {
     a = { ':ToggleAlternate<CR>', 'alternate' },
+    n = { function() require('neotest').run.run() end, 'test nearest' },
+    f = { function() require('neotest').run.run(vim.fn.expand('%')) end, 'test file' },
+    s = { function() require('neotest').summary.toggle() end, 'test summary' },
+    o = { function() require('neotest').output.open() end, 'test output' }
   },
   ['<leader>b'] = { ':Neotree buffers toggle<cr>', 'buffers' },
   ['<leader>.'] = { function() require('searchbox').replace({ confirm = 'menu' }) end, 'replace' },
@@ -284,15 +291,17 @@ vim.api.nvim_create_autocmd('TermOpen', {
   callback = function() vim.cmd [[ setlocal nonumber signcolumn=no ]] end
 })
 
+vim.api.nvim_create_autocmd('VimResized', {
+  pattern = '*',
+  callback = function() vim.cmd [[ wincmd = ]] end
+})
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- satellite -----------------------------------------------------------------------------------------------------------------------
+-- searchbox -----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('satellite').setup {
-  handlers = {
-    enable = false
-  }
+require('auto-session').setup {
+  auto_session_suppress_dirs = { '~/', '~/Projects' }
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -315,8 +324,8 @@ require('searchbox').setup {
 require('neotest').setup {
   discovery = false,
   adapters = {
-    -- require('neotest-rspec'),
-    require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),
+    require('neotest-rspec'),
+    -- require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),
   }
 }
 
@@ -365,14 +374,6 @@ vim.cmd [[
     let $GIT_EDITOR = "nvr -cc split --remote-wait"
   endif
 ]]
-
-------------------------------------------------------------------------------------------------------------------------------------
--- neovim-session-manager ----------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('session_manager').setup {
-  autoload_mode = require('session_manager.config').AutoloadMode.CurrentDir
-}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- vim-test ------------------------------------------------------------------------------------------------------------------------
@@ -480,6 +481,11 @@ local statusline = {
 
 local winbar = {
   {
+    condition = gps.is_available,
+    provider = gps.get_location,
+    hl = { bold = false }
+  },
+  {
     init = utils.pick_child_on_condition,
     { -- hide the winbar for special buffers
       condition = function()
@@ -545,8 +551,8 @@ require('gitsigns').setup {
         S = { gs.stage_buffer, 'stage buffer' },
         R = { gs.reset_buffer, 'reset buffer' },
         b = { function() gs.blame_line { full = true } end, 'blame line' },
-        d = { gs.diffthis, 'diff' },
-        D = { function() gs.diffthis('~') end, 'diff (~)' }
+        -- d = { gs.diffthis, 'diff' },
+        -- D = { function() gs.diffthis('~') end, 'diff (~)' }
       },
       ['<leader>h'] = {
         name = 'hunk',
@@ -715,6 +721,14 @@ require('nvim-treesitter.configs').setup {
         ['[]'] = '@class.outer',
       },
     },
+    lsp_interop = {
+      enable = true,
+      border = 'single',
+      peek_definition_code = {
+        ['<leader>df'] = '@function.outer',
+        ['<leader>dF'] = '@class.outer'
+      }
+    }
   },
 }
 
@@ -743,7 +757,7 @@ local lspconfig = require 'lspconfig'
 
 lspinstaller.setup {}
 
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
   local opts = { buffer = bufnr }
 
   wk.register({
@@ -760,6 +774,7 @@ local on_attach = function(_, bufnr)
       'workspace symbols' },
     ['<leader>l'] = { name = 'lsp', f = { function() vim.lsp.buf.format({ async = true }) end, 'format' } }
   }, opts)
+
 end
 
 -- nvim-cmp supports additional completion capabilities
@@ -856,6 +871,7 @@ cmp.setup {
     { name = 'luasnip' },
     { name = 'path' },
     { name = 'nvim_lsp_signature_help' },
+    { name = 'buffer' }
   },
   window = {
     completion = cmp.config.window.bordered({
