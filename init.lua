@@ -39,7 +39,7 @@ vim.opt.numberwidth = 2
 vim.opt.pumheight = 10
 vim.opt.ruler = false
 vim.opt.scrolloff = 10
-vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal"
+vim.opt.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos"
 vim.opt.shiftwidth = 2
 vim.opt.shortmess:append('IFa')
 vim.opt.showcmd = false
@@ -113,7 +113,6 @@ require('packer').startup(function(use)
   use { 'VonHeikemen/searchbox.nvim', requires = { 'MunifTanjim/nui.nvim' } }
   use 'p00f/nvim-ts-rainbow'
   use 'hrsh7th/nvim-pasta'
-  use { "SmiteshP/nvim-gps", requires = "nvim-treesitter/nvim-treesitter" }
   use 'rmagatti/auto-session'
   use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install",
     setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
@@ -127,10 +126,10 @@ require('Comment').setup {}
 require('fidget').setup {}
 require('nvim-autopairs').setup {}
 require('which-key').setup {}
-require("nvim-gps").setup()
 
 local fzflua = require('fzf-lua')
-local gps = require('nvim-gps')
+local neotest = require('neotest')
+local splits = require('smart-splits')
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- theme ---------------------------------------------------------------------------------------------------------------------------
@@ -203,7 +202,7 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { function() fzflua.buffers({ fzf_opts = { ['--keep-right'] = '' } }) end,
+    ['<space>'] = { function() fzflua.buffers() end,
       'buffers' },
     ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
     f = { function() fzflua.files({ fzf_opts = { ['--tiebreak'] = 'begin ' } }) end, 'find files' },
@@ -238,16 +237,18 @@ wk.register({
     d = { ':DiffviewOpen<cr>', 'diff' }
   },
   ['<leader>t'] = {
-    a = { ':ToggleAlternate<CR>', 'alternate' },
-    n = { function() require('neotest').run.run() end, 'test nearest' },
-    f = { function() require('neotest').run.run(vim.fn.expand('%')) end, 'test file' },
-    s = { function() require('neotest').summary.toggle() end, 'test summary' },
-    o = { function() require('neotest').output.open() end, 'test output' }
+    a = { function() neotest.run.attach() end, 'attach (test)' },
+    n = { function() neotest.run.run() end, 'nearest (test)' },
+    f = { function() neotest.run.run(vim.fn.expand('%')) end, 'file (test)' },
+    s = { function() neotest.summary.toggle() end, 'summary (test)' },
+    o = { function() neotest.output.open() end, 'output (test)' }
   },
   ['<leader>b'] = { ':Neotree buffers toggle<cr>', 'buffers' },
   ['<leader>.'] = { function() require('searchbox').replace({ confirm = 'menu' }) end, 'replace' },
-  ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } }) end, 'previous diagnostic' },
-  [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end, 'next diagnostic' },
+  ['[d'] = { function() vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN },
+    float = { border = 'single' } }) end, 'previous diagnostic' },
+  [']d'] = { function() vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN },
+    float = { border = 'single' } }) end, 'next diagnostic' },
 })
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -255,10 +256,10 @@ vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 
-vim.keymap.set('n', '<c-s-k>', require('smart-splits').resize_up)
-vim.keymap.set('n', '<c-s-j>', require('smart-splits').resize_down)
-vim.keymap.set('n', '<c-s-h>', require('smart-splits').resize_left)
-vim.keymap.set('n', '<c-s-l>', require('smart-splits').resize_right)
+vim.keymap.set('n', '<c-s-k>', splits.resize_up)
+vim.keymap.set('n', '<c-s-j>', splits.resize_down)
+vim.keymap.set('n', '<c-s-h>', splits.resize_left)
+vim.keymap.set('n', '<c-s-l>', splits.resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 
@@ -322,10 +323,17 @@ require('searchbox').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('neotest').setup {
-  discovery = false,
+  discovery = {
+    enabled = false
+  },
   adapters = {
-    require('neotest-rspec'),
-    -- require("neotest-vim-test")({ ignore_filetypes = { "python", "lua" } }),
+    require('neotest-rspec')
+  },
+  icons = {
+    running = "",
+  },
+  diagnostic = {
+    enabled = false
   }
 }
 
@@ -480,11 +488,6 @@ local statusline = {
 }
 
 local winbar = {
-  {
-    condition = gps.is_available,
-    provider = gps.get_location,
-    hl = { bold = false }
-  },
   {
     init = utils.pick_child_on_condition,
     { -- hide the winbar for special buffers
@@ -737,7 +740,10 @@ require('nvim-treesitter.configs').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 vim.diagnostic.config({
-  virtual_text = false
+  virtual_text = false,
+  signs = {
+    severity = { min = vim.diagnostic.severity.WARN }
+  }
 })
 
 local signs = {
