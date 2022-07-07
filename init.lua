@@ -99,7 +99,6 @@ require('packer').startup(function(use)
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x',
     requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
-  use 'vim-test/vim-test'
   use 'folke/lua-dev.nvim'
   use 'norcalli/nvim-colorizer.lua'
   use 'olimorris/onedarkpro.nvim'
@@ -107,9 +106,7 @@ require('packer').startup(function(use)
   use 'rmagatti/alternate-toggler'
   use 'antoinemadec/FixCursorHold.nvim'
   use 'akinsho/git-conflict.nvim'
-  use 'vim-test/vim-test'
   use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec' } }
-  use 'nvim-neotest/neotest-vim-test'
   use { 'VonHeikemen/searchbox.nvim', requires = { 'MunifTanjim/nui.nvim' } }
   use 'p00f/nvim-ts-rainbow'
   use 'hrsh7th/nvim-pasta'
