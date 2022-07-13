@@ -9,8 +9,6 @@ pcall(require, 'impatient')
 ------------------------------------------------------------------------------------------------------------------------------------
 -- options -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-vim.g.do_filetype_lua = 1
-vim.g.did_load_filetypes = 0
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
 vim.g.test = { ruby = { rspec = { options = '--color' } } }
@@ -113,6 +111,7 @@ require('packer').startup(function(use)
   use 'rmagatti/auto-session'
   use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install",
     setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
+  use 'jinh0/eyeliner.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -221,17 +220,13 @@ wk.register({
     s = { fzflua.tagstack, 'stack (tags)' },
     j = { fzflua.jumps, 'jumps' }
   },
-  ['<leader>y'] = {
-    name = 'yank',
-    f = { ':TestFile<CR>', '(test) file' },
-    n = { ':TestNearest<CR>', '(test) nearest' }
-  },
   ['<leader>g'] = {
     name = 'git',
     s = { ':Neotree git_status toggle<cr>', 'status' },
     L = { fzflua.git_commits, 'log' },
     l = { fzflua.git_bcommits, 'log (buffer)' },
-    d = { ':DiffviewOpen<cr>', 'diff' }
+    d = { ':Gitsigns diffthis<cr>', 'diff this' },
+    D = { ':DiffviewOpen<cr>', 'diffview' }
   },
   ['<leader>t'] = {
     a = { function() neotest.run.attach() end, 'attach (test)' },
@@ -240,12 +235,18 @@ wk.register({
     s = { function() neotest.summary.toggle() end, 'summary (test)' },
     o = { function() neotest.output.open() end, 'output (test)' }
   },
+  ['<leader>y'] = {
+    name = 'yank',
+    f = { ':let @+ = expand("%")<cr>', 'filename' }
+  },
   ['<leader>b'] = { ':Neotree buffers toggle<cr>', 'buffers' },
   ['<leader>.'] = { function() require('searchbox').replace({ confirm = 'menu' }) end, 'replace' },
   ['[d'] = { function() vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN },
-    float = { border = 'single' } }) end, 'previous diagnostic' },
+      float = { border = 'single' } })
+  end, 'previous diagnostic' },
   [']d'] = { function() vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN },
-    float = { border = 'single' } }) end, 'next diagnostic' },
+      float = { border = 'single' } })
+  end, 'next diagnostic' },
 })
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -357,7 +358,6 @@ require('diffview').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('git-conflict').setup {
-  default_mappings = true, -- disable buffer local mapping created by this plugin
   disable_diagnostics = false, -- This will disable the diagnostics in a buffer whilst it is conflicted
   highlights = { -- They must have background color, otherwise the default color will be used
     incoming = 'DiffText',
@@ -379,18 +379,6 @@ vim.cmd [[
     let $GIT_EDITOR = "nvr -cc split --remote-wait"
   endif
 ]]
-
-------------------------------------------------------------------------------------------------------------------------------------
--- vim-test ------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-vim.g['test#custom_strategies'] = {
-  yank = function(cmd)
-    vim.cmd('let @+="' .. cmd .. '"')
-  end
-}
-
-vim.g['test#strategy'] = 'yank'
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- toggleterm ----------------------------------------------------------------------------------------------------------------------
@@ -625,14 +613,17 @@ fzflua.setup {
     git_icons = true
   },
   git = {
+    status = {
+      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
+    },
     branches = {
       cmd = "git branch --color --sort=-committerdate"
     },
     commits = {
-      preview = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1} | delta --width $FZF_PREVIEW_COLUMNS",
+      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
     },
     bcommits = {
-      preview = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1} | delta --width $FZF_PREVIEW_COLUMNS",
+      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
     },
   },
   previewers = {
