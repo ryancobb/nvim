@@ -112,6 +112,7 @@ require('packer').startup(function(use)
   use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install",
     setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
   use 'jinh0/eyeliner.nvim'
+  use 'keith/swift.vim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
