@@ -260,6 +260,7 @@ vim.keymap.set('n', '<c-s-h>', splits.resize_left)
 vim.keymap.set('n', '<c-s-l>', splits.resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
+vim.keymap.set('n', 'gx', ':!open <c-r><c-a>')
 
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
 vim.keymap.set('v', '<s-k>', ":m-2<CR>gv=gv")
@@ -587,10 +588,6 @@ fzflua.setup {
       default = 'bat_native',
       delay = 250
     },
-    window_on_create = function()
-      vim.keymap.set('t', '<c-j>', '<down>', { buffer = true })
-      vim.keymap.set('t', '<c-k>', '<up>', { buffer = true })
-    end
   },
   keymap = {
     fzf = {
