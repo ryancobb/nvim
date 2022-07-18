@@ -21,7 +21,7 @@ vim.opt.cmdheight = 0
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
-vim.opt.fillchars = { stl = '─' }
+-- vim.opt.fillchars = { stl = '─' }
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldlevel = 99
 vim.opt.foldmethod = 'expr'
@@ -112,6 +112,8 @@ require('packer').startup(function(use)
   use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install",
     setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
   use 'jinh0/eyeliner.nvim'
+  use 'karb94/neoscroll.nvim'
+  use { 'knubie/vim-kitty-navigator', run = 'cp ./*.py ~/.config/kitty' }
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -120,6 +122,7 @@ end)
 
 require('Comment').setup {}
 require('fidget').setup {}
+require('neoscroll').setup {}
 require('nvim-autopairs').setup {}
 require('which-key').setup {}
 
@@ -212,6 +215,7 @@ wk.register({
   ['<leader>s'] = {
     name = 'search',
     t = { fzflua.live_grep_glob, 'text' },
+    T = { function() fzflua.live_grep_glob({ continue_last_search = true }) end, 'text' },
     c = { fzflua.grep_cword, 'cursor word' },
     r = { fzflua.resume, 'resume' },
     a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' ..
@@ -249,18 +253,13 @@ wk.register({
   end, 'next diagnostic' },
 })
 
-vim.keymap.set('n', '<C-h>', '<C-w>h')
-vim.keymap.set('n', '<C-j>', '<C-w>j')
-vim.keymap.set('n', '<C-k>', '<C-w>k')
-vim.keymap.set('n', '<C-l>', '<C-w>l')
-
 vim.keymap.set('n', '<c-s-k>', splits.resize_up)
 vim.keymap.set('n', '<c-s-j>', splits.resize_down)
 vim.keymap.set('n', '<c-s-h>', splits.resize_left)
 vim.keymap.set('n', '<c-s-l>', splits.resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
-vim.keymap.set('n', 'gx', ':!open <c-r><c-a>')
+vim.keymap.set('n', 'gx', ':!open <c-r><c-a><cr>', { desc = 'open file' })
 
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
 vim.keymap.set('v', '<s-k>', ":m-2<CR>gv=gv")
