@@ -114,6 +114,7 @@ require('packer').startup(function(use)
   use 'jinh0/eyeliner.nvim'
   use 'karb94/neoscroll.nvim'
   use { 'knubie/vim-kitty-navigator', run = 'cp ./*.py ~/.config/kitty' }
+  use 'keith/swift.vim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
