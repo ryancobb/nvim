@@ -21,7 +21,6 @@ vim.opt.cmdheight = 0
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
--- vim.opt.fillchars = { stl = '─' }
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldlevel = 99
 vim.opt.foldmethod = 'expr'
@@ -31,13 +30,11 @@ vim.opt.ignorecase = true
 vim.opt.incsearch = true
 vim.opt.laststatus = 3
 vim.opt.modeline = false
-vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.numberwidth = 2
 vim.opt.pumheight = 10
 vim.opt.ruler = false
 vim.opt.scrolloff = 10
-vim.opt.sessionoptions = "blank,buffers,curdir,help,tabpages,winsize,winpos"
 vim.opt.shiftwidth = 2
 vim.opt.shortmess:append('IFa')
 vim.opt.showcmd = false
@@ -105,16 +102,15 @@ require('packer').startup(function(use)
   use 'antoinemadec/FixCursorHold.nvim'
   use 'akinsho/git-conflict.nvim'
   use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec' } }
-  use { 'VonHeikemen/searchbox.nvim', requires = { 'MunifTanjim/nui.nvim' } }
   use 'p00f/nvim-ts-rainbow'
   use 'hrsh7th/nvim-pasta'
-  use 'rmagatti/auto-session'
   use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install",
     setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
-  use 'jinh0/eyeliner.nvim'
   use 'karb94/neoscroll.nvim'
   use { 'knubie/vim-kitty-navigator', run = 'cp ./*.py ~/.config/kitty' }
   use 'keith/swift.vim'
+  use 'petertriho/nvim-scrollbar'
+  use 'kevinhwang91/nvim-hlslens'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -245,7 +241,6 @@ wk.register({
     f = { ':let @+ = expand("%")<cr>', 'filename' }
   },
   ['<leader>b'] = { ':Neotree buffers toggle<cr>', 'buffers' },
-  ['<leader>.'] = { function() require('searchbox').replace({ confirm = 'menu' }) end, 'replace' },
   ['[d'] = { function() vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN },
       float = { border = 'single' } })
   end, 'previous diagnostic' },
@@ -297,25 +292,11 @@ vim.api.nvim_create_autocmd('VimResized', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- searchbox -----------------------------------------------------------------------------------------------------------------------
+-- scrollbar -----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('auto-session').setup {
-  auto_session_suppress_dirs = { '~/', '~/Projects' }
-}
-
-------------------------------------------------------------------------------------------------------------------------------------
--- searchbox -----------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('searchbox').setup {
-  popup = {
-    position = {
-      row = '0%',
-      col = '100%'
-    }
-  }
-}
+require('scrollbar').setup {}
+require("scrollbar.handlers.search").setup()
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- neotest -------------------------------------------------------------------------------------------------------------------------
@@ -852,9 +833,9 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = false,
     },
-    ['<c-j>'] = down,
+    ['<down>'] = down,
     ['<tab>'] = down,
-    ['<c-k>'] = up,
+    ['<up>'] = up,
     ['<s-tab>'] = up,
   }),
   sources = {
