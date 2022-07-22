@@ -385,6 +385,16 @@ require('neotest').setup {
   },
   diagnostic = {
     enabled = false
+  },
+  highlights = {
+    adapter_name = 'TSUnderline',
+    dir = 'TSInclude',
+    failed = 'TSVariableBuiltin',
+    file = 'TSInclude',
+    namespace = 'TSMethod',
+    passed = 'TSString',
+    running = 'TSType',
+    test = 'TSType'
   }
 }
 
