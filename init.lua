@@ -9,15 +9,17 @@ pcall(require, 'impatient')
 ------------------------------------------------------------------------------------------------------------------------------------
 -- options -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
+
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
-vim.g.test = { ruby = { rspec = { options = '--color' } } }
+vim.g.qs_highlight_on_keys = { 'f', 'F' }
 
 vim.cmd [[ set formatoptions-=cro ]]
+vim.cmd [[ set fillchars+=diff:╱ ]]
 
 vim.opt.autoread = true
 vim.opt.clipboard = 'unnamedplus'
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
@@ -107,10 +109,12 @@ require('packer').startup(function(use)
   use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install",
     setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
   use 'karb94/neoscroll.nvim'
-  use { 'knubie/vim-kitty-navigator', run = 'cp ./*.py ~/.config/kitty' }
+  use { 'knubie/vim-kitty-navigator' }
   use 'keith/swift.vim'
-  use 'petertriho/nvim-scrollbar'
   use 'kevinhwang91/nvim-hlslens'
+  use 'unblevable/quick-scope'
+  use { "catppuccin/nvim", as = "catppuccin" }
+  use "b0o/incline.nvim"
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -131,60 +135,87 @@ local splits = require('smart-splits')
 -- theme ---------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-vim.o.background = 'dark'
-local onedarkpro = require('onedarkpro')
-onedarkpro.setup {
-  hlgroups = {
-    CursorLineNr = { fg = '${fg}' },
-    DiagnosticUnderlineError = { fg = 'NONE' },
-    DiagnosticUnderlineHint = { fg = 'NONE' },
-    DiagnosticUnderlineInfo = { fg = 'NONE' },
-    DiagnosticUnderlineWarn = { fg = 'NONE' },
-    IndentBlanklineContextChar = { fg = '${fg}' },
-    LineNr = { bg = 'NONE' },
-    NeoTreeDirectoryIcon = { fg = '${fg}' },
-    NeoTreeNormalNC = { bg = '${bg_dark}' },
-    NormalNC = { bg = '${bg_dark}' },
-    SignColumn = { bg = 'NONE' },
-    TabLine = { bg = '${bg_dark}', fg = 'gray' },
-    TabLineFill = { bg = '${bg_dark}' },
-    TabLineSel = { bg = '${bg}', fg = '${fg}' },
-    TermCursor = { bg = '${fg}', fg = '${bg}' },
-    TermCursorNC = { bg = 'NONE' },
-    WhichKeyFloat = { bg = '${bg_dark}' },
-    WinBarNC = { bg = '${bg_dark}' },
-    WinSeparator = { bg = '${bg_dark}' },
-  },
-  colors = {
-    onedark = {
-      bg_dark = '#1f2329',
-      blue = '#6FA5D3',
-      green = '#94ae82',
-      purple = '#B681C4',
-      yellow = '#c7aa75',
-      cyan = '#67A5AD',
-      red = '#dc8188'
-    }
-  },
-  options = {
-    cursorline = true,
-  },
-  plugins = {
-    aerial = false,
-    barbar = false,
-    dashboard = false,
-    hop = false,
+vim.g.catppuccin_flavour = "frappe" -- latte, frappe, macchiato, mocha
+
+local colors = require("catppuccin.palettes").get_palette()
+local color_utils = require('catppuccin.utils.colors')
+local dark_bg = color_utils.darken(colors.base, 0.8, nil)
+
+require("catppuccin").setup {
+  transparent_background = true,
+  integrations = {
+    treesitter = true,
+    native_lsp = {
+      enabled = true,
+      virtual_text = {
+        errors = { "italic" },
+        hints = { "italic" },
+        warnings = { "italic" },
+        information = { "italic" },
+      },
+      underlines = {
+        errors = { "underline" },
+        hints = { "underline" },
+        warnings = { "underline" },
+        information = { "underline" },
+      },
+    },
+    coc_nvim = false,
+    lsp_trouble = false,
+    cmp = true,
     lsp_saga = false,
-    nvim_tree = false,
-    polygot = false,
-    startify = false,
+    gitgutter = false,
+    gitsigns = true,
+    leap = false,
     telescope = false,
-    trouble_nvim = false,
+    nvimtree = {
+      enabled = false
+    },
+    neotree = {
+      enabled = true,
+      show_root = true,
+      transparent_panel = true,
+    },
+    dap = {
+      enabled = false,
+      enable_ui = false,
+    },
+    which_key = true,
+    indent_blankline = {
+      enabled = true,
+      colored_indent_levels = false,
+    },
+    dashboard = false,
+    neogit = false,
+    vim_sneak = false,
+    fern = false,
+    barbar = false,
+    bufferline = false,
+    markdown = true,
+    lightspeed = false,
+    ts_rainbow = true,
+    hop = false,
+    notify = true,
+    telekasten = false,
+    symbols_outline = true,
+    mini = false,
+    aerial = false,
+    vimwiki = false,
+    beacon = false,
+  },
+  custom_highlights = {
+    DiffAdd = { fg = 'NONE', bg = color_utils.darken(colors.green, 0.15, colors.base) },
+    DiffChange = { fg = 'NONE', bg = color_utils.darken(colors.yellow, 0.15, colors.base) },
+    DiffDelete = { fg = 'NONE', bg = color_utils.darken(colors.red, 0.15, colors.base) },
+    DiffText = { fg = 'NONE', bg = color_utils.darken(colors.yellow, 0.25, colors.base) },
+    FloatBorder = { bg = dark_bg },
+    NormalNC = { bg = dark_bg },
+    Pmenu = { bg = dark_bg },
+    VertSplit = { fg = colors.surface0, bg = dark_bg },
   }
 }
-onedarkpro.load()
 
-local colors = require('onedarkpro').get_colors(vim.g.onedarkpro_style)
+vim.cmd [[colorscheme catppuccin]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
@@ -198,8 +229,7 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { function() fzflua.buffers() end,
-      'buffers' },
+    ['<space>'] = { ':FzfLua buffers<cr>', 'buffers' },
     ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
     f = { function() fzflua.files({ fzf_opts = { ['--tiebreak'] = 'begin ' } }) end, 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
@@ -216,7 +246,7 @@ wk.register({
     c = { fzflua.grep_cword, 'cursor word' },
     r = { fzflua.resume, 'resume' },
     a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' ..
-          vim.fn.expand('%:t:r'):gsub('_spec', '') .. ' !' .. vim.fn.expand('%') .. '"' } })
+          '!' .. vim.fn.expand('%') .. ' ' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. '"' } })
     end, 'alternate files' },
     s = { fzflua.tagstack, 'stack (tags)' },
     j = { fzflua.jumps, 'jumps' }
@@ -249,10 +279,10 @@ wk.register({
   end, 'next diagnostic' },
 })
 
-vim.keymap.set('n', '<c-s-k>', splits.resize_up)
-vim.keymap.set('n', '<c-s-j>', splits.resize_down)
-vim.keymap.set('n', '<c-s-h>', splits.resize_left)
-vim.keymap.set('n', '<c-s-l>', splits.resize_right)
+vim.keymap.set('n', '<c-up>', splits.resize_up)
+vim.keymap.set('n', '<c-down>', splits.resize_down)
+vim.keymap.set('n', '<c-left>', splits.resize_left)
+vim.keymap.set('n', '<c-right>', splits.resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 vim.keymap.set('n', 'gx', ':!open <c-r><c-a><cr>', { desc = 'open file' })
@@ -292,11 +322,52 @@ vim.api.nvim_create_autocmd('VimResized', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- scrollbar -----------------------------------------------------------------------------------------------------------------------
+-- incline -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('scrollbar').setup {}
-require("scrollbar.handlers.search").setup()
+require('incline').setup {
+  render = function(props)
+    local bufname = vim.api.nvim_buf_get_name(props.buf)
+    if bufname == "" then
+      bufname = "[No name]"
+    else
+      bufname = vim.fn.fnamemodify(bufname, ":.")
+    end
+
+    local icon = require('nvim-web-devicons').get_icon(bufname, nil, { default = true })
+    local max_len = vim.api.nvim_win_get_width(props.win) / 2
+
+    if #bufname > max_len then
+      bufname = icon .. " ..." .. string.sub(bufname, #bufname - max_len, -1)
+    else
+      bufname = icon .. " " .. bufname
+    end
+
+    if vim.bo.modified then
+      return { bufname, guifg = colors.yellow }
+    else
+      return bufname
+    end
+  end,
+  window = {
+    winhighlight = {
+      active = { Normal = 'Search' },
+      inactive = { Normal = 'Normal' }
+    }
+  },
+  hide = {
+    cursorline = "focused_win",
+  }
+}
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- hlslens -------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('hlslens').setup({
+  calm_down = true,
+  nearest_only = true,
+})
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- neotest -------------------------------------------------------------------------------------------------------------------------
@@ -406,46 +477,17 @@ require('toggleterm').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 local hl = require('heirline_components')
-local conditions = require('heirline.conditions')
-local utils = require('heirline.utils')
-
-vim.cmd [[ highlight! link StatusLine WinSeparator ]]
-
-vim.api.nvim_create_autocmd({ 'InsertEnter', 'TermEnter' }, {
-  command = 'highlight StatusLine guibg=' .. colors.bg_dark .. ' guifg=' .. colors.blue,
-  pattern = '*'
-})
-
-vim.api.nvim_create_autocmd({ 'InsertLeave', 'TermLeave' }, {
-  command = 'highlight! link StatusLine WinSeparator',
-  pattern = '*'
-})
-
-vim.api.nvim_create_autocmd("User", {
-  pattern = 'HeirlineInitWinbar',
-  callback = function(args)
-    local buf = args.buf
-    local buftype = vim.tbl_contains(
-      { "prompt", "nofile", "help", "quickfix" },
-      vim.bo[buf].buftype
-    )
-    local filetype = vim.tbl_contains({ "gitcommit" }, vim.bo[buf].filetype)
-    if buftype or filetype then
-      vim.opt_local.winbar = nil
-    end
-  end,
-})
 
 local statusline = {
   {
-    hl = { bg = colors.bg_dark },
+    hl = 'NormalNC',
     hl.git,
     hl.space,
   },
   {
     provider = '%=',
     {
-      hl = { bg = colors.bg_dark },
+      hl = 'NormalNC',
       hl.space,
       hl.lsp_active,
       hl.treesitter,
@@ -454,32 +496,7 @@ local statusline = {
   },
 }
 
-local winbar = {
-  {
-    init = utils.pick_child_on_condition,
-    { -- hide the winbar for special buffers
-      condition = function()
-        return conditions.buffer_matches({
-          buftype = { 'nofile', 'prompt', 'help', 'quickfix' },
-          filetype = { 'fzf', '^git.*' },
-        })
-      end,
-      init = function()
-        vim.opt_local.winbar = nil
-      end
-    },
-    { -- terminals
-      provider = '%=',
-      condition = function()
-        return conditions.buffer_matches({ buftype = { 'terminal' } })
-      end,
-      hl.terminal_name
-    },
-    hl.file_name_block,
-  }
-}
-
-require('heirline').setup(statusline, winbar)
+require('heirline').setup(statusline)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- indent blankline ----------------------------------------------------------------------------------------------------------------
@@ -521,8 +538,6 @@ require('gitsigns').setup {
         S = { gs.stage_buffer, 'stage buffer' },
         R = { gs.reset_buffer, 'reset buffer' },
         b = { function() gs.blame_line { full = true } end, 'blame line' },
-        -- d = { gs.diffthis, 'diff' },
-        -- D = { function() gs.diffthis('~') end, 'diff (~)' }
       },
       ['<leader>h'] = {
         name = 'hunk',
@@ -570,12 +585,6 @@ fzflua.setup {
       delay = 250
     },
   },
-  keymap = {
-    fzf = {
-      ['alt-j'] = 'preview-page-down',
-      ['alt-k'] = 'preview-page-up'
-    }
-  },
   files = {
     git_icons = false
   },
@@ -615,10 +624,10 @@ fzflua.setup {
   }
 }
 
-
 ------------------------------------------------------------------------------------------------------------------------------------
 -- treesitter ----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
+
 require('nvim-treesitter.configs').setup {
   highlight             = {
     enable = true,
@@ -641,7 +650,6 @@ require('nvim-treesitter.configs').setup {
   },
   indent                = {
     enable = true,
-    disable = { 'ruby' }
   },
   matchup               = {
     enable = true,
@@ -833,9 +841,7 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = false,
     },
-    ['<down>'] = down,
     ['<tab>'] = down,
-    ['<up>'] = up,
     ['<s-tab>'] = up,
   }),
   sources = {
