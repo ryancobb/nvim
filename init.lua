@@ -12,7 +12,6 @@ pcall(require, 'impatient')
 
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
-vim.g.qs_highlight_on_keys = { 'f', 'F' }
 
 vim.cmd [[ set formatoptions-=cro ]]
 vim.cmd [[ set fillchars+=diff:╱ ]]
@@ -68,7 +67,6 @@ require('packer').startup(function(use)
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'nvim-treesitter/nvim-treesitter-refactor'
-  use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer'
@@ -77,7 +75,6 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
-  use 'williamboman/nvim-lsp-installer'
   use 'kyazdani42/nvim-web-devicons'
   use 'famiu/bufdelete.nvim'
   use 'fladson/vim-kitty'
@@ -96,7 +93,6 @@ require('packer').startup(function(use)
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x',
     requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
-  use 'folke/lua-dev.nvim'
   use 'norcalli/nvim-colorizer.lua'
   use 'olimorris/onedarkpro.nvim'
   use "rebelot/heirline.nvim"
@@ -112,9 +108,14 @@ require('packer').startup(function(use)
   use { 'knubie/vim-kitty-navigator' }
   use 'keith/swift.vim'
   use 'kevinhwang91/nvim-hlslens'
-  use 'unblevable/quick-scope'
   use { "catppuccin/nvim", as = "catppuccin" }
   use "b0o/incline.nvim"
+  use {
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
+    "neovim/nvim-lspconfig",
+  }
+  use 'jinh0/eyeliner.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -321,6 +322,13 @@ vim.api.nvim_create_autocmd('VimResized', {
   callback = function() vim.cmd [[ wincmd = ]] end
 })
 
+------------------------------------------------------------------------------------------------------------------------------------
+-- eyeliner -------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require'eyeliner'.setup {
+  highlight_on_key = true
+}
 ------------------------------------------------------------------------------------------------------------------------------------
 -- incline -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -742,11 +750,6 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-local lspinstaller = require 'nvim-lsp-installer'
-local lspconfig = require 'lspconfig'
-
-lspinstaller.setup {}
-
 local on_attach = function(client, bufnr)
   local opts = { buffer = bufnr }
 
@@ -771,26 +774,40 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
-for _, server in ipairs(lspinstaller.get_installed_servers()) do
-  if server.name == 'sumneko_lua' then
-    lspconfig.sumneko_lua.setup(require('lua-dev').setup {
-      lspconfig = {
-        on_attach = on_attach,
-        capabilities = capabilities
-      }
-    })
-  else
-    lspconfig[server.name].setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-    }
-  end
-end
-
+local lspconfig = require 'lspconfig'
 lspconfig.solargraph.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   cmd = { '/Users/ryancobb/.asdf/shims/solargraph', 'stdio' }
+}
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- mason ---------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('mason').setup()
+require('mason-lspconfig').setup()
+require('mason-lspconfig').setup_handlers {
+  function(server_name)
+    lspconfig[server_name].setup {
+      on_attach = on_attach,
+      capabilities = capabilities
+    }
+  end,
+  ["sumneko_lua"] = function()
+    lspconfig.sumneko_lua.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          runtime = { version = 'LuaJIT' },
+          diagnostics = { globals = {'vim'} },
+          workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+          telemetry = { enable = false }
+        }
+      }
+    }
+  end
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -899,7 +916,7 @@ require('window-picker').setup {
       buftype = {}
     }
   },
-  other_win_hl_color = '#2D4F67'
+  other_win_hl_color = colors.mauve
 }
 
 require('neo-tree').setup {
