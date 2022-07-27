@@ -205,10 +205,6 @@ require("catppuccin").setup {
     beacon = false,
   },
   custom_highlights = {
-    DiffAdd = { fg = 'NONE', bg = color_utils.darken(colors.green, 0.15, colors.base) },
-    DiffChange = { fg = 'NONE', bg = color_utils.darken(colors.yellow, 0.15, colors.base) },
-    DiffDelete = { fg = 'NONE', bg = color_utils.darken(colors.red, 0.15, colors.base) },
-    DiffText = { fg = 'NONE', bg = color_utils.darken(colors.yellow, 0.25, colors.base) },
     FloatBorder = { bg = dark_bg },
     NormalNC = { bg = dark_bg },
     Pmenu = { bg = dark_bg },
@@ -272,11 +268,9 @@ wk.register({
     f = { ':let @+ = expand("%")<cr>', 'filename' }
   },
   ['<leader>b'] = { ':Neotree buffers toggle<cr>', 'buffers' },
-  ['[d'] = { function() vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN },
-      float = { border = 'single' } })
+  ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } })
   end, 'previous diagnostic' },
-  [']d'] = { function() vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN },
-      float = { border = 'single' } })
+  [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } })
   end, 'next diagnostic' },
 })
 
@@ -326,9 +320,10 @@ vim.api.nvim_create_autocmd('VimResized', {
 -- eyeliner -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require'eyeliner'.setup {
+require('eyeliner').setup {
   highlight_on_key = true
 }
+
 ------------------------------------------------------------------------------------------------------------------------------------
 -- incline -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -733,9 +728,6 @@ require('nvim-treesitter.configs').setup {
 
 vim.diagnostic.config({
   virtual_text = false,
-  signs = {
-    severity = { min = vim.diagnostic.severity.WARN }
-  }
 })
 
 local signs = {
@@ -801,7 +793,7 @@ require('mason-lspconfig').setup_handlers {
       settings = {
         Lua = {
           runtime = { version = 'LuaJIT' },
-          diagnostics = { globals = {'vim'} },
+          diagnostics = { globals = { 'vim' } },
           workspace = { library = vim.api.nvim_get_runtime_file("", true) },
           telemetry = { enable = false }
         }
@@ -913,7 +905,7 @@ require('window-picker').setup {
   filter_rules = {
     bo = {
       filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix', 'toggleterm' },
-      buftype = {}
+      buftype = { 'nofile' }
     }
   },
   other_win_hl_color = colors.mauve
