@@ -116,6 +116,7 @@ require('packer').startup(function(use)
     "neovim/nvim-lspconfig",
   }
   use 'jinh0/eyeliner.nvim'
+  use {'kevinhwang91/nvim-bqf', ft = 'qf'}
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
