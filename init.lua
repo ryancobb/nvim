@@ -85,7 +85,6 @@ require('packer').startup(function(use)
   use 'sindrets/diffview.nvim'
   use 'onsails/lspkind.nvim'
   use 'windwp/nvim-autopairs'
-  use 'akinsho/toggleterm.nvim'
   use 'folke/which-key.nvim'
   use 'j-hui/fidget.nvim'
   use 'andymass/vim-matchup'
@@ -124,7 +123,6 @@ end)
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('Comment').setup {}
-require('fidget').setup {}
 require('neoscroll').setup {}
 require('nvim-autopairs').setup {}
 require('which-key').setup {}
@@ -199,7 +197,7 @@ require("catppuccin").setup {
     hop = false,
     notify = true,
     telekasten = false,
-    symbols_outline = true,
+    symbols_outline = false,
     mini = false,
     aerial = false,
     vimwiki = false,
@@ -318,11 +316,24 @@ vim.api.nvim_create_autocmd('VimResized', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- eyeliner -------------------------------------------------------------------------------------------------------------------------
+-- eyeliner ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('eyeliner').setup {
   highlight_on_key = true
+}
+
+vim.api.nvim_set_hl(0, 'EyelinerPrimary', { fg = colors.mauve, bold = true, underline = true })
+vim.api.nvim_set_hl(0, 'EyelinerSecondary', { fg = colors.yellow, underline = true })
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- fidget --------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('fidget').setup {
+  window = {
+    blend = 0
+  }
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -448,45 +459,6 @@ vim.cmd [[
 ]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- toggleterm ----------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-vim.g.terminal_direction = 'horizontal'
-
-vim.keymap.set('n', '<c-\\>', '<cmd>exe v:count . "ToggleTerm direction=" . g:terminal_direction<CR>')
-
-vim.api.nvim_command('autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-\\> <Cmd>exe v:count1 . "ToggleTerm"<CR>')
-
-require('toggleterm').setup {
-  size = function(term)
-    if term.direction == "horizontal" then
-      return vim.api.nvim_win_get_height(0) * 0.7
-    elseif term.direction == "vertical" then
-      return vim.o.columns * 0.4
-    end
-  end,
-  open_mapping = nil,
-  hide_numbers = true,
-  shade_terminals = false,
-  start_in_insert = false,
-  insert_mappings = true, -- whether or not the open mapping applies in insert mode
-  persist_size = true,
-  direction = vim.g.terminal_direction,
-  close_on_exit = false, -- close the terminal window when the process exits
-  float_opts = {
-    border = 'curved'
-  },
-  highlights = {
-    NormalNC = {
-      link = 'NormalNC'
-    },
-    StatusLine = {
-      link = 'StatusLine'
-    }
-  }
-}
-
-------------------------------------------------------------------------------------------------------------------------------------
 -- heirline ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -527,7 +499,6 @@ require('indent_blankline').setup {
     'packer',
     'lspinfo',
     'lsp-installer',
-    'toggleterm',
     ''
   }
 }
@@ -905,7 +876,7 @@ require('window-picker').setup {
   include_current = false,
   filter_rules = {
     bo = {
-      filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix', 'toggleterm' },
+      filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix' },
       buftype = { 'nofile' }
     }
   },
