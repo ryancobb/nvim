@@ -93,16 +93,12 @@ require('packer').startup(function(use)
     requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'norcalli/nvim-colorizer.lua'
-  use 'olimorris/onedarkpro.nvim'
   use "rebelot/heirline.nvim"
-  use 'rmagatti/alternate-toggler'
   use 'antoinemadec/FixCursorHold.nvim'
   use 'akinsho/git-conflict.nvim'
-  use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec' } }
+  use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec', 'haydenmeade/neotest-jest' } }
   use 'p00f/nvim-ts-rainbow'
   use 'hrsh7th/nvim-pasta'
-  use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install",
-    setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
   use 'karb94/neoscroll.nvim'
   use { 'knubie/vim-kitty-navigator' }
   use 'keith/swift.vim'
@@ -116,6 +112,8 @@ require('packer').startup(function(use)
   }
   use 'jinh0/eyeliner.nvim'
   use {'kevinhwang91/nvim-bqf', ft = 'qf'}
+  use 'dstein64/nvim-scrollview'
+  use 'TimUntersberger/neogit'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -186,7 +184,7 @@ require("catppuccin").setup {
       colored_indent_levels = false,
     },
     dashboard = false,
-    neogit = false,
+    neogit = true,
     vim_sneak = false,
     fern = false,
     barbar = false,
@@ -208,6 +206,8 @@ require("catppuccin").setup {
     NormalNC = { bg = dark_bg },
     Pmenu = { bg = dark_bg },
     VertSplit = { fg = colors.surface0, bg = dark_bg },
+    ScrollView = { bg = colors.overlay2 },
+    NeoTreeTitleBar = { fg = colors.surface0, bg = colors.blue }
   }
 }
 
@@ -249,7 +249,7 @@ wk.register({
   },
   ['<leader>g'] = {
     name = 'git',
-    s = { ':Neotree git_status toggle<cr>', 'status' },
+    s = { ':FzfLua git_status<cr>', 'status' },
     L = { fzflua.git_commits, 'log' },
     l = { fzflua.git_bcommits, 'log (buffer)' },
     d = { ':Gitsigns diffthis<cr>', 'diff this' },
@@ -314,6 +314,16 @@ vim.api.nvim_create_autocmd('VimResized', {
   pattern = '*',
   callback = function() vim.cmd [[ wincmd = ]] end
 })
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- neogit --------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('neogit').setup {
+  integrations = {
+    diffview = true
+  }
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- eyeliner ------------------------------------------------------------------------------------------------------------------------
@@ -384,6 +394,20 @@ require('hlslens').setup({
   nearest_only = true,
 })
 
+vim.cmd[[ highlight link HlSearchNear CurSearch]]
+vim.cmd[[ highlight link HlSearchLensNear CurSearch]]
+
+local kopts = {noremap = true, silent = true}
+
+vim.api.nvim_set_keymap('n', 'n',
+    [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+    kopts)
+vim.api.nvim_set_keymap('n', 'N',
+    [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+    kopts)
+vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+
 ------------------------------------------------------------------------------------------------------------------------------------
 -- neotest -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -393,7 +417,8 @@ require('neotest').setup {
     enabled = false
   },
   adapters = {
-    require('neotest-rspec')
+    require('neotest-rspec'),
+    require('neotest-jest')
   },
   icons = {
     running = "",
@@ -423,10 +448,12 @@ require('diffview').setup {
   enhanced_diff_hl = true,
   keymaps = {
     view = {
-      ['gf'] = actions.goto_file_edit
+      ['gf'] = actions.goto_file_edit,
+      ['s'] = actions.toggle_stage_entry
     },
     file_panel = {
-      ['gf'] = actions.goto_file_edit
+      ['gf'] = actions.goto_file_edit,
+      ['s'] = actions.toggle_stage_entry
     }
   }
 }
@@ -577,12 +604,23 @@ fzflua.setup {
     git_icons = false
   },
   buffers = {
-    winopts = {
-      height = 0.15,
-      width = 0.75,
-    },
     previewer = false,
-    git_icons = true
+    git_icons = true,
+    winopts_fn = function()
+      if vim.o.columns > 80 then
+        return {
+          width = 0.60,
+          height = 0.3
+        }
+
+      else
+        return {
+          width = 0.85,
+          height = 0.3
+        }
+      end
+    end
+
   },
   git = {
     status = {
@@ -606,6 +644,16 @@ fzflua.setup {
   oldfiles = {
     cwd = vim.loop.cwd(),
     cwd_only = true,
+  },
+  keymap = {
+    builtin = {
+      ['<c-d>'] = 'preview-page-down',
+      ['<c-u>'] = 'preview-page-up'
+    },
+    fzf = {
+      ['ctrl-d'] = 'preview-page-down',
+      ['ctrl-u'] = 'preview-page-up'
+    }
   }
 }
 
@@ -894,7 +942,7 @@ require('neo-tree').setup {
   },
   window = {
     mappings = {
-      ['<cr>'] = 'open_with_window_picker'
+      ['<cr>'] = 'open_with_window_picker',
     }
   }
 }
