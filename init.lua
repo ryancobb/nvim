@@ -64,9 +64,13 @@ require('packer').startup(function(use)
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'lukas-reineke/indent-blankline.nvim'
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'nvim-treesitter/nvim-treesitter-refactor'
+  use 'nvim-treesitter/nvim-treesitter-context'
+  use 'RRethy/nvim-treesitter-endwise'
+
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer'
@@ -74,12 +78,10 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-cmdline'
   use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'saadparwaiz1/cmp_luasnip'
+
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'kyazdani42/nvim-web-devicons'
   use 'famiu/bufdelete.nvim'
-  use 'fladson/vim-kitty'
-  use 'google/vim-jsonnet'
-  use 'RRethy/nvim-treesitter-endwise'
   use 'lewis6991/impatient.nvim'
   use 'mrjones2014/smart-splits.nvim'
   use 'sindrets/diffview.nvim'
@@ -101,7 +103,6 @@ require('packer').startup(function(use)
   use 'hrsh7th/nvim-pasta'
   use 'karb94/neoscroll.nvim'
   use { 'knubie/vim-kitty-navigator' }
-  use 'keith/swift.vim'
   use 'kevinhwang91/nvim-hlslens'
   use { "catppuccin/nvim", as = "catppuccin" }
   use "b0o/incline.nvim"
@@ -111,9 +112,14 @@ require('packer').startup(function(use)
     "neovim/nvim-lspconfig",
   }
   use 'jinh0/eyeliner.nvim'
-  use {'kevinhwang91/nvim-bqf', ft = 'qf'}
+  use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
   use 'dstein64/nvim-scrollview'
   use 'TimUntersberger/neogit'
+
+  -- languages
+  use 'keith/swift.vim'
+  use 'fladson/vim-kitty'
+  use 'google/vim-jsonnet'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -252,8 +258,8 @@ wk.register({
     s = { ':FzfLua git_status<cr>', 'status' },
     L = { fzflua.git_commits, 'log' },
     l = { fzflua.git_bcommits, 'log (buffer)' },
-    d = { ':Gitsigns diffthis<cr>', 'diff this' },
-    D = { ':DiffviewOpen<cr>', 'diffview' }
+    D = { ':Gitsigns diffthis<cr>', 'diff this' },
+    d = { ':DiffviewOpen<cr>', 'diffview' }
   },
   ['<leader>t'] = {
     a = { function() neotest.run.attach() end, 'attach (test)' },
@@ -394,17 +400,17 @@ require('hlslens').setup({
   nearest_only = true,
 })
 
-vim.cmd[[ highlight link HlSearchNear CurSearch]]
-vim.cmd[[ highlight link HlSearchLensNear CurSearch]]
+vim.cmd [[ highlight link HlSearchNear CurSearch]]
+vim.cmd [[ highlight link HlSearchLensNear CurSearch]]
 
-local kopts = {noremap = true, silent = true}
+local kopts = { noremap = true, silent = true }
 
 vim.api.nvim_set_keymap('n', 'n',
-    [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
-    kopts)
+  [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+  kopts)
 vim.api.nvim_set_keymap('n', 'N',
-    [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
-    kopts)
+  [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+  kopts)
 vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
 vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
 
@@ -683,6 +689,7 @@ require('nvim-treesitter.configs').setup {
   },
   indent                = {
     enable = true,
+    disable = { 'ruby' }
   },
   matchup               = {
     enable = true,
