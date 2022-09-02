@@ -102,7 +102,6 @@ require('packer').startup(function(use)
   use 'p00f/nvim-ts-rainbow'
   use 'hrsh7th/nvim-pasta'
   use 'karb94/neoscroll.nvim'
-  use { 'knubie/vim-kitty-navigator' }
   use 'kevinhwang91/nvim-hlslens'
   use { "catppuccin/nvim", as = "catppuccin" }
   use "b0o/incline.nvim"
@@ -118,8 +117,8 @@ require('packer').startup(function(use)
 
   -- languages
   use 'keith/swift.vim'
-  use 'fladson/vim-kitty'
   use 'google/vim-jsonnet'
+  use 'phaazon/mind.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -127,6 +126,7 @@ end)
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('Comment').setup {}
+require('mind').setup {}
 require('neoscroll').setup {}
 require('nvim-autopairs').setup {}
 require('which-key').setup {}
@@ -238,7 +238,8 @@ wk.register({
     q = { '<C-w>q', 'quit window' },
     Q = { ':bd<cr>', 'quit window and close buffer' },
     e = { ':NeoTreeShowToggle<CR>', 'neotree' },
-    r = { ':Neotree reveal<CR>', 'reveal file' }
+    r = { ':Neotree reveal<CR>', 'reveal file' },
+    m = { ':MindOpenMain<CR>', 'mind' }
 
   },
   ['<leader>s'] = {
@@ -278,6 +279,11 @@ wk.register({
   [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } })
   end, 'next diagnostic' },
 })
+
+vim.keymap.set('n', '<c-h>', '<c-w>h')
+vim.keymap.set('n', '<c-j>', '<c-w>j')
+vim.keymap.set('n', '<c-k>', '<c-w>k')
+vim.keymap.set('n', '<c-l>', '<c-w>l')
 
 vim.keymap.set('n', '<c-up>', splits.resize_up)
 vim.keymap.set('n', '<c-down>', splits.resize_down)
@@ -366,7 +372,7 @@ require('incline').setup {
     end
 
     local icon = require('nvim-web-devicons').get_icon(bufname, nil, { default = true })
-    local max_len = vim.api.nvim_win_get_width(props.win) / 2
+    local max_len = vim.api.nvim_win_get_width(props.win) * 4/3
 
     if #bufname > max_len then
       bufname = icon .. " ..." .. string.sub(bufname, #bufname - max_len, -1)
