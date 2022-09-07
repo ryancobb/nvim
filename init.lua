@@ -97,7 +97,6 @@ require('packer').startup(function(use)
   use 'norcalli/nvim-colorizer.lua'
   use "rebelot/heirline.nvim"
   use 'antoinemadec/FixCursorHold.nvim'
-  use 'akinsho/git-conflict.nvim'
   use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec', 'haydenmeade/neotest-jest' } }
   use 'p00f/nvim-ts-rainbow'
   use 'hrsh7th/nvim-pasta'
@@ -114,6 +113,8 @@ require('packer').startup(function(use)
   use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
   use 'dstein64/nvim-scrollview'
   use 'TimUntersberger/neogit'
+  use { 'nvim-telescope/telescope.nvim', tag = '0.1.0', requires = { 'nvim-lua/plenary.nvim' } }
+  use 'nvim-telescope/telescope-fzy-native.nvim'
 
   -- languages
   use 'keith/swift.vim'
@@ -131,7 +132,6 @@ require('neoscroll').setup {}
 require('nvim-autopairs').setup {}
 require('which-key').setup {}
 
-local fzflua = require('fzf-lua')
 local neotest = require('neotest')
 local splits = require('smart-splits')
 
@@ -171,7 +171,7 @@ require("catppuccin").setup {
     gitgutter = false,
     gitsigns = true,
     leap = false,
-    telescope = false,
+    telescope = true,
     nvimtree = {
       enabled = false
     },
@@ -231,9 +231,9 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { ':FzfLua buffers<cr>', 'buffers' },
-    ['?'] = { function() fzflua.oldfiles({ fzf_opts = { ['--keep-right'] = '' } }) end, 'old files' },
-    f = { function() fzflua.files({ fzf_opts = { ['--tiebreak'] = 'begin ' } }) end, 'find files' },
+    ['<space>'] = { ':Telescope buffers<cr>', 'buffers' },
+    ['?'] = { ':Telescope oldfiles<cr>', 'old files' },
+    f = { ':Telescope find_files<cr>', 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
     q = { '<C-w>q', 'quit window' },
     Q = { ':bd<cr>', 'quit window and close buffer' },
@@ -244,21 +244,18 @@ wk.register({
   },
   ['<leader>s'] = {
     name = 'search',
-    t = { fzflua.live_grep_glob, 'text' },
-    T = { function() fzflua.live_grep_glob({ continue_last_search = true }) end, 'text' },
-    c = { fzflua.grep_cword, 'cursor word' },
-    r = { fzflua.resume, 'resume' },
-    a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' ..
-          '!' .. vim.fn.expand('%') .. ' ' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. '"' } })
-    end, 'alternate files' },
-    s = { fzflua.tagstack, 'stack (tags)' },
-    j = { fzflua.jumps, 'jumps' }
+    t = { ':Telescope live_grep<cr>', 'text' },
+    c = { ':Telescope grep_string<cr>', 'cursor word' },
+    r = { ':Telescope resume<cr>', 'resume' },
+    -- a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' ..
+    --       '!' .. vim.fn.expand('%') .. ' ' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. '"' } })
+    -- end, 'alternate files' },
   },
   ['<leader>g'] = {
     name = 'git',
-    s = { ':FzfLua git_status<cr>', 'status' },
-    L = { fzflua.git_commits, 'log' },
-    l = { fzflua.git_bcommits, 'log (buffer)' },
+    s = { ':Telescope git_status<cr>', 'status' },
+    L = { ':Telescope git_commits<cr>', 'log' },
+    l = { ':Telescope git_bcommits<cr>', 'log (buffer)' },
     D = { ':Gitsigns diffthis<cr>', 'diff this' },
     d = { ':DiffviewOpen<cr>', 'diffview' }
   },
@@ -328,6 +325,36 @@ vim.api.nvim_create_autocmd('VimResized', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
+-- telescope -----------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('telescope').setup {
+  defaults = {
+    sorting_strategy = "ascending",
+    layout_strategy = "horizontal",
+    layout_config = {
+      horizontal = {
+        prompt_position = "top",
+        preview_width = 0.55,
+        results_width = 0.8,
+      },
+      vertical = {
+        mirror = false,
+      },
+      width = 0.87,
+      height = 0.80,
+      preview_cutoff = 120,
+    },
+    mappings = {
+      i = {
+        ['<esc>'] = require('telescope.actions').close
+      }
+    }
+  }
+}
+require('telescope').load_extension('fzy_native')
+
+------------------------------------------------------------------------------------------------------------------------------------
 -- neogit --------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -372,7 +399,7 @@ require('incline').setup {
     end
 
     local icon = require('nvim-web-devicons').get_icon(bufname, nil, { default = true })
-    local max_len = vim.api.nvim_win_get_width(props.win) * 4/3
+    local max_len = vim.api.nvim_win_get_width(props.win) * 4 / 3
 
     if #bufname > max_len then
       bufname = icon .. " ..." .. string.sub(bufname, #bufname - max_len, -1)
@@ -467,18 +494,6 @@ require('diffview').setup {
       ['gf'] = actions.goto_file_edit,
       ['s'] = actions.toggle_stage_entry
     }
-  }
-}
-
-------------------------------------------------------------------------------------------------------------------------------------
--- git-conflict --------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('git-conflict').setup {
-  disable_diagnostics = false, -- This will disable the diagnostics in a buffer whilst it is conflicted
-  highlights = { -- They must have background color, otherwise the default color will be used
-    incoming = 'DiffText',
-    current = 'DiffAdd',
   }
 }
 
@@ -596,80 +611,6 @@ require('gitsigns').setup {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- fzflua --------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-fzflua.setup {
-  winopts = {
-    height = 0.90,
-    width = 0.90,
-    col = 0.50,
-    preview = {
-      default = 'bat_native',
-      delay = 250
-    },
-  },
-  files = {
-    git_icons = false
-  },
-  lsp = {
-    git_icons = false
-  },
-  buffers = {
-    previewer = false,
-    git_icons = true,
-    winopts_fn = function()
-      if vim.o.columns > 80 then
-        return {
-          width = 0.60,
-          height = 0.3
-        }
-
-      else
-        return {
-          width = 0.85,
-          height = 0.3
-        }
-      end
-    end
-
-  },
-  git = {
-    status = {
-      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
-    },
-    branches = {
-      cmd = "git branch --color --sort=-committerdate"
-    },
-    commits = {
-      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
-    },
-    bcommits = {
-      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
-    },
-  },
-  previewers = {
-    git_diff = {
-      pager = 'delta --width $FZF_PREVIEW_COLUMNS'
-    }
-  },
-  oldfiles = {
-    cwd = vim.loop.cwd(),
-    cwd_only = true,
-  },
-  keymap = {
-    builtin = {
-      ['<c-d>'] = 'preview-page-down',
-      ['<c-u>'] = 'preview-page-up'
-    },
-    fzf = {
-      ['ctrl-d'] = 'preview-page-down',
-      ['ctrl-u'] = 'preview-page-up'
-    }
-  }
-}
-
-------------------------------------------------------------------------------------------------------------------------------------
 -- treesitter ----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -779,17 +720,11 @@ local on_attach = function(client, bufnr)
   local opts = { buffer = bufnr }
 
   wk.register({
-    ['gd'] = { function() fzflua.lsp_definitions({ jump_to_single_result = true }) end, 'definition' },
-    ['gr'] = { function() fzflua.lsp_references({ jump_to_single_result = true }) end, 'references' },
+    ['gd'] = { ':Telescope lsp_definitions<cr>', 'definition' },
+    ['gr'] = { ':Telescope lsp_references<cr>', 'references' },
     K = { vim.lsp.buf.hover, 'hover' },
-    ['<leader>D'] = { fzflua.lsp_typedefs, 'type definition' },
     ['<leader>rn'] = { vim.lsp.buf.rename, 'rename' },
-    ['<leader>la'] = { function() fzflua.lsp_code_actions({ winopts = { height = 0.15, width = 0.30 } }) end,
-      'code actions' },
-    ['<leader>so'] = { function() fzflua.lsp_document_symbols({ fzf_cli_args = '--with-nth=2..' }) end,
-      'document symbols' },
-    ['<leader>sO'] = { function() fzflua.lsp_workspace_symbols({ fzf_cli_args = '--with-nth=2..' }) end,
-      'workspace symbols' },
+    ['<leader>so'] = { ':Telescope lsp_document_symbols<cr>', 'document symbols' },
     ['<leader>l'] = { name = 'lsp', f = { function() vim.lsp.buf.format({ async = true }) end, 'format' } }
   }, opts)
 
