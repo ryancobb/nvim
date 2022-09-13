@@ -13,8 +13,8 @@ pcall(require, 'impatient')
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
 
-vim.cmd [[ set formatoptions-=cro ]]
 vim.cmd [[ set fillchars+=diff:╱ ]]
+vim.cmd [[ set formatoptions-=cro ]]
 
 vim.opt.autoread = true
 vim.opt.clipboard = 'unnamedplus'
@@ -31,6 +31,7 @@ vim.opt.ignorecase = true
 vim.opt.incsearch = true
 vim.opt.laststatus = 3
 vim.opt.modeline = false
+vim.opt.mouse = nil
 vim.opt.number = true
 vim.opt.numberwidth = 2
 vim.opt.pumheight = 10
@@ -67,7 +68,6 @@ require('packer').startup(function(use)
 
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
-  use 'nvim-treesitter/nvim-treesitter-refactor'
   use 'nvim-treesitter/nvim-treesitter-context'
   use 'RRethy/nvim-treesitter-endwise'
 
@@ -90,7 +90,6 @@ require('packer').startup(function(use)
   use 'folke/which-key.nvim'
   use 'j-hui/fidget.nvim'
   use 'andymass/vim-matchup'
-  use 'ibhagwan/fzf-lua'
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x',
     requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
@@ -115,6 +114,7 @@ require('packer').startup(function(use)
   use 'TimUntersberger/neogit'
   use { 'nvim-telescope/telescope.nvim', tag = '0.1.0', requires = { 'nvim-lua/plenary.nvim' } }
   use 'nvim-telescope/telescope-fzy-native.nvim'
+  use 'RRethy/vim-illuminate'
 
   -- languages
   use 'keith/swift.vim'
@@ -183,7 +183,6 @@ require("catppuccin").setup {
   custom_highlights = {
     FloatBorder = { bg = dark_bg },
     NormalNC = { bg = dark_bg },
-    Pmenu = { bg = dark_bg },
     VertSplit = { fg = colors.surface0, bg = dark_bg },
     ScrollView = { bg = colors.overlay2 },
     NeoTreeTitleBar = { fg = colors.surface0, bg = colors.blue }
@@ -303,6 +302,16 @@ vim.api.nvim_create_autocmd('VimResized', {
 
 require('telescope').setup {
   defaults = {
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case',
+      '--trim'
+    },
     sorting_strategy = "ascending",
     layout_strategy = "horizontal",
     layout_config = {
@@ -322,6 +331,11 @@ require('telescope').setup {
       i = {
         ['<esc>'] = require('telescope.actions').close
       }
+    }
+  },
+  pickers = {
+    find_files = {
+      find_command = { 'fd', '--type', 'f', '--strip-cwd-prefix' }
     }
   }
 }
@@ -604,9 +618,6 @@ require('nvim-treesitter.configs').setup {
       node_decremental = '<S-TAB>',
     },
   },
-  refactor              = {
-    highlight_definitions = { enable = true }
-  },
   indent                = {
     enable = true,
     disable = { 'ruby' }
@@ -812,12 +823,8 @@ cmp.setup {
     { name = 'buffer' }
   },
   window = {
-    completion = cmp.config.window.bordered({
-      winhighlight = 'Normal:Pmenu'
-    }),
-    documentation = cmp.config.window.bordered({
-      winhighlight = 'Normal:Pmenu'
-    })
+    completion = cmp.config.window.bordered({}),
+    documentation = cmp.config.window.bordered({})
   }
 }
 
