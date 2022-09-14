@@ -6,7 +6,7 @@ M.space = { provider = ' ' }
 
 M.file_type = {
   condition = function()
-    return not conditions.buffer_matches({ buftype = { "terminal" } })
+    return not conditions.buffer_matches({ filetype = { 'TelescopePrompt' }, buftype = { 'terminal' } })
   end,
   provider = function()
     return " " .. vim.bo.filetype .. " "

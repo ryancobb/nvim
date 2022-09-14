@@ -31,7 +31,6 @@ vim.opt.ignorecase = true
 vim.opt.incsearch = true
 vim.opt.laststatus = 3
 vim.opt.modeline = false
-vim.opt.mouse = nil
 vim.opt.number = true
 vim.opt.numberwidth = 2
 vim.opt.pumheight = 10
@@ -229,14 +228,22 @@ wk.register({
     L = { ':Telescope git_commits<cr>', 'log' },
     l = { ':Telescope git_bcommits<cr>', 'log (buffer)' },
     D = { ':Gitsigns diffthis<cr>', 'diff this' },
-    d = { ':DiffviewOpen<cr>', 'diffview' }
   },
   ['<leader>t'] = {
     a = { function() neotest.run.attach() end, 'attach (test)' },
     n = { function() neotest.run.run() end, 'nearest (test)' },
     f = { function() neotest.run.run(vim.fn.expand('%')) end, 'file (test)' },
     s = { function() neotest.summary.toggle() end, 'summary (test)' },
-    o = { function() neotest.output.open() end, 'output (test)' }
+    o = { function() neotest.output.open() end, 'output (test)' },
+    c = {
+      function()
+        if vim.bo.filetype == '' then
+          vim.cmd [[%s/[0-9]*rspec /]]
+          vim.cmd [[%s/ # .*\n/ ]]
+        end
+      end,
+      'clean failed'
+    }
   },
   ['<leader>y'] = {
     name = 'yank',
@@ -295,6 +302,16 @@ vim.api.nvim_create_autocmd('VimResized', {
   pattern = '*',
   callback = function() vim.cmd [[ wincmd = ]] end
 })
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- illuminate-----------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('illuminate').configure {
+  filetypes_denylist = {
+    'TelescopePrompt'
+  }
+}
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- telescope -----------------------------------------------------------------------------------------------------------------------
@@ -468,6 +485,23 @@ require('neotest').setup {
 -- diffview ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
+function DiffviewToggle()
+  local lib = require('diffview.lib')
+  local view = lib.get_current_view()
+  if view then
+    -- Current tabpage is a Diffview; close it
+    vim.cmd(':DiffviewClose')
+  else
+    vim.cmd(':DiffviewOpen')
+  end
+end
+
+wk.register({
+  ['<leader>g'] = {
+    ['d'] = { DiffviewToggle, 'diff' }
+  }
+})
+
 local actions = require('diffview.actions')
 
 require('diffview').setup {
@@ -572,11 +606,6 @@ require('gitsigns').setup {
         u = { gs.undo_stage_hunk, 'undo stage hunk' },
         p = { gs.preview_hunk, 'preview hunk' },
       },
-      ['<leader>t'] = {
-        name = 'toggle/test',
-        b = { gs.toggle_current_line_blame, 'line blame' },
-        d = { gs.toggle_deleted, 'deleted' }
-      }
     })
 
     -- Navigation
