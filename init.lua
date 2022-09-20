@@ -64,7 +64,6 @@ require('packer').startup(function(use)
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'lukas-reineke/indent-blankline.nvim'
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'nvim-treesitter/nvim-treesitter-context'
@@ -94,7 +93,6 @@ require('packer').startup(function(use)
   use { 's1n7ax/nvim-window-picker', tag = '1.*' }
   use 'norcalli/nvim-colorizer.lua'
   use "rebelot/heirline.nvim"
-  use 'antoinemadec/FixCursorHold.nvim'
   use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec', 'haydenmeade/neotest-jest' } }
   use 'p00f/nvim-ts-rainbow'
   use 'hrsh7th/nvim-pasta'
@@ -114,11 +112,12 @@ require('packer').startup(function(use)
   use { 'nvim-telescope/telescope.nvim', tag = '0.1.0', requires = { 'nvim-lua/plenary.nvim' } }
   use 'nvim-telescope/telescope-fzy-native.nvim'
   use 'RRethy/vim-illuminate'
+  use 'phaazon/mind.nvim'
 
   -- languages
   use 'keith/swift.vim'
   use 'google/vim-jsonnet'
-  use 'phaazon/mind.nvim'
+  use 'folke/lua-dev.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -130,6 +129,7 @@ require('mind').setup {}
 require('neoscroll').setup {}
 require('nvim-autopairs').setup {}
 require('which-key').setup {}
+require("lua-dev").setup {}
 
 local neotest = require('neotest')
 local splits = require('smart-splits')
@@ -345,8 +345,13 @@ require('telescope').setup {
       preview_cutoff = 120,
     },
     mappings = {
+      n = {
+        ['<c-x>'] = require('telescope.actions').delete_buffer
+      },
       i = {
-        ['<esc>'] = require('telescope.actions').close
+        ['<esc>'] = require('telescope.actions').close,
+        ["<c-h>"] = "which_key",
+        ['<c-x>'] = require('telescope.actions').delete_buffer
       }
     }
   },
@@ -534,32 +539,6 @@ vim.cmd [[
 ]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- heirline ------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-local hl = require('heirline_components')
-
-local statusline = {
-  {
-    hl = 'NormalNC',
-    hl.git,
-    hl.space,
-  },
-  {
-    provider = '%=',
-    {
-      hl = 'NormalNC',
-      hl.space,
-      hl.lsp_active,
-      hl.treesitter,
-      hl.file_type,
-    }
-  },
-}
-
-require('heirline').setup(statusline)
-
-------------------------------------------------------------------------------------------------------------------------------------
 -- indent blankline ----------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -710,6 +689,32 @@ require('nvim-treesitter.configs').setup {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
+-- heirline ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+local hl = require('heirline_components')
+
+local statusline = {
+  {
+    hl = 'NormalNC',
+    hl.git,
+    hl.space,
+  },
+  {
+    provider = '%=',
+    {
+      hl = 'NormalNC',
+      hl.space,
+      hl.lsp_active,
+      hl.treesitter,
+      hl.file_type,
+    }
+  },
+}
+
+require('heirline').setup(statusline)
+
+------------------------------------------------------------------------------------------------------------------------------------
 -- lsp -----------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -765,20 +770,6 @@ require('mason-lspconfig').setup_handlers {
     lspconfig[server_name].setup {
       on_attach = on_attach,
       capabilities = capabilities
-    }
-  end,
-  ["sumneko_lua"] = function()
-    lspconfig.sumneko_lua.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      settings = {
-        Lua = {
-          runtime = { version = 'LuaJIT' },
-          diagnostics = { globals = { 'vim' } },
-          workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-          telemetry = { enable = false }
-        }
-      }
     }
   end
 }
