@@ -95,7 +95,6 @@ require('packer').startup(function(use)
   use "rebelot/heirline.nvim"
   use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec', 'haydenmeade/neotest-jest' } }
   use 'p00f/nvim-ts-rainbow'
-  use 'hrsh7th/nvim-pasta'
   use 'karb94/neoscroll.nvim'
   use 'kevinhwang91/nvim-hlslens'
   use { "catppuccin/nvim", as = "catppuccin" }
@@ -111,8 +110,10 @@ require('packer').startup(function(use)
   use 'TimUntersberger/neogit'
   use { 'nvim-telescope/telescope.nvim', tag = '0.1.0', requires = { 'nvim-lua/plenary.nvim' } }
   use 'nvim-telescope/telescope-fzy-native.nvim'
+  use 'nvim-telescope/telescope-live-grep-args.nvim'
   use 'RRethy/vim-illuminate'
   use 'phaazon/mind.nvim'
+  use 'nvim-treesitter/playground'
 
   -- languages
   use 'keith/swift.vim'
@@ -184,7 +185,8 @@ require("catppuccin").setup {
     NormalNC = { bg = dark_bg },
     VertSplit = { fg = colors.surface0, bg = dark_bg },
     ScrollView = { bg = colors.overlay2 },
-    NeoTreeTitleBar = { fg = colors.surface0, bg = colors.blue }
+    NeoTreeTitleBar = { fg = colors.surface0, bg = colors.blue },
+    ['@symbol'] = { fg = colors.sapphire },
   }
 }
 
@@ -215,7 +217,7 @@ wk.register({
   },
   ['<leader>s'] = {
     name = 'search',
-    t = { ':Telescope live_grep<cr>', 'text' },
+    t = { ':Telescope live_grep_args<cr>', 'text' },
     c = { ':Telescope grep_string<cr>', 'cursor word' },
     r = { ':Telescope resume<cr>', 'resume' },
     -- a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' ..
@@ -268,11 +270,13 @@ vim.keymap.set('n', '<c-right>', splits.resize_right)
 
 vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 vim.keymap.set('n', 'gx', ':!open <c-r><c-a><cr>', { desc = 'open file' })
+vim.keymap.set('n', 'gx', [[:silent execute '!open ' . shellescape(expand('<cfile>'), 1)<CR>]], { silent = true })
+
+vim.keymap.set({'n', 'x'}, 'd', '"_d')
+vim.keymap.set('x', 'p', '"_dP')
 
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
 vim.keymap.set('v', '<s-k>', ":m-2<CR>gv=gv")
-vim.keymap.set({ 'n', 'x' }, 'p', require('pasta.mappings').p)
-vim.keymap.set({ 'n', 'x' }, 'P', require('pasta.mappings').P)
 
 vim.keymap.set('t', '<c-h>', '<c-\\><c-n><c-w>h')
 vim.keymap.set('t', '<c-j>', '<c-\\><c-n><c-w>j')
@@ -362,6 +366,7 @@ require('telescope').setup {
   }
 }
 require('telescope').load_extension('fzy_native')
+require('telescope').load_extension('live_grep_args')
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- neogit --------------------------------------------------------------------------------------------------------------------------
@@ -611,7 +616,7 @@ require('gitsigns').setup {
 
 require('nvim-treesitter.configs').setup {
   highlight             = {
-    enable = true,
+    enable = true
   },
   rainbow               = {
     enable = true,
@@ -686,6 +691,9 @@ require('nvim-treesitter.configs').setup {
       }
     }
   },
+  playground            = {
+    enable = true
+  }
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
