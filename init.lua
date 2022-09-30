@@ -12,6 +12,7 @@ pcall(require, 'impatient')
 
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
+vim.g.Illuminate_useDeprecated = 1
 
 vim.cmd [[ set fillchars+=diff:╱ ]]
 vim.cmd [[ set formatoptions-=cro ]]
@@ -61,7 +62,7 @@ vim.opt.wrap = false
 
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
-  use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
+  use 'numToStr/Comment.nvim'
   use 'lukas-reineke/indent-blankline.nvim'
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
@@ -114,6 +115,9 @@ require('packer').startup(function(use)
   use 'RRethy/vim-illuminate'
   use 'phaazon/mind.nvim'
   use 'nvim-treesitter/playground'
+  use 'AckslD/messages.nvim'
+  use 'gennaro-tedesco/nvim-jqx'
+  use 'ellisonleao/glow.nvim'
 
   -- languages
   use 'keith/swift.vim'
@@ -125,12 +129,13 @@ end)
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('Comment').setup {}
-require('mind').setup {}
-require('neoscroll').setup {}
-require('nvim-autopairs').setup {}
-require('which-key').setup {}
-require("lua-dev").setup {}
+require('Comment').setup({})
+require('lua-dev').setup({})
+require('messages').setup({})
+require('mind').setup({})
+require('neoscroll').setup({})
+require('nvim-autopairs').setup({})
+require('which-key').setup({})
 
 local neotest = require('neotest')
 local splits = require('smart-splits')
@@ -159,6 +164,8 @@ require("catppuccin").setup {
     treesitter_context = true,
     ts_rainbow = true,
     which_key = true,
+    illuminate = true,
+    neotest = true,
     native_lsp = {
       enabled = true,
       virtual_text = {
@@ -186,7 +193,6 @@ require("catppuccin").setup {
     VertSplit = { fg = colors.surface0, bg = dark_bg },
     ScrollView = { bg = colors.overlay2 },
     NeoTreeTitleBar = { fg = colors.surface0, bg = colors.blue },
-    ['@symbol'] = { fg = colors.sapphire },
   }
 }
 
@@ -232,7 +238,7 @@ wk.register({
     D = { ':Gitsigns diffthis<cr>', 'diff this' },
   },
   ['<leader>t'] = {
-    a = { function() neotest.run.attach() end, 'attach (test)' },
+    a = { function() neotest.run.attach({ interactive = true }) end, 'attach (test)' },
     n = { function() neotest.run.run() end, 'nearest (test)' },
     f = { function() neotest.run.run(vim.fn.expand('%')) end, 'file (test)' },
     s = { function() neotest.summary.toggle() end, 'summary (test)' },
@@ -272,7 +278,7 @@ vim.keymap.set('n', '<Esc>', '<cmd>:noh<cr>', { silent = true })
 vim.keymap.set('n', 'gx', ':!open <c-r><c-a><cr>', { desc = 'open file' })
 vim.keymap.set('n', 'gx', [[:silent execute '!open ' . shellescape(expand('<cfile>'), 1)<CR>]], { silent = true })
 
-vim.keymap.set({'n', 'x'}, 'd', '"_d')
+vim.keymap.set({ 'n', 'x' }, 'd', '"_d')
 vim.keymap.set('x', 'p', '"_dP')
 
 vim.keymap.set('v', '<s-j>', ":m'>+<CR>gv=gv")
@@ -283,6 +289,9 @@ vim.keymap.set('t', '<c-j>', '<c-\\><c-n><c-w>j')
 vim.keymap.set('t', '<c-k>', '<c-\\><c-n><c-w>k')
 vim.keymap.set('t', '<c-l>', '<c-\\><c-n><c-w>l')
 vim.keymap.set('t', '<c-n>', '<c-\\><c-n>')
+
+vim.keymap.set({ 'i', 'c' }, '<c-a>', '<home>')
+vim.keymap.set({ 'i', 'c' }, '<c-e>', '<end>')
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- autocmds ------------------------------------------------------------------------------------------------------------------------
@@ -305,6 +314,15 @@ vim.api.nvim_create_autocmd('TermOpen', {
 vim.api.nvim_create_autocmd('VimResized', {
   pattern = '*',
   callback = function() vim.cmd [[ wincmd = ]] end
+})
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- glow-----------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('glow').setup({
+  width = 120,
+  border = 'single'
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -473,21 +491,8 @@ require('neotest').setup {
     require('neotest-rspec'),
     require('neotest-jest')
   },
-  icons = {
-    running = "",
-  },
   diagnostic = {
     enabled = false
-  },
-  highlights = {
-    adapter_name = 'TSUnderline',
-    dir = 'TSInclude',
-    failed = 'TSVariableBuiltin',
-    file = 'TSInclude',
-    namespace = 'TSMethod',
-    passed = 'TSString',
-    running = 'TSType',
-    test = 'TSType'
   }
 }
 
