@@ -12,12 +12,10 @@ pcall(require, 'impatient')
 
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
-vim.g.Illuminate_useDeprecated = 1
 
 vim.cmd [[ set fillchars+=diff:╱ ]]
 vim.cmd [[ set formatoptions-=cro ]]
 
-vim.opt.autoread = true
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.cmdheight = 1
 vim.opt.completeopt = 'menu,menuone,noselect'
@@ -118,6 +116,7 @@ require('packer').startup(function(use)
   use 'AckslD/messages.nvim'
   use 'gennaro-tedesco/nvim-jqx'
   use 'ellisonleao/glow.nvim'
+  use 'rgroli/other.nvim'
 
   -- languages
   use 'keith/swift.vim'
@@ -164,7 +163,7 @@ require("catppuccin").setup {
     treesitter_context = true,
     ts_rainbow = true,
     which_key = true,
-    illuminate = true,
+    illuminate = false,
     neotest = true,
     native_lsp = {
       enabled = true,
@@ -226,13 +225,11 @@ wk.register({
     t = { ':Telescope live_grep_args<cr>', 'text' },
     c = { ':Telescope grep_string<cr>', 'cursor word' },
     r = { ':Telescope resume<cr>', 'resume' },
-    -- a = { function() fzflua.files({ fzf_opts = { ['--query'] = '"' ..
-    --       '!' .. vim.fn.expand('%') .. ' ' .. vim.fn.expand('%:t:r'):gsub('_spec', '') .. '"' } })
-    -- end, 'alternate files' },
+    a = { ':Other<cr>', 'alternate'}
   },
   ['<leader>g'] = {
     name = 'git',
-    s = { ':Telescope git_status<cr>', 'status' },
+    s = { ':Neotree git_status<cr>', 'status' },
     L = { ':Telescope git_commits<cr>', 'log' },
     l = { ':Telescope git_bcommits<cr>', 'log (buffer)' },
     D = { ':Gitsigns diffthis<cr>', 'diff this' },
@@ -314,6 +311,32 @@ vim.api.nvim_create_autocmd('TermOpen', {
 vim.api.nvim_create_autocmd('VimResized', {
   pattern = '*',
   callback = function() vim.cmd [[ wincmd = ]] end
+})
+
+vim.api.nvim_create_autocmd('FocusGained', {
+  pattern = '*',
+  callback = function() vim.cmd [[ checktime ]] end
+})
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- glow-----------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('other-nvim').setup({
+  mappings = {
+    'rails',
+    {
+      pattern = 'app/(.*/.*).rb$',
+      target = 'spec/%1_spec.rb$',
+      context = 'test'
+    },
+    {
+      pattern = 'spec/(.*/.*)_spec.rb$',
+      target = 'app/%1.rb$',
+      context = 'implementation'
+    },
+
+  }
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
