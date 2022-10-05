@@ -11,7 +11,7 @@ M.file_type = {
   provider = function()
     return " " .. vim.bo.filetype .. " "
   end,
-  hl = 'Normal',
+  hl = '@text',
 }
 
 M.lsp_active = {
@@ -23,7 +23,7 @@ M.lsp_active = {
     end
     return "%( [" .. table.concat(names, " ") .. "]%)"
   end,
-  hl        = 'Normal',
+  hl = '@text',
 }
 
 M.git = {

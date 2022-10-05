@@ -17,7 +17,7 @@ vim.cmd [[ set fillchars+=diff:╱ ]]
 vim.cmd [[ set formatoptions-=cro ]]
 
 vim.opt.clipboard = 'unnamedplus'
-vim.opt.cmdheight = 1
+vim.opt.cmdheight = 0
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
@@ -36,7 +36,7 @@ vim.opt.pumheight = 10
 vim.opt.ruler = false
 vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 2
-vim.opt.shortmess:append('IFa')
+vim.opt.shortmess:append('sI')
 vim.opt.showcmd = false
 vim.opt.showmatch = true
 vim.opt.showmode = false
@@ -65,7 +65,6 @@ require('packer').startup(function(use)
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
-  use 'nvim-treesitter/nvim-treesitter-context'
   use 'RRethy/nvim-treesitter-endwise'
 
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
@@ -117,6 +116,8 @@ require('packer').startup(function(use)
   use 'gennaro-tedesco/nvim-jqx'
   use 'ellisonleao/glow.nvim'
   use 'rgroli/other.nvim'
+  use { 'ruifm/gitlinker.nvim', requires = 'nvim-lua/plenary.nvim' }
+  use { "SmiteshP/nvim-navic", requires = "neovim/nvim-lspconfig" }
 
   -- languages
   use 'keith/swift.vim'
@@ -129,6 +130,7 @@ end)
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('Comment').setup({})
+require('gitlinker').setup()
 require('lua-dev').setup({})
 require('messages').setup({})
 require('mind').setup({})
@@ -150,7 +152,7 @@ local color_utils = require('catppuccin.utils.colors')
 local dark_bg = color_utils.darken(colors.base, 0.8, nil)
 
 require("catppuccin").setup {
-  transparent_background = true,
+  transparent_background = false,
   integrations = {
     cmp = true,
     fidget = true,
@@ -160,10 +162,8 @@ require("catppuccin").setup {
     notify = true,
     telescope = true,
     treesitter = true,
-    treesitter_context = true,
     ts_rainbow = true,
     which_key = true,
-    illuminate = false,
     neotest = true,
     native_lsp = {
       enabled = true,
@@ -181,17 +181,20 @@ require("catppuccin").setup {
       },
     },
     neotree = {
-      enabled = false,
+      enabled = true,
       show_root = true,
       transparent_panel = false,
     },
+    navic = {
+      enabled = true,
+      custom_bg = dark_bg
+    }
   },
   custom_highlights = {
     FloatBorder = { bg = dark_bg },
     NormalNC = { bg = dark_bg },
     VertSplit = { fg = colors.surface0, bg = dark_bg },
     ScrollView = { bg = colors.overlay2 },
-    NeoTreeTitleBar = { fg = colors.surface0, bg = colors.blue },
   }
 }
 
@@ -210,7 +213,7 @@ local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
     ['<space>'] = { ':Telescope buffers<cr>', 'buffers' },
-    ['?'] = { ':Telescope oldfiles<cr>', 'old files' },
+    ['?'] = { ':Telescope oldfiles cwd_only=true<cr>', 'old files' },
     f = { ':Telescope find_files<cr>', 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
     q = { '<C-w>q', 'quit window' },
@@ -225,7 +228,7 @@ wk.register({
     t = { ':Telescope live_grep_args<cr>', 'text' },
     c = { ':Telescope grep_string<cr>', 'cursor word' },
     r = { ':Telescope resume<cr>', 'resume' },
-    a = { ':Other<cr>', 'alternate'}
+    a = { ':Other<cr>', 'alternate' }
   },
   ['<leader>g'] = {
     name = 'git',
@@ -233,6 +236,7 @@ wk.register({
     L = { ':Telescope git_commits<cr>', 'log' },
     l = { ':Telescope git_bcommits<cr>', 'log (buffer)' },
     D = { ':Gitsigns diffthis<cr>', 'diff this' },
+    y = { function() require('gitlinker').get_buf_range_url('n', {}) end, 'yank repo link' }
   },
   ['<leader>t'] = {
     a = { function() neotest.run.attach({ interactive = true }) end, 'attach (test)' },
@@ -316,6 +320,14 @@ vim.api.nvim_create_autocmd('VimResized', {
 vim.api.nvim_create_autocmd('FocusGained', {
   pattern = '*',
   callback = function() vim.cmd [[ checktime ]] end
+})
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- navic ---------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('nvim-navic').setup({
+  highlight = true
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -735,6 +747,11 @@ local statusline = {
     hl = 'NormalNC',
     hl.git,
     hl.space,
+    hl.space,
+    {
+      condition = require('nvim-navic').is_available,
+      provider = require('nvim-navic').get_location
+    }
   },
   {
     provider = '%=',
@@ -782,6 +799,9 @@ local on_attach = function(client, bufnr)
     ['<leader>l'] = { name = 'lsp', f = { function() vim.lsp.buf.format({ async = true }) end, 'format' } }
   }, opts)
 
+  if client.server_capabilities.documentSymbolProvider then
+    require('nvim-navic').attach(client, bufnr)
+  end
 end
 
 -- nvim-cmp supports additional completion capabilities
@@ -872,11 +892,11 @@ cmp.setup {
     ['<s-tab>'] = up,
   }),
   sources = {
-    { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'nvim_lsp' },
+    { name = 'buffer' },
     { name = 'path' },
     { name = 'nvim_lsp_signature_help' },
-    { name = 'buffer' }
   },
   window = {
     completion = cmp.config.window.bordered({}),
@@ -884,7 +904,13 @@ cmp.setup {
   }
 }
 
-cmp.setup.cmdline('/', {
+cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+    { name = 'buffer' }
+  })
+})
+
+cmp.setup.cmdline({ '/', '?' }, {
   mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
     { name = 'buffer' },
