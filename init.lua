@@ -122,7 +122,7 @@ require('packer').startup(function(use)
   -- languages
   use 'keith/swift.vim'
   use 'google/vim-jsonnet'
-  use 'folke/lua-dev.nvim'
+  use 'folke/neodev.nvim'
 end)
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ end)
 
 require('Comment').setup({})
 require('gitlinker').setup()
-require('lua-dev').setup({})
+require('neodev').setup({})
 require('messages').setup({})
 require('mind').setup({})
 require('neoscroll').setup({})
@@ -805,8 +805,7 @@ local on_attach = function(client, bufnr)
 end
 
 -- nvim-cmp supports additional completion capabilities
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local lspconfig = require 'lspconfig'
 lspconfig.solargraph.setup {
