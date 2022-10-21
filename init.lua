@@ -34,7 +34,6 @@ vim.opt.number = true
 vim.opt.numberwidth = 2
 vim.opt.pumheight = 10
 vim.opt.ruler = false
-vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 2
 vim.opt.shortmess:append('sI')
 vim.opt.showcmd = false
@@ -191,10 +190,8 @@ require("catppuccin").setup {
     }
   },
   custom_highlights = {
-    FloatBorder = { bg = dark_bg },
     NormalNC = { bg = dark_bg },
     VertSplit = { fg = colors.surface0, bg = dark_bg },
-    ScrollView = { bg = colors.overlay2 },
   }
 }
 
@@ -212,7 +209,7 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { ':Telescope buffers<cr>', 'buffers' },
+    ['<space>'] = { ':Telescope buffers previewer=false layout_config={height=20}<cr>', 'buffers' },
     ['?'] = { ':Telescope oldfiles cwd_only=true<cr>', 'old files' },
     f = { ':Telescope find_files<cr>', 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
