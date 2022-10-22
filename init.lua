@@ -151,7 +151,11 @@ local color_utils = require('catppuccin.utils.colors')
 local dark_bg = color_utils.darken(colors.base, 0.8, nil)
 
 require("catppuccin").setup {
-  transparent_background = false,
+  dim_inactive = {
+    enabled = true,
+    shade = 'dark',
+    percentage = 0.20
+  },
   integrations = {
     cmp = true,
     fidget = true,
@@ -189,10 +193,6 @@ require("catppuccin").setup {
       custom_bg = dark_bg
     }
   },
-  custom_highlights = {
-    NormalNC = { bg = dark_bg },
-    VertSplit = { fg = colors.surface0, bg = dark_bg },
-  }
 }
 
 vim.cmd [[colorscheme catppuccin]]
