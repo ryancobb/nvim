@@ -94,8 +94,9 @@ require('packer').startup(function(use)
   use 'p00f/nvim-ts-rainbow'
   use 'karb94/neoscroll.nvim'
   use 'kevinhwang91/nvim-hlslens'
+
   use { "catppuccin/nvim", as = "catppuccin" }
-  use "b0o/incline.nvim"
+
   use {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
@@ -450,45 +451,6 @@ require('fidget').setup {
 }
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- incline -------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('incline').setup {
-  render = function(props)
-    local bufname = vim.api.nvim_buf_get_name(props.buf)
-    if bufname == "" then
-      bufname = "[No name]"
-    else
-      bufname = vim.fn.fnamemodify(bufname, ":.")
-    end
-
-    local icon = require('nvim-web-devicons').get_icon(bufname, nil, { default = true })
-    local max_len = vim.api.nvim_win_get_width(props.win) * 4 / 3
-
-    if #bufname > max_len then
-      bufname = icon .. " ..." .. string.sub(bufname, #bufname - max_len, -1)
-    else
-      bufname = icon .. " " .. bufname
-    end
-
-    if vim.bo.modified then
-      return { bufname, guifg = colors.yellow }
-    else
-      return bufname
-    end
-  end,
-  window = {
-    winhighlight = {
-      active = { Normal = 'Search' },
-      inactive = { Normal = 'Normal' }
-    }
-  },
-  hide = {
-    cursorline = "focused_win",
-  }
-}
-
-------------------------------------------------------------------------------------------------------------------------------------
 -- hlslens -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -738,6 +700,8 @@ require('nvim-treesitter.configs').setup {
 ------------------------------------------------------------------------------------------------------------------------------------
 
 local hl = require('heirline_components')
+local conditions = require("heirline.conditions")
+local utils = require("heirline.utils")
 
 local statusline = {
   {
@@ -762,7 +726,73 @@ local statusline = {
   },
 }
 
-require('heirline').setup(statusline)
+local winbar = {
+  {
+    fallthrough = false,
+    {
+      condition = function()
+        return conditions.buffer_matches({
+          buftype = { 'nofile', 'prompt', 'help', 'quickfix' },
+          filetype = {}
+        })
+      end,
+      init = function()
+        vim.opt_local.winbar = nil
+      end
+    },
+    {
+      init = function(self)
+        self.filename = vim.api.nvim_buf_get_name(0)
+      end,
+      provider = '%=',
+      {
+        hl = function()
+          if vim.bo.modified then
+            local highlight = utils.get_highlight('@text.warning')
+            return { fg = highlight.fg, bg = highlight.bg, force = true }
+          end
+        end,
+        {
+          {
+            init = function(self)
+              local filename = self.filename
+              local extension = vim.fn.fnamemodify(filename, ":e")
+              self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension,
+                { default = true })
+            end,
+            provider = function(self)
+              return self.icon and (' ' .. self.icon .. ' ')
+            end,
+            hl = function(self)
+              return { fg = self.icon_color }
+            end
+          },
+          {
+            provider = function(self)
+              -- first, trim the pattern relative to the current directory. For other
+              -- options, see :h filename-modifers
+              local filename = vim.fn.fnamemodify(self.filename, ":.")
+              if filename == "" then return "[No Name]" end
+              -- now, if the filename would occupy more than 1/4th of the available
+              -- space, we trim the file path to its initials
+              -- See Flexible Components section below for dynamic truncation
+              if not conditions.width_percent_below(#filename, 0.25) then
+                filename = vim.fn.pathshorten(filename)
+              end
+              return filename .. ' '
+            end,
+            hl = function()
+              return { fg = utils.get_highlight('Directory').fg }
+            end
+          },
+        }
+
+      }
+    }
+  }
+}
+
+require('heirline').setup(statusline, winbar)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- lsp -----------------------------------------------------------------------------------------------------------------------------
