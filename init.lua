@@ -103,7 +103,6 @@ require('packer').startup(function(use)
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
   }
-  use 'jinh0/eyeliner.nvim'
   use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
   use 'dstein64/nvim-scrollview'
   use 'TimUntersberger/neogit'
@@ -145,56 +144,58 @@ local splits = require('smart-splits')
 -- theme ---------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-vim.g.catppuccin_flavour = "frappe" -- latte, frappe, macchiato, mocha
+-- vim.g.catppuccin_flavour = "frappe" -- latte, frappe, macchiato, mocha
+--
+-- local colors = require("catppuccin.palettes").get_palette()
+-- local color_utils = require('catppuccin.utils.colors')
+-- local dark_bg = color_utils.darken(colors.base, 0.8, nil)
+--
+-- require("catppuccin").setup {
+--   dim_inactive = {
+--     enabled = true,
+--     shade = 'dark',
+--     percentage = 0.20
+--   },
+--   integrations = {
+--     cmp = true,
+--     fidget = true,
+--     gitsigns = true,
+--     markdown = true,
+--     neogit = true,
+--     notify = true,
+--     telescope = true,
+--     treesitter = true,
+--     ts_rainbow = true,
+--     which_key = true,
+--     neotest = true,
+--     native_lsp = {
+--       enabled = true,
+--       virtual_text = {
+--         errors = { "italic" },
+--         hints = { "italic" },
+--         warnings = { "italic" },
+--         information = { "italic" },
+--       },
+--       underlines = {
+--         errors = { "underline" },
+--         hints = { "underline" },
+--         warnings = { "underline" },
+--         information = { "underline" },
+--       },
+--     },
+--     neotree = {
+--       enabled = true,
+--       show_root = true,
+--       transparent_panel = false,
+--     },
+--   },
+-- }
 
-local colors = require("catppuccin.palettes").get_palette()
-local color_utils = require('catppuccin.utils.colors')
-local dark_bg = color_utils.darken(colors.base, 0.8, nil)
+local dark_bg = "#252c31"
 
-require("catppuccin").setup {
-  dim_inactive = {
-    enabled = true,
-    shade = 'dark',
-    percentage = 0.20
-  },
-  integrations = {
-    cmp = true,
-    fidget = true,
-    gitsigns = true,
-    markdown = true,
-    neogit = true,
-    notify = true,
-    telescope = true,
-    treesitter = true,
-    ts_rainbow = true,
-    which_key = true,
-    neotest = true,
-    native_lsp = {
-      enabled = true,
-      virtual_text = {
-        errors = { "italic" },
-        hints = { "italic" },
-        warnings = { "italic" },
-        information = { "italic" },
-      },
-      underlines = {
-        errors = { "underline" },
-        hints = { "underline" },
-        warnings = { "underline" },
-        information = { "underline" },
-      },
-    },
-    neotree = {
-      enabled = true,
-      show_root = true,
-      transparent_panel = false,
-    },
-  },
-}
-
-vim.cmd [[ highlight NormalNC guibg=#252c31 ]]
 vim.cmd [[set background=dark]]
 vim.cmd [[colorscheme everforest]]
+vim.cmd("highlight NormalNC guibg=" .. dark_bg)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
@@ -418,17 +419,6 @@ require('neogit').setup {
     diffview = true
   }
 }
-
-------------------------------------------------------------------------------------------------------------------------------------
--- eyeliner ------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('eyeliner').setup {
-  highlight_on_key = true
-}
-
-vim.api.nvim_set_hl(0, 'EyelinerPrimary', { fg = colors.mauve, bold = true, underline = true })
-vim.api.nvim_set_hl(0, 'EyelinerSecondary', { fg = colors.yellow, underline = true })
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- fidget --------------------------------------------------------------------------------------------------------------------------
@@ -689,36 +679,131 @@ require('nvim-treesitter.configs').setup {
 -- heirline ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-local hl = require('heirline_components')
 local conditions = require("heirline.conditions")
 local utils = require("heirline.utils")
 
-local statusline = {
+local components = {}
+
+components.space = { provider = ' ' }
+
+components.file_type = {
+  condition = function()
+    return not conditions.buffer_matches({ filetype = { 'TelescopePrompt' }, buftype = { 'terminal' } })
+  end,
+  provider = function()
+    return ' ' .. vim.bo.filetype .. ' '
+  end,
+  hl = function()
+    local highlight = utils.get_highlight('@text')
+    return { fg = highlight.fg }
+  end
+}
+
+components.file_icon = {
+  init = function(self)
+    local filename = vim.api.nvim_buf_get_name(0)
+    local extension = vim.fn.fnamemodify(filename, ":e")
+    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension)
+  end,
+  provider = function(self)
+    return self.icon and (' ' .. self.icon)
+  end,
+  hl = function(self)
+    return { fg = self.icon_color }
+  end
+}
+
+components.lsp_active = {
+  condition = conditions.lsp_attached,
+  provider = function()
+    local names = {}
+    for i, server in pairs(vim.lsp.buf_get_clients(0)) do
+      table.insert(names, server.name)
+    end
+    return "%( [" .. table.concat(names, " ") .. "]%)"
+  end,
+  hl = function()
+    local highlight = utils.get_highlight('@text')
+    return { fg = highlight.fg }
+  end
+}
+
+components.git = {
+  condition = conditions.is_git_repo,
+  init = function(self)
+    self.status_dict = vim.b.gitsigns_status_dict
+    self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
+  end,
+  { -- git branch name
+    provider = function(self)
+      return " " .. self.status_dict.head
+    end,
+    hl = function()
+      local highlight = utils.get_highlight('@constant')
+      return { fg = highlight.fg }
+    end,
+  },
   {
-    hl.git,
-    hl.space,
-    hl.space,
+    provider = function(self)
+      local count = self.status_dict.added or 0
+      return count > 0 and (" +" .. count)
+    end,
+    hl = function()
+      local highlight = utils.get_highlight('@string')
+      return { fg = highlight.fg }
+    end,
+  },
+  {
+    provider = function(self)
+      local count = self.status_dict.removed or 0
+      return count > 0 and (" -" .. count)
+    end,
+    hl = function()
+      local highlight = utils.get_highlight('@variable.builtin')
+      return { fg = highlight.fg }
+    end,
+  },
+  {
+    provider = function(self)
+      local count = self.status_dict.changed or 0
+      return count > 0 and (" ~" .. count)
+    end,
+    hl = function()
+      local highlight = utils.get_highlight('@type')
+      return { fg = highlight.fg }
+    end,
+  }
+}
+
+components.treesitter = {
+  hl = '@string',
+  provider = function()
+    local ts_avail, ts = pcall(require, 'nvim-treesitter.parsers')
+
+    if not (ts_avail and ts.has_parser()) then
+      return
+    else
+      local buf = vim.api.nvim_get_current_buf()
+      if require('vim.treesitter.highlighter').active[buf] then
+        return " "
+      end
+    end
+  end
+}
+
+local statusline = {
+  hl = { bg = dark_bg },
+  {
+    components.git,
+    components.space
   },
   {
     provider = '%=',
     {
-      hl.space,
-      hl.lsp_active,
-      hl.treesitter,
-      {
-        init = function(self)
-          local filename = vim.api.nvim_buf_get_name(0)
-          local extension = vim.fn.fnamemodify(filename, ":e")
-          self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension)
-        end,
-        provider = function(self)
-          return self.icon and (' ' .. self.icon)
-        end,
-        hl = function(self)
-          return { fg = self.icon_color }
-        end
-      },
-      hl.file_type,
+      components.lsp_active,
+      components.treesitter,
+      components.file_icon,
+      components.file_type
     }
   },
 }
@@ -956,8 +1041,7 @@ require('window-picker').setup {
       filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix' },
       buftype = { 'nofile' }
     }
-  },
-  other_win_hl_color = colors.mauve
+  }
 }
 
 require('neo-tree').setup {
