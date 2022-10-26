@@ -23,7 +23,7 @@ M.lsp_active = {
     end
     return "%( [" .. table.concat(names, " ") .. "]%)"
   end,
-  hl = '@text',
+  hl        = '@text',
 }
 
 M.git = {
@@ -62,12 +62,19 @@ M.git = {
 }
 
 M.treesitter = {
-  condition = function()
-    local b = vim.api.nvim_get_current_buf()
-    return vim.treesitter.highlighter.active[b]
-  end,
-  provider = " ",
   hl = '@string',
+  provider = function()
+    local ts_avail, ts = pcall(require, 'nvim-treesitter.parsers')
+
+    if not (ts_avail and ts.has_parser()) then
+      return
+    else
+      local buf = vim.api.nvim_get_current_buf()
+      if require('vim.treesitter.highlighter').active[buf] then
+        return " "
+      end
+    end
+  end
 }
 
 return M

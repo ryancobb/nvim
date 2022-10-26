@@ -117,7 +117,6 @@ require('packer').startup(function(use)
   use 'ellisonleao/glow.nvim'
   use 'rgroli/other.nvim'
   use { 'ruifm/gitlinker.nvim', requires = 'nvim-lua/plenary.nvim' }
-  use { "SmiteshP/nvim-navic", requires = "neovim/nvim-lspconfig" }
 
   -- languages
   use 'keith/swift.vim'
@@ -189,10 +188,6 @@ require("catppuccin").setup {
       show_root = true,
       transparent_panel = false,
     },
-    navic = {
-      enabled = true,
-      custom_bg = dark_bg
-    }
   },
 }
 
@@ -318,14 +313,6 @@ vim.api.nvim_create_autocmd('VimResized', {
 vim.api.nvim_create_autocmd('FocusGained', {
   pattern = '*',
   callback = function() vim.cmd [[ checktime ]] end
-})
-
-------------------------------------------------------------------------------------------------------------------------------------
--- navic ---------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('nvim-navic').setup({
-  highlight = true
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -709,10 +696,6 @@ local statusline = {
     hl.git,
     hl.space,
     hl.space,
-    {
-      condition = require('nvim-navic').is_available,
-      provider = require('nvim-navic').get_location
-    }
   },
   {
     provider = '%=',
@@ -721,6 +704,19 @@ local statusline = {
       hl.space,
       hl.lsp_active,
       hl.treesitter,
+      {
+        init = function(self)
+          local filename = vim.api.nvim_buf_get_name(0)
+          local extension = vim.fn.fnamemodify(filename, ":e")
+          self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension)
+        end,
+        provider = function(self)
+          return self.icon and (' ' .. self.icon)
+        end,
+        hl = function(self)
+          return { fg = self.icon_color }
+        end
+      },
       hl.file_type,
     }
   },
@@ -825,10 +821,6 @@ local on_attach = function(client, bufnr)
     ['<leader>so'] = { ':Telescope lsp_document_symbols<cr>', 'document symbols' },
     ['<leader>l'] = { name = 'lsp', f = { function() vim.lsp.buf.format({ async = true }) end, 'format' } }
   }, opts)
-
-  if client.server_capabilities.documentSymbolProvider then
-    require('nvim-navic').attach(client, bufnr)
-  end
 end
 
 -- nvim-cmp supports additional completion capabilities
