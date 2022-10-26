@@ -96,6 +96,7 @@ require('packer').startup(function(use)
   use 'kevinhwang91/nvim-hlslens'
 
   use { "catppuccin/nvim", as = "catppuccin" }
+  use 'sainnhe/everforest'
 
   use {
     "williamboman/mason.nvim",
@@ -191,7 +192,9 @@ require("catppuccin").setup {
   },
 }
 
-vim.cmd [[colorscheme catppuccin]]
+vim.cmd [[ highlight NormalNC guibg=#252c31 ]]
+vim.cmd [[set background=dark]]
+vim.cmd [[colorscheme everforest]]
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
@@ -692,7 +695,6 @@ local utils = require("heirline.utils")
 
 local statusline = {
   {
-    hl = 'NormalNC',
     hl.git,
     hl.space,
     hl.space,
@@ -700,7 +702,6 @@ local statusline = {
   {
     provider = '%=',
     {
-      hl = 'NormalNC',
       hl.space,
       hl.lsp_active,
       hl.treesitter,

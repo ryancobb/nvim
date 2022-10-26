@@ -1,4 +1,5 @@
 local conditions = require('heirline.conditions')
+local utils = require("heirline.utils")
 
 local M = {}
 
@@ -11,7 +12,10 @@ M.file_type = {
   provider = function()
     return " " .. vim.bo.filetype .. " "
   end,
-  hl = '@text',
+  hl = function()
+    local highlight = utils.get_highlight('@text')
+    return { fg = highlight.fg }
+  end,
 }
 
 M.lsp_active = {
@@ -36,28 +40,40 @@ M.git = {
     provider = function(self)
       return " " .. self.status_dict.head
     end,
-    hl = '@constant'
+    hl = function()
+      local highlight = utils.get_highlight('@constant')
+      return { fg = highlight.fg, bg = 'NONE' }
+    end,
   },
   {
     provider = function(self)
       local count = self.status_dict.added or 0
       return count > 0 and (" +" .. count)
     end,
-    hl = '@string',
+    hl = function()
+      local highlight = utils.get_highlight('@string')
+      return { fg = highlight.fg }
+    end,
   },
   {
     provider = function(self)
       local count = self.status_dict.removed or 0
       return count > 0 and (" -" .. count)
     end,
-    hl = '@variable.builtin',
+    hl = function()
+      local highlight = utils.get_highlight('@variable.builtin')
+      return { fg = highlight.fg }
+    end,
   },
   {
     provider = function(self)
       local count = self.status_dict.changed or 0
       return count > 0 and (" ~" .. count)
     end,
-    hl = '@type',
+    hl = function()
+      local highlight = utils.get_highlight('@type')
+      return { fg = highlight.fg }
+    end,
   },
 }
 
