@@ -17,7 +17,7 @@ vim.cmd [[ set fillchars+=diff:╱ ]]
 vim.cmd [[ set formatoptions-=cro ]]
 
 vim.opt.clipboard = 'unnamedplus'
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.expandtab = true
@@ -93,7 +93,6 @@ require('packer').startup(function(use)
   use { 'nvim-neotest/neotest', requires = { 'olimorris/neotest-rspec', 'haydenmeade/neotest-jest' } }
   use 'p00f/nvim-ts-rainbow'
   use 'karb94/neoscroll.nvim'
-  use 'kevinhwang91/nvim-hlslens'
 
   use { "catppuccin/nvim", as = "catppuccin" }
   use 'sainnhe/everforest'
@@ -191,11 +190,14 @@ local splits = require('smart-splits')
 --   },
 -- }
 
-local dark_bg = "#252c31"
+local dark_bg = '#252c31'
 
+vim.g.everforest_show_eob = 0
 vim.cmd [[set background=dark]]
 vim.cmd [[colorscheme everforest]]
-vim.cmd("highlight NormalNC guibg=" .. dark_bg)
+vim.cmd('highlight NormalNC guibg=' .. dark_bg)
+vim.cmd('highlight WinbarNC guibg=' .. dark_bg)
+vim.cmd('highlight EndOfBuffer guibg=NONE')
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
@@ -320,6 +322,14 @@ vim.api.nvim_create_autocmd('FocusGained', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
+-- scrollview ----------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('scrollview').setup({
+  current_only = true
+})
+
+------------------------------------------------------------------------------------------------------------------------------------
 -- glow-----------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -429,29 +439,6 @@ require('fidget').setup {
     blend = 0
   }
 }
-
-------------------------------------------------------------------------------------------------------------------------------------
--- hlslens -------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('hlslens').setup({
-  calm_down = true,
-  nearest_only = true,
-})
-
-vim.cmd [[ highlight link HlSearchNear CurSearch]]
-vim.cmd [[ highlight link HlSearchLensNear CurSearch]]
-
-local kopts = { noremap = true, silent = true }
-
-vim.api.nvim_set_keymap('n', 'n',
-  [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
-  kopts)
-vim.api.nvim_set_keymap('n', 'N',
-  [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
-  kopts)
-vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
-vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- neotest -------------------------------------------------------------------------------------------------------------------------
@@ -791,11 +778,49 @@ components.treesitter = {
   end
 }
 
+components.search_results = {
+  condition = function(self)
+    local lines = vim.api.nvim_buf_line_count(0)
+    if lines > 50000 then return end
+
+    local query = vim.fn.getreg("/")
+    if query == "" then return end
+
+    if query:find("@") then return end
+
+    local search_count = vim.fn.searchcount({ recompute = 1, maxcount = -1 })
+    local active = false
+    if vim.v.hlsearch and vim.v.hlsearch == 1 and search_count.total > 0 then
+      active = true
+    end
+    if not active then return end
+
+    query = query:gsub([[^\V]], "")
+    query = query:gsub([[\<]], ""):gsub([[\>]], "")
+
+    self.query = query
+    self.count = search_count
+    return true
+  end,
+  {
+    provider = function(self)
+      return table.concat({
+        ' ', self.query, ' ', self.count.current, '/', self.count.total, ' '
+      })
+    end,
+    hl = function()
+      local highlight = utils.get_highlight('@function')
+      return { bg = highlight.fg, fg = dark_bg }
+    end
+  },
+}
+
 local statusline = {
   hl = { bg = dark_bg },
   {
     components.git,
-    components.space
+    components.space,
+    components.search_results
   },
   {
     provider = '%=',
