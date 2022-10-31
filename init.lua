@@ -96,6 +96,7 @@ require('packer').startup(function(use)
 
   use { "catppuccin/nvim", as = "catppuccin" }
   use 'sainnhe/everforest'
+  use 'EdenEast/nightfox.nvim'
 
   use {
     "williamboman/mason.nvim",
@@ -143,61 +144,7 @@ local splits = require('smart-splits')
 -- theme ---------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
--- vim.g.catppuccin_flavour = "frappe" -- latte, frappe, macchiato, mocha
---
--- local colors = require("catppuccin.palettes").get_palette()
--- local color_utils = require('catppuccin.utils.colors')
--- local dark_bg = color_utils.darken(colors.base, 0.8, nil)
---
--- require("catppuccin").setup {
---   dim_inactive = {
---     enabled = true,
---     shade = 'dark',
---     percentage = 0.20
---   },
---   integrations = {
---     cmp = true,
---     fidget = true,
---     gitsigns = true,
---     markdown = true,
---     neogit = true,
---     notify = true,
---     telescope = true,
---     treesitter = true,
---     ts_rainbow = true,
---     which_key = true,
---     neotest = true,
---     native_lsp = {
---       enabled = true,
---       virtual_text = {
---         errors = { "italic" },
---         hints = { "italic" },
---         warnings = { "italic" },
---         information = { "italic" },
---       },
---       underlines = {
---         errors = { "underline" },
---         hints = { "underline" },
---         warnings = { "underline" },
---         information = { "underline" },
---       },
---     },
---     neotree = {
---       enabled = true,
---       show_root = true,
---       transparent_panel = false,
---     },
---   },
--- }
-
-local dark_bg = '#252c31'
-
-vim.g.everforest_show_eob = 0
-vim.cmd [[set background=dark]]
-vim.cmd [[colorscheme everforest]]
-vim.cmd('highlight NormalNC guibg=' .. dark_bg)
-vim.cmd('highlight WinbarNC guibg=' .. dark_bg)
-vim.cmd('highlight EndOfBuffer guibg=NONE')
+local theme = require('themes.nightfox')
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- mappings ------------------------------------------------------------------------------------------------------------------------
@@ -799,13 +746,13 @@ components.search_results = {
     end,
     hl = function()
       local highlight = utils.get_highlight('@function')
-      return { bg = highlight.fg, fg = dark_bg }
+      return { bg = highlight.fg, fg = theme.dark_bg }
     end
   },
 }
 
 local statusline = {
-  hl = { bg = dark_bg },
+  hl = { bg = theme.dark_bg },
   {
     components.git,
     components.space,
