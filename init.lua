@@ -791,8 +791,8 @@ local winbar = {
       {
         hl = function()
           if vim.bo.modified then
-            local highlight = utils.get_highlight('@text.warning')
-            return { fg = highlight.fg, bg = highlight.bg, force = true }
+            local highlight = utils.get_highlight('@string.escape')
+            return { fg = theme.dark_bg, bg = highlight.fg, force = true }
           end
         end,
         {
@@ -1002,7 +1002,8 @@ require('window-picker').setup {
       filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix' },
       buftype = { 'nofile' }
     }
-  }
+  },
+  other_win_hl_color = theme.dark_bg
 }
 
 require('neo-tree').setup {
@@ -1017,6 +1018,7 @@ require('neo-tree').setup {
   window = {
     mappings = {
       ['<cr>'] = 'open_with_window_picker',
+      ['<c-v>'] = 'open_vsplit'
     }
   }
 }

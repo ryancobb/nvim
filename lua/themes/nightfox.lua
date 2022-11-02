@@ -6,7 +6,29 @@ local M = {
 
 require('nightfox').setup({
   options = {
-    dim_inactive = true
+    dim_inactive = true,
+    inverse = {
+      match_paren = true,
+    },
+    modules = {
+      cmp = true,
+      fidget = true,
+      gitsigns = true,
+      illuminate = true,
+      neogit = true,
+      neotest = true,
+      neotree = true,
+      telescope = true,
+      treesitter = true,
+      tsrainbow = true,
+      whichkey = true,
+      diagnostic = {
+        enable = true
+      },
+      native_lsp = {
+        enable = true
+      }
+    }
   }
 })
 
