@@ -29,6 +29,11 @@ require('nightfox').setup({
         enable = true
       }
     }
+  },
+  groups = {
+    all = {
+      ['@symbol'] = { link = '@label' }
+    }
   }
 })
 

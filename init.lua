@@ -13,6 +13,7 @@ pcall(require, 'impatient')
 vim.g.matchup_matchparen_offscreen = {}
 vim.g.ruby_indent_assignment_style = 'variable'
 
+vim.cmd [[ set diffopt+=linematch:60 ]]
 vim.cmd [[ set fillchars+=diff:╱ ]]
 vim.cmd [[ set formatoptions-=cro ]]
 
@@ -103,20 +104,19 @@ require('packer').startup(function(use)
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
   }
+
   use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
   use 'dstein64/nvim-scrollview'
   use 'TimUntersberger/neogit'
-  use { 'nvim-telescope/telescope.nvim', tag = '0.1.0', requires = { 'nvim-lua/plenary.nvim' } }
-  use 'nvim-telescope/telescope-fzy-native.nvim'
-  use 'nvim-telescope/telescope-live-grep-args.nvim'
+  use { 'ibhagwan/fzf-lua', requires = { 'kyazdani42/nvim-web-devicons' } }
   use 'RRethy/vim-illuminate'
-  use 'phaazon/mind.nvim'
   use 'nvim-treesitter/playground'
   use 'AckslD/messages.nvim'
   use 'gennaro-tedesco/nvim-jqx'
   use 'ellisonleao/glow.nvim'
   use 'rgroli/other.nvim'
   use { 'ruifm/gitlinker.nvim', requires = 'nvim-lua/plenary.nvim' }
+  use { "SmiteshP/nvim-navic", requires = "neovim/nvim-lspconfig" }
 
   -- languages
   use 'keith/swift.vim'
@@ -132,7 +132,6 @@ require('Comment').setup({})
 require('gitlinker').setup()
 require('neodev').setup({})
 require('messages').setup({})
-require('mind').setup({})
 require('neoscroll').setup({})
 require('nvim-autopairs').setup({})
 require('which-key').setup({})
@@ -158,29 +157,32 @@ vim.g.maplocalleader = ' '
 local wk = require('which-key')
 wk.register({
   ['<leader>'] = {
-    ['<space>'] = { ':Telescope buffers previewer=false layout_config={height=20}<cr>', 'buffers' },
-    ['?'] = { ':Telescope oldfiles cwd_only=true<cr>', 'old files' },
-    f = { ':Telescope find_files<cr>', 'find files' },
+    ['<space>'] = { function() require('fzf-lua').buffers({
+        previewer = false,
+        winopts = { height = 0.20 },
+        global_resume = false
+      })
+    end, 'buffers' },
+    ['?'] = { ':FzfLua oldfiles cwd_only=true<cr>', 'old files' },
+    f = { ':FzfLua files<cr>', 'find files' },
     c = { function() require('bufdelete').bufdelete(0, true) end, 'close buffer' },
     q = { '<C-w>q', 'quit window' },
     Q = { ':bd<cr>', 'quit window and close buffer' },
     e = { ':NeoTreeShowToggle<CR>', 'neotree' },
     r = { ':Neotree reveal<CR>', 'reveal file' },
-    m = { ':MindOpenMain<CR>', 'mind' }
-
   },
   ['<leader>s'] = {
     name = 'search',
-    t = { ':Telescope live_grep_args<cr>', 'text' },
-    c = { ':Telescope grep_string<cr>', 'cursor word' },
-    r = { ':Telescope resume<cr>', 'resume' },
+    t = { ':FzfLua live_grep_glob<cr>', 'text' },
+    c = { ':FzfLua grep_cword<cr>', 'cursor word' },
+    r = { ':FzfLua resume<cr>', 'resume' },
     a = { ':Other<cr>', 'alternate' }
   },
   ['<leader>g'] = {
     name = 'git',
     s = { ':Neotree git_status<cr>', 'status' },
-    L = { ':Telescope git_commits<cr>', 'log' },
-    l = { ':Telescope git_bcommits<cr>', 'log (buffer)' },
+    L = { ':FzfLua git_commits<cr>', 'log' },
+    l = { ':FzfLua git_bcommits<cr>', 'log (buffer)' },
     D = { ':Gitsigns diffthis<cr>', 'diff this' },
     y = { function() require('gitlinker').get_buf_range_url('n', {}) end, 'yank repo link' }
   },
@@ -269,6 +271,14 @@ vim.api.nvim_create_autocmd('FocusGained', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
+-- navic ---------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('nvim-navic').setup({
+  highlight = true
+})
+
+------------------------------------------------------------------------------------------------------------------------------------
 -- scrollview ----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -299,62 +309,31 @@ require('glow').setup({
 -- illuminate-----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('illuminate').configure {
-  filetypes_denylist = {
-    'TelescopePrompt'
-  }
-}
+require('illuminate').configure {}
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- telescope -----------------------------------------------------------------------------------------------------------------------
+-- fzf-lua -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('telescope').setup {
-  defaults = {
-    vimgrep_arguments = {
-      'rg',
-      '--color=never',
-      '--no-heading',
-      '--with-filename',
-      '--line-number',
-      '--column',
-      '--smart-case',
-      '--trim'
-    },
-    sorting_strategy = "ascending",
-    layout_strategy = "horizontal",
-    layout_config = {
-      horizontal = {
-        prompt_position = "top",
-        preview_width = 0.55,
-        results_width = 0.8,
-      },
-      vertical = {
-        mirror = false,
-      },
-      width = 0.87,
-      height = 0.80,
-      preview_cutoff = 120,
-    },
-    mappings = {
-      n = {
-        ['<c-x>'] = require('telescope.actions').delete_buffer
-      },
-      i = {
-        ['<esc>'] = require('telescope.actions').close,
-        ["<c-h>"] = "which_key",
-        ['<c-x>'] = require('telescope.actions').delete_buffer
-      }
-    }
+require('fzf-lua').setup({
+  winopts = {
+    preview = { default = 'bat_native' }
   },
-  pickers = {
-    find_files = {
-      find_command = { 'fd', '--type', 'f', '--strip-cwd-prefix' }
-    }
+  files = {
+    git_icons = false
+  },
+  git = {
+    status = {
+      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
+    },
+    commits = {
+      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
+    },
+    bcommits = {
+      preview_pager = 'delta --width=$FZF_PREVIEW_COLUMNS'
+    },
   }
-}
-require('telescope').load_extension('fzy_native')
-require('telescope').load_extension('live_grep_args')
+})
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- neogit --------------------------------------------------------------------------------------------------------------------------
@@ -611,7 +590,7 @@ components.space = { provider = ' ' }
 
 components.file_type = {
   condition = function()
-    return not conditions.buffer_matches({ filetype = { 'TelescopePrompt' }, buftype = { 'terminal' } })
+    return not conditions.buffer_matches({ filetype = {}, buftype = { 'terminal' } })
   end,
   provider = function()
     return ' ' .. vim.bo.filetype .. ' '
@@ -776,7 +755,7 @@ local winbar = {
       condition = function()
         return conditions.buffer_matches({
           buftype = { 'nofile', 'prompt', 'help', 'quickfix' },
-          filetype = {}
+          filetype = { 'fzf' }
         })
       end,
       init = function()
@@ -784,52 +763,60 @@ local winbar = {
       end
     },
     {
-      init = function(self)
-        self.filename = vim.api.nvim_buf_get_name(0)
-      end,
-      provider = '%=',
       {
-        hl = function()
-          if vim.bo.modified then
-            local highlight = utils.get_highlight('@string.escape')
-            return { fg = theme.dark_bg, bg = highlight.fg, force = true }
-          end
+        condition = require('nvim-navic').is_available,
+        provider = function()
+          return require('nvim-navic').get_location({ highlight = true })
         end,
+        update = 'CursorMoved'
+      },
+      {
+        init = function(self)
+          self.filename = vim.api.nvim_buf_get_name(0)
+        end,
+        provider = '%=',
         {
-          {
-            init = function(self)
-              local filename = self.filename
-              local extension = vim.fn.fnamemodify(filename, ":e")
-              self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension,
-                { default = true })
-            end,
-            provider = function(self)
-              return self.icon and (' ' .. self.icon .. ' ')
-            end,
-            hl = function(self)
-              return { fg = self.icon_color }
+          hl = function()
+            if vim.bo.modified then
+              local highlight = utils.get_highlight('@string.escape')
+              return { fg = theme.dark_bg, bg = highlight.fg, force = true }
             end
-          },
+          end,
           {
-            provider = function(self)
-              -- first, trim the pattern relative to the current directory. For other
-              -- options, see :h filename-modifers
-              local filename = vim.fn.fnamemodify(self.filename, ":.")
-              if filename == "" then return "[No Name]" end
-              -- now, if the filename would occupy more than 1/4th of the available
-              -- space, we trim the file path to its initials
-              -- See Flexible Components section below for dynamic truncation
-              if not conditions.width_percent_below(#filename, 0.25) then
-                filename = vim.fn.pathshorten(filename)
+            {
+              init = function(self)
+                local filename = self.filename
+                local extension = vim.fn.fnamemodify(filename, ":e")
+                self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension,
+                  { default = true })
+              end,
+              provider = function(self)
+                return self.icon and (' ' .. self.icon .. ' ')
+              end,
+              hl = function(self)
+                return { fg = self.icon_color }
               end
-              return filename .. ' '
-            end,
-            hl = function()
-              return { fg = utils.get_highlight('Directory').fg }
-            end
-          },
+            },
+            {
+              provider = function(self)
+                -- first, trim the pattern relative to the current directory. For other
+                -- options, see :h filename-modifers
+                local filename = vim.fn.fnamemodify(self.filename, ":.")
+                if filename == "" then return "[No Name]" end
+                -- now, if the filename would occupy more than 1/4th of the available
+                -- space, we trim the file path to its initials
+                -- See Flexible Components section below for dynamic truncation
+                if not conditions.width_percent_below(#filename, 0.50) then
+                  filename = vim.fn.pathshorten(filename)
+                end
+                return filename .. ' '
+              end,
+              hl = function()
+                return { fg = utils.get_highlight('Directory').fg }
+              end
+            },
+          }
         }
-
       }
     }
   }
@@ -860,12 +847,16 @@ end
 local on_attach = function(client, bufnr)
   local opts = { buffer = bufnr }
 
+  if client.server_capabilities.documentSymbolProvider then
+    require('nvim-navic').attach(client, bufnr)
+  end
+
   wk.register({
-    ['gd'] = { ':Telescope lsp_definitions<cr>', 'definition' },
-    ['gr'] = { ':Telescope lsp_references<cr>', 'references' },
+    ['gd'] = { ':FzfLua lsp_definitions jump_to_single_result=true<cr>', 'definition' },
+    ['gr'] = { ':FzfLua lsp_references jump_to_single_result=true<cr>', 'references' },
     K = { vim.lsp.buf.hover, 'hover' },
     ['<leader>rn'] = { vim.lsp.buf.rename, 'rename' },
-    ['<leader>so'] = { ':Telescope lsp_document_symbols<cr>', 'document symbols' },
+    ['<leader>so'] = { ':FzfLua lsp_document_symbols<cr>', 'document symbols' },
     ['<leader>l'] = { name = 'lsp', f = { function() vim.lsp.buf.format({ async = true }) end, 'format' } }
   }, opts)
 end
