@@ -63,6 +63,7 @@ require('packer').startup(function(use)
   use 'numToStr/Comment.nvim'
   use 'lukas-reineke/indent-blankline.nvim'
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'RRethy/nvim-treesitter-endwise'
@@ -508,8 +509,8 @@ require('nvim-treesitter.configs').setup {
     keymaps = {
       init_selection = '<CR>',
       node_incremental = '<CR>',
-      scope_incremental = '<TAB>',
       node_decremental = '<S-TAB>',
+      scope_incremental = '<TAB>',
     },
   },
   indent                = {

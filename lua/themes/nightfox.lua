@@ -7,9 +7,6 @@ local M = {
 require('nightfox').setup({
   options = {
     dim_inactive = true,
-    inverse = {
-      match_paren = true,
-    },
     modules = {
       cmp = true,
       fidget = true,
