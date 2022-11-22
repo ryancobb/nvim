@@ -107,7 +107,6 @@ require('packer').startup(function(use)
   }
 
   use { 'kevinhwang91/nvim-bqf', ft = 'qf' }
-  use 'dstein64/nvim-scrollview'
   use 'TimUntersberger/neogit'
   use { 'ibhagwan/fzf-lua', requires = { 'kyazdani42/nvim-web-devicons' } }
   use 'RRethy/vim-illuminate'
@@ -115,9 +114,10 @@ require('packer').startup(function(use)
   use 'AckslD/messages.nvim'
   use 'gennaro-tedesco/nvim-jqx'
   use 'ellisonleao/glow.nvim'
-  use 'rgroli/other.nvim'
   use { 'ruifm/gitlinker.nvim', requires = 'nvim-lua/plenary.nvim' }
   use { "SmiteshP/nvim-navic", requires = "neovim/nvim-lspconfig" }
+  use 'petertriho/nvim-scrollbar'
+  use 'kevinhwang91/nvim-hlslens'
 
   -- languages
   use 'keith/swift.vim'
@@ -177,7 +177,11 @@ wk.register({
     t = { ':FzfLua live_grep_glob<cr>', 'text' },
     c = { ':FzfLua grep_cword<cr>', 'cursor word' },
     r = { ':FzfLua resume<cr>', 'resume' },
-    a = { ':Other<cr>', 'alternate' }
+    a = { function() require('fzf-lua').files({
+        fzf_opts = { ['--query'] = vim.fn.expand('%:t:r'):gsub('_spec', '') .. '\\ \"!' .. vim.fn.expand('%:t') ..
+            '\"\\ ' }
+      })
+    end, 'alternate' },
   },
   ['<leader>g'] = {
     name = 'git',
@@ -280,22 +284,19 @@ require('nvim-navic').setup({
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- scrollview ----------------------------------------------------------------------------------------------------------------------
+-- hlslens -------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
-
-require('scrollview').setup({
-  current_only = true
+--
+require("scrollbar.handlers.search").setup({
+  calm_down = true,
+  nearest_only = true
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
--- other ---------------------------------------------------------------------------------------------------------------------------
+-- scrollbar -----------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
-require('other-nvim').setup({
-  mappings = {
-    'rails'
-  }
-})
+require("scrollbar").setup()
 
 ------------------------------------------------------------------------------------------------------------------------------------
 -- glow-----------------------------------------------------------------------------------------------------------------------------
@@ -370,6 +371,10 @@ require('neotest').setup {
   },
   diagnostic = {
     enabled = false
+  },
+  output_panel = {
+    enabled = true,
+    open = 'botright split | resize 15'
   }
 }
 
@@ -489,6 +494,8 @@ require('gitsigns').setup {
 
     -- Text object
     map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+
+    require("scrollbar.handlers.gitsigns").setup()
   end
 }
 
@@ -736,7 +743,6 @@ local statusline = {
   {
     components.git,
     components.space,
-    components.search_results
   },
   {
     provider = '%=',
