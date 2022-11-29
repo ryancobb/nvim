@@ -18,8 +18,7 @@ vim.cmd [[ set fillchars+=diff:╱ ]]
 vim.cmd [[ set formatoptions-=cro ]]
 
 vim.opt.clipboard = 'unnamedplus'
-vim.opt.cmdheight = 1
-vim.opt.completeopt = 'menu,menuone,noselect'
+vim.opt.cmdheight = 0
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -72,8 +71,6 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
-  use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'saadparwaiz1/cmp_luasnip'
 
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
@@ -85,7 +82,6 @@ require('packer').startup(function(use)
   use 'onsails/lspkind.nvim'
   use 'windwp/nvim-autopairs'
   use 'folke/which-key.nvim'
-  use 'j-hui/fidget.nvim'
   use 'andymass/vim-matchup'
   use { 'nvim-neo-tree/neo-tree.nvim', branch = 'v2.x',
     requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons', 'MunifTanjim/nui.nvim' } }
@@ -117,7 +113,7 @@ require('packer').startup(function(use)
   use { 'ruifm/gitlinker.nvim', requires = 'nvim-lua/plenary.nvim' }
   use { "SmiteshP/nvim-navic", requires = "neovim/nvim-lspconfig" }
   use 'petertriho/nvim-scrollbar'
-  use 'kevinhwang91/nvim-hlslens'
+  use { 'folke/noice.nvim', requires = { 'MunifTanjim/nui.nvim', 'rcarriga/nvim-notify' } }
 
   -- languages
   use 'keith/swift.vim'
@@ -135,7 +131,6 @@ require('neodev').setup({})
 require('messages').setup({})
 require('neoscroll').setup({})
 require('nvim-autopairs').setup({})
-require('which-key').setup({})
 
 local neotest = require('neotest')
 local splits = require('smart-splits')
@@ -276,20 +271,43 @@ vim.api.nvim_create_autocmd('FocusGained', {
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
+-- which-key -----------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('which-key').setup {
+  show_help = false,
+  show_keys = false,
+}
+
+------------------------------------------------------------------------------------------------------------------------------------
+-- noice ---------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
+
+require('noice').setup({
+  lsp = {
+    hover = { enabled = true },
+    signature = { enabled = true },
+    message = { enabled = true },
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true,
+    }
+  },
+  presets = {
+    bottom_search = true, -- use a classic bottom cmdline for search
+    command_palette = true, -- position the cmdline and popupmenu together
+    long_message_to_split = true, -- long messages will be sent to a split
+    inc_rename = false, -- enables an input dialog for inc-rename.nvim
+  }
+})
+
+------------------------------------------------------------------------------------------------------------------------------------
 -- navic ---------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 
 require('nvim-navic').setup({
   highlight = true
-})
-
-------------------------------------------------------------------------------------------------------------------------------------
--- hlslens -------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
---
-require("scrollbar.handlers.search").setup({
-  calm_down = true,
-  nearest_only = true
 })
 
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -344,16 +362,6 @@ require('fzf-lua').setup({
 require('neogit').setup {
   integrations = {
     diffview = true
-  }
-}
-
-------------------------------------------------------------------------------------------------------------------------------------
--- fidget --------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------------------------------
-
-require('fidget').setup {
-  window = {
-    blend = 0
   }
 }
 
@@ -868,7 +876,6 @@ local on_attach = function(client, bufnr)
   }, opts)
 end
 
--- nvim-cmp supports additional completion capabilities
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local lspconfig = require 'lspconfig'
@@ -959,7 +966,6 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'buffer' },
     { name = 'path' },
-    { name = 'nvim_lsp_signature_help' },
   },
   window = {
     completion = cmp.config.window.bordered({}),
