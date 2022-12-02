@@ -72,6 +72,7 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
   use 'saadparwaiz1/cmp_luasnip'
+  use 'hrsh7th/cmp-cmdline'
 
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'kyazdani42/nvim-web-devicons'
@@ -300,6 +301,14 @@ require('noice').setup({
         event = "msg_show",
         kind = "",
         find = "written",
+      },
+      opts = { skip = true },
+    },
+    {
+      filter = {
+        event = "msg_show",
+        kind = "",
+        find = "lines yanked",
       },
       opts = { skip = true },
     },
