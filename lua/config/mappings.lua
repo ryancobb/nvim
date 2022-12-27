@@ -1,20 +1,12 @@
 vim.keymap.set({ 'n', 'v' }, 'q', '<nop>', { silent = true })
 
-local wk = require('which-key')
-wk.register({
-  ['<leader>'] = {
-    q = { '<C-w>q', 'quit window' },
-    Q = { ':bd<cr>', 'quit window and close buffer' },
-  },
-  ['<leader>y'] = {
-    name = 'yank',
-    f = { ':let @+ = expand("%")<cr>', 'filename' }
-  },
-  ['[d'] = { function() vim.diagnostic.goto_prev({ float = { border = 'single' } })
-  end, 'previous diagnostic' },
-  [']d'] = { function() vim.diagnostic.goto_next({ float = { border = 'single' } })
-  end, 'next diagnostic' },
-})
+vim.keymap.set('n', '<leader>q', '<c-w>q', { desc = 'quit window' })
+vim.keymap.set('n', '<leader>yf', ':let @+ = expand("%")<cr>', { desc = 'filename' })
+
+vim.keymap.set('n', '[d', function() vim.diagnostic.goto_prev({ float = { border = 'single' } }) end,
+  { desc = 'previous diagnostic' })
+vim.keymap.set('n', ']d', function() vim.diagnostic.goto_next({ float = { border = 'single' } }) end,
+  { desc = 'next diagnostic' })
 
 vim.keymap.set('n', '<c-h>', '<c-w>h')
 vim.keymap.set('n', '<c-j>', '<c-w>j')
