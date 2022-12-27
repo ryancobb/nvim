@@ -45,5 +45,8 @@ return {
 
       require("scrollbar.handlers.gitsigns").setup()
     end
+  },
+  keys = {
+    { '<leader>gD', ':Gitsigns diffthis<cr>', desc = 'diff this' }
   }
 }

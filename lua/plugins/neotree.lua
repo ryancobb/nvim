@@ -22,7 +22,12 @@ return {
           ['<c-v>'] = 'open_vsplit'
         }
       }
-
+    },
+    keys = {
+      { '<leader>e', ':NeoTreeShowToggle<CR>', desc = 'neotree' },
+      { '<leader>r', ':Neotree reveal<CR>', desc = 'reveal file' },
+      { '<leader>gs', ':Neotree git_status<cr>', desc = 'status'  },
+      { '<leader>b', ':Neotree buffers toggle<cr>', desc = 'buffers'  }
     }
   },
   {

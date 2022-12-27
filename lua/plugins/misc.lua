@@ -9,7 +9,6 @@ return {
   'google/vim-jsonnet',
 
   { 'numToStr/Comment.nvim', config = true },
-  { 'ruifm/gitlinker.nvim', config = true, dependencies = 'nvim-lua/plenary.nvim' },
   { 'karb94/neoscroll.nvim', config = true },
   { 'windwp/nvim-autopairs', config = true },
   { 'williamboman/mason.nvim', config = true },
