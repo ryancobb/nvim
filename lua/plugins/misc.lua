@@ -4,7 +4,6 @@ return {
   'famiu/bufdelete.nvim',
   'mrjones2014/smart-splits.nvim',
   'onsails/lspkind.nvim',
-  'andymass/vim-matchup',
   'keith/swift.vim',
   'google/vim-jsonnet',
 

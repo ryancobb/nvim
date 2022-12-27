@@ -32,7 +32,7 @@ return {
   },
   {
     's1n7ax/nvim-window-picker',
-    tag = '1.*',
+    tag = 'v1.5',
     config = {
       autoselect_one = true,
       include_current = false,

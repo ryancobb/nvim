@@ -8,6 +8,7 @@ return {
       'RRethy/nvim-treesitter-endwise',
       'nvim-treesitter/playground',
       'p00f/nvim-ts-rainbow',
+      'andymass/vim-matchup',
     },
     config = function()
       require('nvim-treesitter.configs').setup({
