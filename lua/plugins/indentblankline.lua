@@ -1,8 +1,8 @@
 return {
   {
     'lukas-reineke/indent-blankline.nvim',
+    event = 'BufReadPre',
     config = {
-      use_treesitter = true,
       char = '┊',
       show_trailing_blankline_indent = false,
       show_current_context = true,

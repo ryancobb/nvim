@@ -1,12 +1,12 @@
 return {
-  { 
+  { "nvim-treesitter/playground", cmd = "TSPlaygroundToggle" },
+  {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     event = 'BufReadPost',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
       'RRethy/nvim-treesitter-endwise',
-      'nvim-treesitter/playground',
       'p00f/nvim-ts-rainbow',
       'andymass/vim-matchup',
     },

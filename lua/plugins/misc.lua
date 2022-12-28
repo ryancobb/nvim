@@ -11,7 +11,6 @@ return {
   { 'karb94/neoscroll.nvim', config = true },
   { 'windwp/nvim-autopairs', config = true },
   { 'williamboman/mason.nvim', config = true },
-  { 'petertriho/nvim-scrollbar', config = true },
   { 'kevinhwang91/nvim-bqf', ft = 'qf' },
   { 'lukas-reineke/indent-blankline.nvim', }
 }

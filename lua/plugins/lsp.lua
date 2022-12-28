@@ -5,7 +5,7 @@ return {
     'neovim/nvim-lspconfig',
     dependencies = {
       'hrsh7th/cmp-nvim-lsp',
-      'folke/neodev.nvim'
+      { 'folke/neodev.nvim', config = true }
     },
     config = function()
       vim.diagnostic.config({
@@ -43,7 +43,7 @@ return {
 
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-      local lspconfig = require 'lspconfig'
+      local lspconfig = require('lspconfig')
       lspconfig.solargraph.setup {
         on_attach = on_attach,
         capabilities = capabilities,

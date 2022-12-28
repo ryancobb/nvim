@@ -34,8 +34,6 @@ return {
         }
       })
 
-      local palette = require('nightfox.palette').load('nordfox')
-      vim.cmd('highlight IndentBlankLineChar guifg= ' .. palette.fg3)
       vim.cmd [[ colorscheme nordfox ]]
     end
   },

@@ -5,6 +5,8 @@ return {
       local conditions = require("heirline.conditions")
       local utils = require("heirline.utils")
 
+      local dark_bg = utils.get_highlight('StatusLine').bg
+
       local components = {}
 
       components.space = { provider = ' ' }
@@ -146,15 +148,13 @@ return {
             })
           end,
           hl = function()
-            local highlight = utils.get_highlight('@function')
-            -- return { bg = highlight.fg, fg = theme.dark_bg }
-            return { bg = highlight.fg }
+            return { bg = utils.get_highlight('@function').fg, fg = dark_bg }
           end
         },
       }
 
       local statusline = {
-        -- hl = { bg = theme.dark_bg },
+        hl = { bg = dark_bg },
         {
           components.git,
           components.space,
@@ -200,9 +200,7 @@ return {
               {
                 hl = function()
                   if vim.bo.modified then
-                    local highlight = utils.get_highlight('@string.escape')
-                    -- return { fg = theme.dark_bg, bg = highlight.fg, force = true }
-                    return { bg = highlight.fg, force = true }
+                    return { fg = dark_bg, bg = utils.get_highlight('@string.escape').fg, force = true }
                   end
                 end,
                 {
