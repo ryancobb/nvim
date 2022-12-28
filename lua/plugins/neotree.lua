@@ -6,7 +6,27 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'kyazdani42/nvim-web-devicons',
-      'MunifTanjim/nui.nvim'
+      'MunifTanjim/nui.nvim',
+      {
+        's1n7ax/nvim-window-picker',
+        tag = 'v1.5',
+        dependencies = {
+          'rebelot/heirline.nvim'
+        },
+        config = function()
+          require('window-picker').setup({
+            autoselect_one = true,
+            include_current = false,
+            other_win_hl_color = 'grey',
+            filter_rules = {
+              bo = {
+                filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix' },
+                buftype = { 'nofile' }
+              }
+            }
+          })
+        end
+      }
     },
     config = {
       enable_diagnostics = false,
@@ -25,24 +45,10 @@ return {
       }
     },
     keys = {
-      { '<leader>e', ':NeoTreeShowToggle<CR>', desc = 'neotree' },
-      { '<leader>r', ':Neotree reveal<CR>', desc = 'reveal file' },
-      { '<leader>gs', ':Neotree git_status<cr>', desc = 'status'  },
-      { '<leader>b', ':Neotree buffers toggle<cr>', desc = 'buffers'  }
+      { '<leader>e', '<cmd>NeoTreeShowToggle<cr>', desc = 'neotree' },
+      { '<leader>r', '<cmd>Neotree reveal<cr>', desc = 'reveal file' },
+      { '<leader>gs', '<cmd>Neotree git_status<cr>', desc = 'status' },
+      { '<leader>b', '<cmd>Neotree buffers toggle<cr>', desc = 'buffers' }
     }
   },
-  {
-    's1n7ax/nvim-window-picker',
-    tag = 'v1.5',
-    config = {
-      autoselect_one = true,
-      include_current = false,
-      filter_rules = {
-        bo = {
-          filetype = { 'neo-tree', 'neo-tree-popup', 'notify', 'quickfix' },
-          buftype = { 'nofile' }
-        }
-      },
-    }
-  }
 }

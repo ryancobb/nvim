@@ -42,13 +42,13 @@ return {
         end,
         desc = 'alternate'
       },
-      { '<leader>?', ':FzfLua oldfiles cwd_only=true<cr>', desc = 'old files' },
-      { '<leader>f', ':FzfLua files<cr>', desc = 'find files' },
-      { '<leader>st', ':FzfLua live_grep_glob<cr>', desc = 'text' },
-      { '<leader>sc', ':FzfLua grep_cword<cr>', desc = 'cursor word' },
-      { '<leader>sr', ':FzfLua resume<cr>', desc = 'resume' },
-      { '<leader>gL', ':FzfLua git_commits<cr>', desc = 'log' },
-      { '<leader>gl', ':FzfLua git_bcommits<cr>', desc = 'log (buffer)' }
+      { '<leader>?', '<cmd>FzfLua oldfiles cwd_only=true<cr>', desc = 'old files' },
+      { '<leader>f', '<cmd>FzfLua files<cr>', desc = 'find files' },
+      { '<leader>st', '<cmd>FzfLua live_grep_glob<cr>', desc = 'text' },
+      { '<leader>sc', '<cmd>FzfLua grep_cword<cr>', desc = 'cursor word' },
+      { '<leader>sr', '<cmd>FzfLua resume<cr>', desc = 'resume' },
+      { '<leader>gL', '<cmd>FzfLua git_commits<cr>', desc = 'log' },
+      { '<leader>gl', '<cmd>FzfLua git_bcommits<cr>', desc = 'log (buffer)' }
     }
   }
 }
