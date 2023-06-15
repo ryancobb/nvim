@@ -6,6 +6,7 @@ return {
 
       keys[#keys + 1] = { "gd", vim.lsp.buf.definition }
       keys[#keys + 1] = { "gr", require("fzf-lua").lsp_references }
+      keys[#keys + 1] = { "<leader>cf", vim.lsp.buf.format }
     end,
     opts = {
       servers = {

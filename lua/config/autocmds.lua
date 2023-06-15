@@ -9,3 +9,10 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.b.miniindentscope_disable = true
   end,
 })
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = { "ruby" },
+  callback = function()
+    vim.b.autoformat = false
+  end,
+})
