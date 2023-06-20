@@ -4,6 +4,7 @@
 
 vim.keymap.set("n", "<leader>yf", '<cmd>let @+ = expand("%")<cr>', { desc = "filename" })
 vim.keymap.set("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link" })
+vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen origin/main...HEAD<cr>", { desc = "DiffviewOpen" })
 
 vim.keymap.del({ "t" }, "<esc><esc>")
 
