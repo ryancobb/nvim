@@ -3,8 +3,8 @@
 -- Add any additional autocmds here
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("fzf", { clear = true }),
-  pattern = { "Fzf" },
+  group = vim.api.nvim_create_augroup("disable_indent_scope", { clear = true }),
+  pattern = { "Fzf", "DiffviewFiles" },
   callback = function()
     vim.b.miniindentscope_disable = true
   end,

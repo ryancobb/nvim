@@ -4,7 +4,7 @@ return {
     event = "VeryLazy",
     opts = function()
       local icons = require("lazyvim.config").icons
-      local neotree = { sections = { lualine_a = {} }, filetypes = { "neo-tree" } }
+      local blank = { sections = { lualine_a = {} }, filetypes = { "neo-tree", "DiffviewFiles" } }
 
       return {
         sections = {
@@ -34,7 +34,7 @@ return {
           lualine_y = { "filetype", "encoding" },
           lualine_z = {},
         },
-        extensions = { neotree },
+        extensions = { blank },
       }
     end,
   },
