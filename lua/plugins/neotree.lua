@@ -6,5 +6,12 @@ return {
         follow_current_file = false,
       },
     },
+    keys = {
+      {
+        "<leader>r",
+        "<cmd>Neotree reveal<cr>",
+        desc = "Reveal in file tree",
+      },
+    },
   },
 }

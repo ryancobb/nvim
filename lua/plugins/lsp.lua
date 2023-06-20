@@ -8,13 +8,5 @@ return {
       keys[#keys + 1] = { "gr", require("fzf-lua").lsp_references }
       keys[#keys + 1] = { "<leader>cf", vim.lsp.buf.format }
     end,
-    opts = {
-      servers = {
-        solargraph = {
-          mason = false,
-          cmd = { "bundle", "exec", "solargraph", "stdio" },
-        },
-      },
-    },
   },
 }
