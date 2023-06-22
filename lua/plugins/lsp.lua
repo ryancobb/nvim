@@ -10,6 +10,12 @@ return {
     end,
     opts = {
       inlay_hints = { enabled = true },
+      servers = {
+        solargraph = {
+          mason = false,
+          cmd = { "bundle", "exec", "solargraph", "stdio" },
+        },
+      },
     },
   },
 }
