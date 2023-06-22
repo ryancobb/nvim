@@ -25,7 +25,7 @@ return {
         end,
         desc = "alternate",
       },
-      { "<leader>fb", fzf_buffers, desc = "buffers" },
+      { "<leader>,", fzf_buffers, desc = "buffers" },
       { "<leader>fr", "<cmd>FzfLua oldfiles cwd_only=true<cr>", desc = "recent files" },
       {
         "<leader><space>",

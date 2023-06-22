@@ -5,6 +5,11 @@ return {
       filesystem = {
         follow_current_file = false,
       },
+      window = {
+        mappings = {
+          ["<enter>"] = "open_with_window_picker",
+        },
+      },
     },
     keys = {
       {
