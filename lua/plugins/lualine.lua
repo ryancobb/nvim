@@ -11,6 +11,7 @@ return {
           lualine_a = {},
           lualine_b = { "branch" },
           lualine_c = {
+            "filename",
             {
               "diagnostics",
               symbols = {
