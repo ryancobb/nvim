@@ -6,6 +6,12 @@ return {
       dim_inactive = {
         enabled = true,
       },
+      custom_highlights = function(colors)
+        return {
+          NeoTreeNormal = { link = "Normal" },
+          NeoTreeNormalNC = { link = "NormalNC" },
+        }
+      end,
     },
   },
   {
