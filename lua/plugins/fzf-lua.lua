@@ -39,7 +39,7 @@ return {
         end,
         desc = "find files",
       },
-      { "<leader>fr", "<cmd>FzfLua resume<cr>", desc = "resume" },
+      { "<leader>fR", "<cmd>FzfLua resume<cr>", desc = "resume" },
       { "<leader>ss", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "symbols" },
       { "<leader>st", "<cmd>FzfLua live_grep_glob<cr>", desc = "text" },
       { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
