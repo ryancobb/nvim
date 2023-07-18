@@ -1,9 +1,22 @@
 return {
   {
-    "rebelot/kanagawa.nvim",
-    opts = {
-      dimInactive = true,
-    },
+    "neanias/everforest-nvim",
+    name = "everforest",
+    lazy = false,
+    opts = function()
+      vim.opt.fillchars = { eob = " " }
+
+      require("everforest").setup({
+        italics = true,
+        dim_inactive_windows = true,
+        on_highlights = function(hl, palette)
+          hl.EndOfBuffer = { bg = palette.none }
+          hl.TSFunction = { link = "Blue" }
+          hl.TSFunctionCall = { link = "Blue" }
+          hl.TSString = { link = "Green" }
+        end,
+      })
+    end,
   },
   {
     "catppuccin/nvim",
@@ -12,7 +25,7 @@ return {
       dim_inactive = {
         enabled = true,
       },
-      custom_highlights = function(colors)
+      custom_highlights = function(_colors)
         return {
           NeoTreeNormal = { link = "Normal" },
           NeoTreeNormalNC = { link = "NormalNC" },
@@ -23,7 +36,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "kanagawa",
+      colorscheme = "everforest",
     },
   },
 }
