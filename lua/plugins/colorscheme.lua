@@ -1,5 +1,19 @@
 return {
   {
+    "EdenEast/nightfox.nvim",
+    opts = {
+      options = {
+        dim_inactive = true,
+      },
+      groups = {
+        all = {
+          NeoTreeNormal = { link = "Normal" },
+          NeoTreeNormalNC = { link = "NormalNC" },
+        },
+      },
+    },
+  },
+  {
     "neanias/everforest-nvim",
     name = "everforest",
     lazy = false,
@@ -10,7 +24,12 @@ return {
         italics = true,
         dim_inactive_windows = true,
         on_highlights = function(hl, palette)
+          hl.Directory = { link = "Blue" }
           hl.EndOfBuffer = { bg = palette.none }
+          hl.NeoTreeEndOfBuffer = { bg = palette.none }
+          hl.NeoTreeGitModified = { link = "Yellow" }
+          hl.NeoTreeNormal = { link = "Normal" }
+          hl.NeoTreeNormalNC = { link = "NormalNC" }
           hl.TSFunction = { link = "Blue" }
           hl.TSFunctionCall = { link = "Blue" }
           hl.TSString = { link = "Green" }
@@ -36,7 +55,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "everforest",
+      colorscheme = "nordfox",
     },
   },
 }
