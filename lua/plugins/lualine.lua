@@ -11,7 +11,6 @@ return {
           lualine_a = {},
           lualine_b = { "branch" },
           lualine_c = {
-            "filename",
             {
               "diagnostics",
               symbols = {
@@ -34,6 +33,10 @@ return {
           },
           lualine_y = { "filetype", "encoding" },
           lualine_z = {},
+        },
+        inactive_sections = {
+          lualine_c = {},
+          lualine_x = {},
         },
         extensions = { blank },
       }

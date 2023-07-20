@@ -42,5 +42,3 @@ end)
 map("n", "<c-right>", function()
   smartsplits.resize_right()
 end)
-
-map({ "n", "v" }, "c", '"_c"')
