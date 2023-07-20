@@ -4,6 +4,9 @@ return {
     opts = {
       options = {
         dim_inactive = true,
+        styles = {
+          comments = "italic",
+        },
       },
       groups = {
         all = {

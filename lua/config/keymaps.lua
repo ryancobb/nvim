@@ -2,34 +2,45 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-vim.keymap.set("n", "<leader>yf", '<cmd>let @+ = expand("%")<cr>', { desc = "filename" })
-vim.keymap.set("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link" })
-vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen origin/main...HEAD<cr>", { desc = "DiffviewOpen" })
+local map = vim.keymap.set
 
 vim.keymap.del({ "t" }, "<esc><esc>")
 
+map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link" })
+map("n", "<leader>gd", "<cmd>DiffviewOpen origin/main...HEAD<cr>", { desc = "DiffviewOpen" })
+
 local smartsplits = require("smart-splits")
-vim.keymap.set("n", "<c-h>", function()
+
+map("n", "<c-h>", function()
   smartsplits.move_cursor_left()
 end)
-vim.keymap.set("n", "<c-j>", function()
+
+map("n", "<c-j>", function()
   smartsplits.move_cursor_down()
 end)
-vim.keymap.set("n", "<c-k>", function()
+
+map("n", "<c-k>", function()
   smartsplits.move_cursor_up()
 end)
-vim.keymap.set("n", "<c-l>", function()
+
+map("n", "<c-l>", function()
   smartsplits.move_cursor_right()
 end)
-vim.keymap.set("n", "<c-left>", function()
+
+map("n", "<c-left>", function()
   smartsplits.resize_left()
 end)
-vim.keymap.set("n", "<c-down>", function()
+
+map("n", "<c-down>", function()
   smartsplits.resize_down()
 end)
-vim.keymap.set("n", "<c-up>", function()
+
+map("n", "<c-up>", function()
   smartsplits.resize_up()
 end)
-vim.keymap.set("n", "<c-right>", function()
+
+map("n", "<c-right>", function()
   smartsplits.resize_right()
 end)
+
+map({ "n", "v" }, "c", '"_c"')
