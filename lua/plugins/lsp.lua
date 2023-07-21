@@ -10,6 +10,9 @@ return {
       keys[#keys + 1] = { "<leader>cf", vim.lsp.buf.format }
     end,
     opts = {
+      diagnostics = {
+        virtual_text = false,
+      },
       inlay_hints = { enabled = true },
       servers = {
         solargraph = {
