@@ -12,6 +12,7 @@ return {
         all = {
           NeoTreeNormal = { link = "Normal" },
           NeoTreeNormalNC = { link = "NormalNC" },
+          ["@text.Todo"] = { bg = "none" },
         },
       },
     },
