@@ -10,6 +10,7 @@ map("n", "<leader>yf", '<cmd>let @+ = expand("%")<cr>', { desc = "filename" })
 map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link" })
 
 map("n", "<leader>gd", "<cmd>DiffviewOpen origin/main...HEAD<cr>", { desc = "DiffviewOpen" })
+map("n", "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", { desc = "resume" })
 
 local smartsplits = require("smart-splits")
 
