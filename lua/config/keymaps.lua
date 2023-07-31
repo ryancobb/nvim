@@ -11,6 +11,7 @@ map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link"
 
 map("n", "<leader>gd", "<cmd>DiffviewOpen origin/main...HEAD<cr>", { desc = "DiffviewOpen" })
 map("n", "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", { desc = "resume" })
+map("n", "<leader>bD", "<cmd>bd<cr>", { desc = "delete and close window" })
 
 local smartsplits = require("smart-splits")
 

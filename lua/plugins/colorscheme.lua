@@ -13,6 +13,8 @@ return {
           NeoTreeNormal = { link = "Normal" },
           NeoTreeNormalNC = { link = "NormalNC" },
           ["@text.Todo"] = { bg = "none" },
+          WindowPickerStatusLine = { link = "@text.warning" },
+          WindowPickerStatusLineNC = { link = "@text.warning" },
         },
       },
     },

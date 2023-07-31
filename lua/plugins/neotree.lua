@@ -10,6 +10,7 @@ return {
       window = {
         mappings = {
           ["<enter>"] = "open_with_window_picker",
+          ["<c-v>"] = "open_vsplit",
         },
       },
     },
