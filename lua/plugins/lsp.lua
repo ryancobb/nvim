@@ -15,6 +15,14 @@ return {
         end,
       }
       keys[#keys + 1] = {
+        "gD",
+        function()
+          fzflua.lsp_definitions({
+            jump_to_single_result = true,
+          })
+        end,
+      }
+      keys[#keys + 1] = {
         "gr",
         function()
           fzflua.lsp_references({ ignore_current_line = true })
