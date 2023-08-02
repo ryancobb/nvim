@@ -14,6 +14,12 @@ return {
       files = {
         cwd_prompt = false,
       },
+      keymap = {
+        builtin = {
+          ["<c-d>"] = "preview-page-down",
+          ["<c-u>"] = "preview-page-up",
+        },
+      },
     },
     keys = {
       {

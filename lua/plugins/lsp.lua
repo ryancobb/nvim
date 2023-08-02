@@ -6,7 +6,7 @@ return {
       local fzflua = require("fzf-lua")
 
       keys[#keys + 1] = {
-        "gd",
+        "<c-w>d",
         function()
           fzflua.lsp_definitions({
             jump_to_single_result = true,
@@ -15,7 +15,7 @@ return {
         end,
       }
       keys[#keys + 1] = {
-        "gD",
+        "gd",
         function()
           fzflua.lsp_definitions({
             jump_to_single_result = true,
