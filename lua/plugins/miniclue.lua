@@ -4,6 +4,9 @@ return {
     local miniclue = require("mini.clue")
 
     miniclue.setup({
+      window = {
+        delay = 500,
+      },
       triggers = {
         -- Leader triggers
         { mode = "n", keys = "<Leader>" },
@@ -35,7 +38,6 @@ return {
         { mode = "n", keys = "z" },
         { mode = "x", keys = "z" },
       },
-
       clues = {
         -- Enhance this by adding descriptions for <Leader> mapping groups
         miniclue.gen_clues.builtin_completion(),

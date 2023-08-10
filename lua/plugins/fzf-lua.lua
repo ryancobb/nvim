@@ -27,10 +27,12 @@ return {
         function()
           require("fzf-lua").files({
             fzf_opts = {
-              ["--query"] = vim.fn.expand("%:~:."):gsub("_spec", ""):gsub("^app/", ""):gsub("^spec/", "")
-                .. '\\ "!'
-                .. vim.fn.expand("%:t")
-                .. '"\\ ',
+              ["--query"] = vim.fn
+                .expand("%:~:.")
+                :gsub("_spec", "")
+                :gsub("^app/", "")
+                :gsub("^spec/", "")
+                :gsub("^ee/app/", "") .. '\\ "!' .. vim.fn.expand("%:t") .. '"\\ ',
             },
           })
         end,
@@ -41,9 +43,16 @@ return {
       {
         "<leader><space>",
         function()
-          require("fzf-lua").files({ cmd = "fd --type f --exclude spec/fixtures" })
+          require("fzf-lua").files({ cmd = "fd --exclude spec/fixtures" })
         end,
-        desc = "find files",
+        desc = "files",
+      },
+      {
+        "<leader>fh",
+        function()
+          require("fzf-lua").files({ cmd = "fd --no-ignore --hidden --exclude spec/fixtures --exclude node_modules" })
+        end,
+        desc = "hidden",
       },
       { "<leader>st", "<cmd>FzfLua live_grep_glob<cr>", desc = "text" },
       { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
