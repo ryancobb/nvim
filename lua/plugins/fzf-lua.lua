@@ -20,6 +20,12 @@ return {
           ["<c-u>"] = "preview-page-up",
         },
       },
+      winopts = {
+        preview = {
+          layout = "flex",
+          flip_columns = 230,
+        },
+      },
     },
     keys = {
       {
@@ -43,7 +49,7 @@ return {
       {
         "<leader><space>",
         function()
-          require("fzf-lua").files({ cmd = "fd --exclude spec/fixtures" })
+          require("fzf-lua").files({ cmd = "fd -t file --exclude spec/fixtures" })
         end,
         desc = "files",
       },

@@ -3,9 +3,12 @@ return {
     "folke/flash.nvim",
     opts = {
       modes = {
-        search = {
+        char = {
           enabled = false,
         },
+        -- search = {
+        --   enabled = false,
+        -- },
       },
     },
   },
