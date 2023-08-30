@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = { "ruby" },
+  pattern = { "ruby", "vue" },
   callback = function()
     vim.b.autoformat = false
   end,

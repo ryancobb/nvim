@@ -28,8 +28,13 @@ return {
           fzflua.lsp_references({ ignore_current_line = true })
         end,
       }
-      keys[#keys + 1] = { "fs", "<cmd>FzfLua lsp_document_symbols<cr>" }
-      keys[#keys + 1] = { "<leader>cf", vim.lsp.buf.format }
+      keys[#keys + 1] = { "<leader>fs", "<cmd>FzfLua lsp_document_symbols<cr>" }
+      keys[#keys + 1] = {
+        "<leader>cf",
+        function()
+          vim.lsp.buf.format({ timeout = 2000 })
+        end,
+      }
     end,
     opts = {
       diagnostics = {

@@ -65,6 +65,26 @@ return {
       { "<leader>gL", "<cmd>FzfLua git_commits<cr>", desc = "log" },
       { "<leader>gl", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
       { "<leader>gs", "<cmd>FzfLua git_status<cr>", desc = "status" },
+      {
+        "<leader>gd",
+        function()
+          local lib = require("diffview.lib")
+          local view = lib.get_current_view()
+          if view then
+            vim.cmd.DiffviewClose()
+          else
+            require("fzf-lua").fzf_exec("git branch -a", {
+              prompt = "diff:",
+              actions = {
+                ["default"] = function(selected)
+                  vim.cmd.DiffviewOpen({ args = { selected[1] } })
+                end,
+              },
+            })
+          end
+        end,
+        desc = "diff",
+      },
     },
   },
 }

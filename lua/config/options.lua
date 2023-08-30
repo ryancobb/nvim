@@ -9,3 +9,7 @@ opt.relativenumber = false
 opt.title = true
 opt.titlestring = '%{substitute(getcwd(), $HOME, "~", "g")} - nvim'
 opt.wrap = false
+
+if vim.g.neovide then
+  vim.o.guifont = "JetBrainsMono Nerd Font:h12"
+end

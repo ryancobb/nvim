@@ -7,7 +7,6 @@ local map = vim.keymap.set
 vim.keymap.del({ "t" }, "<esc><esc>")
 
 map({ "n", "x" }, "q:", "<nop>")
-map({ "n", "x" }, "x", "x") -- make sure x map doesnt get overwritten by vim-cutlass
 
 map("n", "<leader>yf", '<cmd>let @+ = expand("%")<cr>', { desc = "filename" })
 map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link" })
