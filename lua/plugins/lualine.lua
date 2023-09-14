@@ -7,6 +7,10 @@ return {
       local blank = { sections = { lualine_a = {} }, filetypes = { "neo-tree", "DiffviewFiles" } }
 
       return {
+        options = {
+          component_separators = "|",
+          section_separators = { left = "", right = "" },
+        },
         sections = {
           lualine_a = {},
           lualine_b = { "branch" },
