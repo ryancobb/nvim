@@ -16,3 +16,10 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     vim.b.autoformat = false
   end,
 })
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  pattern = { "*.hurl" },
+  callback = function()
+    vim.cmd("set filetype=hurl")
+  end,
+})
