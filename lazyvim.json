@@ -1,0 +1,12 @@
+{
+  "extras": [
+    "coding.copilot",
+    "lang.json",
+    "lang.ruby",
+    "lang.yaml",
+    "linting.eslint"
+  ],
+  "news": {
+    "NEWS.md": "2035"
+  }
+}

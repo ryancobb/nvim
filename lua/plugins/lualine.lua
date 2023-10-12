@@ -24,8 +24,6 @@ return {
                 hint = icons.diagnostics.Hint,
               },
             },
-          },
-          lualine_x = {
             {
               "diff",
               symbols = {
@@ -35,6 +33,7 @@ return {
               },
             },
           },
+          lualine_x = {},
           lualine_y = { "filetype", "encoding" },
           lualine_z = {},
         },
