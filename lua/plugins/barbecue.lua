@@ -9,7 +9,7 @@ return {
     },
     opts = {
       show_modified = true,
-      show_navic = true,
+      show_navic = false,
     },
   },
 }
