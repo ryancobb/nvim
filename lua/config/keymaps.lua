@@ -14,6 +14,13 @@ map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link"
 map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
 map("n", "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", { desc = "resume" })
 
+map("n", "<leader>cf", function()
+  require("conform").format({
+    timeout_ms = 2000,
+    lsp_fallback = true
+  })
+end, { desc = "format" })
+
 local smartsplits = require("smart-splits")
 
 map("n", "<c-h>", function()
