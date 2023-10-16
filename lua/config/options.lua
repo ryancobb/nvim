@@ -5,6 +5,7 @@
 local opt = vim.opt
 
 vim.g.autoformat = false
+vim.g.editorconfig = false
 
 opt.fillchars:append({ diff = "╱" })
 opt.laststatus = 3
