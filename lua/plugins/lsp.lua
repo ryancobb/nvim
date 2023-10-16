@@ -39,7 +39,6 @@ return {
         solargraph = {
           mason = false,
           cmd = { "bundle", "exec", "solargraph", "stdio" },
-          capabilities = { textDocument = { definition = { dynamicRegistration = false } } },
         },
       },
     },
