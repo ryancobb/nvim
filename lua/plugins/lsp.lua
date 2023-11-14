@@ -28,7 +28,7 @@ return {
           fzflua.lsp_references({ ignore_current_line = true })
         end,
       }
-      keys[#keys + 1] = { "<leader>fs", "<cmd>FzfLua lsp_document_symbols<cr>" }
+      keys[#keys + 1] = { "<leader>fs", "<cmd>FzfLua lsp_document_symbols<cr>", desc = 'symbols' }
     end,
     opts = {
       diagnostics = {
