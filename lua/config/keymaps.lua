@@ -8,7 +8,7 @@ vim.keymap.del({ "t" }, "<esc><esc>")
 
 map({ "n", "x" }, "q:", "<nop>")
 
-map("n", "<leader>yf", '<cmd>let @+ = expand("%")<cr>', { desc = "filename" })
+map("n", "<leader>yf", '<cmd>let @+ = expand("%:~:.")<cr>', { desc = "filename" })
 map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link" })
 
 map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })

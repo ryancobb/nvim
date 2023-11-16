@@ -36,13 +36,10 @@ return {
       },
       inlay_hints = { enabled = true },
       servers = {
-        -- solargraph = {
-        --   mason = false,
-        --   cmd = { "bundle", "exec", "solargraph", "stdio" },
-        -- },
-        ruby_ls = {
+        solargraph = {
           mason = false,
-        }
+          cmd = { "bundle", "exec", "solargraph", "stdio" },
+        },
       },
     },
   },
