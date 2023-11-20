@@ -28,22 +28,22 @@ return {
       },
     },
     keys = {
-      -- {
-      --   "<leader>fa",
-      --   function()
-      --     require("fzf-lua").files({
-      --       fzf_opts = {
-      --         ["--query"] = vim.fn
-      --           .expand("%:~:.")
-      --           :gsub("_spec", "")
-      --           :gsub("^app/", "")
-      --           :gsub("^spec/", "")
-      --           :gsub("^ee/app/", "") .. '\\ "!' .. vim.fn.expand("%:t") .. '"\\ ',
-      --       },
-      --     })
-      --   end,
-      --   desc = "alternate",
-      -- },
+      {
+        "<leader>fa",
+        function()
+          require("fzf-lua").files({
+            fzf_opts = {
+              ["--query"] = vim.fn
+                .expand("%:~:.")
+                :gsub("_spec", "")
+                :gsub("^app/", "")
+                :gsub("^spec/", "")
+                :gsub("^ee/app/", "") .. '\\ "!' .. vim.fn.expand("%:t") .. '"\\ ',
+            },
+          })
+        end,
+        desc = "alternate",
+      },
       { "<leader>,", fzf_buffers, desc = "buffers" },
       { "<leader>fr", "<cmd>FzfLua oldfiles cwd_only=true<cr>", desc = "recent files" },
       {

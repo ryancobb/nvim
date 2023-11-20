@@ -9,6 +9,8 @@ vim.g.editorconfig = false
 
 opt.fillchars:append({ diff = "╱" })
 opt.laststatus = 3
+opt.list = true
+opt.lcs = { space = "·" }
 opt.relativenumber = false
 opt.title = true
 opt.titlestring = '%{substitute(getcwd(), $HOME, "~", "g")} - nvim'
