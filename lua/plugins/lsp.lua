@@ -28,18 +28,20 @@ return {
           fzflua.lsp_references({ ignore_current_line = true })
         end,
       }
-      keys[#keys + 1] = { "<leader>ss", "<cmd>FzfLua lsp_document_symbols<cr>", desc = 'symbols' }
+      keys[#keys + 1] = { "<leader>fs", "<cmd>FzfLua lsp_document_symbols<cr>", desc = 'symbols' }
     end,
     opts = {
       diagnostics = {
         virtual_text = false,
       },
-      inlay_hints = { enabled = true },
       servers = {
-        solargraph = {
+        -- solargraph = {
+        --   mason = false,
+        --   cmd = { "bundle", "exec", "solargraph", "stdio" },
+        -- },
+        ruby_ls = {
           mason = false,
-          cmd = { "bundle", "exec", "solargraph", "stdio" },
-        },
+        }
       },
     },
   },

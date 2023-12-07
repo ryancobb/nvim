@@ -16,7 +16,7 @@ map("n", "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", { desc = "resume" })
 
 map("n", "<leader>cf", function()
   require("conform").format({
-    timeout_ms = 2000,
+    timeout_ms = 5000,
     lsp_fallback = true
   })
 end, { desc = "format" })
