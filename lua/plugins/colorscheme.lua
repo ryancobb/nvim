@@ -15,17 +15,11 @@ return {
           ["@text.Todo"] = { bg = "none" },
           WindowPickerStatusLine = { link = "@text.warning" },
           WindowPickerStatusLineNC = { link = "@text.warning" },
-          ['@lsp.type.namespace.ruby'] = { link = '@type.ruby' },
-          ['@lsp.type.parameter.ruby'] = { link = '@variable.ruby' },
-          CursorLine = { link = "none" }
+          ["@lsp.type.namespace.ruby"] = { link = "@type.ruby" },
+          ["@lsp.type.parameter.ruby"] = { link = "@variable.ruby" },
+          CursorLine = { link = "none" },
         },
       },
-    },
-  },
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "nordfox",
     },
   },
 }

@@ -56,7 +56,7 @@ return {
       {
         "<leader>fh",
         function()
-          require("fzf-lua").files({ cmd = "fd --no-ignore --hidden --exclude spec/fixtures --exclude node_modules" })
+          require("fzf-lua").files({ cmd = "fd --no-ignore --hidden --exclude node_modules" })
         end,
         desc = "hidden",
       },
