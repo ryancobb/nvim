@@ -6,7 +6,6 @@ return {
 
       opts.mapping = cmp.mapping.preset.insert(vim.tbl_deep_extend("force", opts.mapping, {
         ["<CR>"] = cmp.config.disable,
-        ["<Right>"] = cmp.mapping.confirm({ select = true }),
       }))
     end,
   },
