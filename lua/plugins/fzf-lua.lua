@@ -49,18 +49,17 @@ return {
       {
         "<leader><space>",
         function()
-          require("fzf-lua").files({ cmd = "fd -t file --exclude spec/fixtures" })
+          require("fzf-lua").files({ cmd = "fd -t file --hidden --exclude node_modules --exclude spec/fixtures" })
         end,
         desc = "files",
       },
       {
-        "<leader>fh",
+        "<leader>st",
         function()
-          require("fzf-lua").files({ cmd = "fd --no-ignore --hidden --exclude node_modules" })
+          require("fzf-lua").live_grep_glob({ cmd = "rg --hidden --iglob '!.git'" })
         end,
-        desc = "hidden",
+        desc = "text",
       },
-      { "<leader>st", "<cmd>FzfLua live_grep_glob<cr>", desc = "text" },
       { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
       { "<leader>gL", "<cmd>FzfLua git_commits<cr>", desc = "log" },
       { "<leader>gl", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
