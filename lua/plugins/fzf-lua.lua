@@ -11,8 +11,12 @@ return {
     "ibhagwan/fzf-lua",
     cmd = "FzfLua",
     opts = {
+      grep = {
+        rg_glob = true,
+        rg_opts = "--hidden -g !.git --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
+      },
       files = {
-        cwd_prompt = false,
+        fd_opts = "--color=never --type f --hidden --follow --exclude .git --exclude node_modules",
       },
       keymap = {
         builtin = {
@@ -46,20 +50,8 @@ return {
       },
       { "<leader>,", fzf_buffers, desc = "buffers" },
       { "<leader>fr", "<cmd>FzfLua oldfiles cwd_only=true<cr>", desc = "recent files" },
-      {
-        "<leader><space>",
-        function()
-          require("fzf-lua").files({ cmd = "fd -t file --hidden --exclude node_modules --exclude spec/fixtures" })
-        end,
-        desc = "files",
-      },
-      {
-        "<leader>st",
-        function()
-          require("fzf-lua").live_grep_glob({ cmd = "rg --hidden --iglob '!.git'" })
-        end,
-        desc = "text",
-      },
+      { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
+      { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
       { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
       { "<leader>gL", "<cmd>FzfLua git_commits<cr>", desc = "log" },
       { "<leader>gl", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
