@@ -5,7 +5,7 @@ return {
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_deep_extend("force", opts.mapping, {
-        ["<CR>"] = cmp.config.disable,
+        ["<CR>"] = cmp.mapping.confirm({ select = false }),
         ["<Right>"] = cmp.mapping.confirm({ select = false }),
       })
       opts.preselect = cmp.PreselectMode.None

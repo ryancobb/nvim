@@ -14,9 +14,15 @@ return {
       grep = {
         rg_glob = true,
         rg_opts = "--hidden -g !.git --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
+        fzf_opts = {
+          ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-grep-history",
+        },
       },
       files = {
         fd_opts = "--color=never --type f --hidden --follow --exclude .git --exclude node_modules",
+        fzf_opts = {
+          ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
+        },
       },
       keymap = {
         builtin = {
