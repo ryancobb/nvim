@@ -35,10 +35,6 @@ return {
         virtual_text = false,
       },
       servers = {
-        -- solargraph = {
-        --   mason = false,
-        --   cmd = { "bundle", "exec", "solargraph", "stdio" },
-        -- },
         ruby_ls = {
           mason = false,
         }
