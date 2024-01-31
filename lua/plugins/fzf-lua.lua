@@ -13,7 +13,7 @@ return {
     opts = {
       grep = {
         rg_glob = true,
-        rg_opts = "--hidden -g !.git --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
+        rg_opts = "--hidden -g !.git -g !spec/fixtures --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
         fzf_opts = {
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-grep-history",
         },
