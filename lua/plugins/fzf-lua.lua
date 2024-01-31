@@ -19,7 +19,7 @@ return {
         },
       },
       files = {
-        fd_opts = "--color=never --type f --hidden --follow --exclude .git --exclude node_modules",
+        fd_opts = "--color=never --type f --hidden --follow --exclude .git --exclude node_modules --exclude spec/fixtures",
         fzf_opts = {
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
         },
@@ -61,7 +61,13 @@ return {
       { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
       { "<leader>gL", "<cmd>FzfLua git_commits<cr>", desc = "log" },
       { "<leader>gl", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
-      { "<leader>gs", "<cmd>FzfLua git_status<cr>", desc = "status" },
+      {
+        "<leader>gs",
+        function()
+          require("fzf-lua").git_status({ winopts = { fullscreen = true, preview = { horizontal = "right:80%" } } })
+        end,
+        desc = "status",
+      },
       {
         "<leader>gd",
         function()
