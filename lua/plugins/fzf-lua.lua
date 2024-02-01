@@ -29,6 +29,10 @@ return {
           ["<c-d>"] = "preview-page-down",
           ["<c-u>"] = "preview-page-up",
         },
+        fzf = {
+          ["ctrl-d"] = "preview-page-down",
+          ["ctrl-u"] = "preview-page-up",
+        },
       },
       winopts = {
         preview = {
@@ -59,8 +63,14 @@ return {
       { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
       { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
       { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
-      { "<leader>gL", "<cmd>FzfLua git_commits<cr>", desc = "log" },
-      { "<leader>gl", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
+      {
+        "<leader>gl",
+        function()
+          require("fzf-lua").git_commits({ winopts = { fullscreen = true } })
+        end,
+        desc = "log",
+      },
+      { "<leader>gL", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
       {
         "<leader>gs",
         function()
