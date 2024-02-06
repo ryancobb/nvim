@@ -29,6 +29,7 @@ return {
         end,
       }
       keys[#keys + 1] = { "<leader>fs", "<cmd>FzfLua lsp_document_symbols<cr>", desc = 'symbols' }
+      keys[#keys + 1] = { "<leader>fS", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", desc = 'symbols (workspace)' }
     end,
     opts = {
       diagnostics = {
