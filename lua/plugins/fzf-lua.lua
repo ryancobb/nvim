@@ -15,12 +15,14 @@ return {
         rg_glob = true,
         rg_opts = "--hidden -g !.git -g !spec/fixtures --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
         fzf_opts = {
+          -- ctrl+n ctrl+p to cycle history
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-grep-history",
         },
       },
       files = {
         fd_opts = "--color=never --type f --hidden --follow --exclude .git --exclude node_modules --exclude spec/fixtures",
         fzf_opts = {
+          -- ctrl+n ctrl+p to cycle history
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
         },
       },
