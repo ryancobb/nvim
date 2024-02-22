@@ -13,7 +13,14 @@ return {
     opts = {
       grep = {
         rg_glob = true,
-        rg_opts = "--hidden -g !.git -g !spec/fixtures -g !package-lock.json -g !yarn.lock -g !Gemfile.lock --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
+        rg_opts = "--hidden --column --line-number --no-heading --color=always --smart-case --max-columns=4096 \z
+          -g !.git \z
+          -g !spec/fixtures \z
+          -g !package-lock.json \z
+          -g !yarn.lock \z
+          -g !locale \z
+          -g !Gemfile.lock \z
+          -e",
         fzf_opts = {
           -- ctrl+n ctrl+p to cycle history
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-grep-history",
