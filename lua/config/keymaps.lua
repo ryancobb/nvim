@@ -11,7 +11,6 @@ map({ "n", "x" }, "q:", "<nop>")
 map("n", "<leader>yf", '<cmd>let @+ = expand("%:~:.")<cr>', { desc = "filename" })
 map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link" })
 
-map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit" })
 map("n", "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", { desc = "resume" })
 
 map("n", "<leader>cf", function()

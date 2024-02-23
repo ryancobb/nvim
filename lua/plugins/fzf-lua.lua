@@ -33,6 +33,11 @@ return {
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
         },
       },
+      git = {
+        branches = {
+          cmd = "git branch --color --sort=-committerdate",
+        },
+      },
       keymap = {
         builtin = {
           ["<c-d>"] = "preview-page-down",
@@ -51,6 +56,13 @@ return {
       },
     },
     keys = {
+      {
+        "<leader>fA",
+        function()
+          require("fzf-lua").files({ fd_opts = "--color=never --type f --hidden --follow --exclude .git"})
+        end,
+        desc = "all"
+      },
       {
         "<leader>fa",
         function()
@@ -87,26 +99,7 @@ return {
         end,
         desc = "status",
       },
-      {
-        "<leader>gd",
-        function()
-          local lib = require("diffview.lib")
-          local view = lib.get_current_view()
-          if view then
-            vim.cmd.DiffviewClose()
-          else
-            require("fzf-lua").fzf_exec("git branch -a", {
-              prompt = "diff:",
-              actions = {
-                ["default"] = function(selected)
-                  vim.cmd.DiffviewOpen({ args = { selected[1] } })
-                end,
-              },
-            })
-          end
-        end,
-        desc = "diff",
-      },
+      { "<leader>gb", "<cmd>FzfLua git_branches<cr>", desc = "branches" },
     },
   },
 }
