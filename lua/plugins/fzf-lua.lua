@@ -33,11 +33,6 @@ return {
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
         },
       },
-      git = {
-        branches = {
-          cmd = "git branch --color --sort=-committerdate",
-        },
-      },
       keymap = {
         builtin = {
           ["<c-d>"] = "preview-page-down",
@@ -59,9 +54,9 @@ return {
       {
         "<leader>fA",
         function()
-          require("fzf-lua").files({ fd_opts = "--color=never --type f --hidden --follow --exclude .git"})
+          require("fzf-lua").files({ fd_opts = "--color=never --type f --hidden --follow --exclude .git" })
         end,
-        desc = "all"
+        desc = "all",
       },
       {
         "<leader>fa",
@@ -99,7 +94,6 @@ return {
         end,
         desc = "status",
       },
-      { "<leader>gb", "<cmd>FzfLua git_branches<cr>", desc = "branches" },
     },
   },
 }

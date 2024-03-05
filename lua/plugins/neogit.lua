@@ -30,5 +30,12 @@ return {
       end,
       desc = "push",
     },
+    {
+      "<leader>gb",
+      function()
+        require("neogit").open({ "branch" })
+      end,
+      desc = "branch",
+    },
   },
 }
