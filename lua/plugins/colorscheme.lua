@@ -10,7 +10,6 @@ return {
       },
       groups = {
         all = {
-          LazyNormal = { link = "Normal" },
           LspReferenceRead = { bg = "none" },
           LspReferenceText = { bg = "none" },
           LspReferenceWrite = { bg = "none" },

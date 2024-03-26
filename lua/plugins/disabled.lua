@@ -4,7 +4,6 @@ return {
   { "folke/todo-comments.nvim", enabled = false },
   { "folke/tokyonight.nvim", enabled = false },
   { "folke/trouble.nvim", enabled = false },
-  { "folke/which-key.nvim", enabled = false },
   { "nvim-pack/nvim-spectre", enabled = false },
   { "nvim-telescope/telescope.nvim", enabled = false },
 }
