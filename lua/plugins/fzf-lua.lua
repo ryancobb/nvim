@@ -73,6 +73,17 @@ return {
         desc = "status",
       },
       {
+        "<leader>gb",
+        function()
+          require("fzf-lua").git_branches({
+            cmd = "git branch -l --sort=-committerdate --color",
+            preview = "git log --decorate --graph --color --date=relative {1}",
+            winopts = { preview = { vertical = "down:70%" } },
+          })
+        end,
+        desc = "branch",
+      },
+      {
         "<leader>fA",
         function()
           require("fzf-lua").files({ fd_opts = "--color=never --type f --hidden --follow --exclude .git" })

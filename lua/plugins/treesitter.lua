@@ -39,4 +39,11 @@ return {
     },
   },
   { "RRethy/nvim-treesitter-endwise" },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    branch = "rc/ruby_do_block",
+    opts = {
+      max_lines = 0
+    }
+  },
 }
