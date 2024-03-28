@@ -51,6 +51,27 @@ return {
       },
     },
     keys = {
+      { "<leader>,", fzf_buffers, desc = "buffers" },
+      { "<leader>fr", "<cmd>FzfLua oldfiles cwd_only=true<cr>", desc = "recent files" },
+      { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
+      { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
+      { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
+      { "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", desc = "resume" },
+      { "<leader>gL", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
+      {
+        "<leader>gl",
+        function()
+          require("fzf-lua").git_commits({ winopts = { fullscreen = true } })
+        end,
+        desc = "log",
+      },
+      {
+        "<leader>gs",
+        function()
+          require("fzf-lua").git_status({ winopts = { fullscreen = true, preview = { horizontal = "right:80%" } } })
+        end,
+        desc = "status",
+      },
       {
         "<leader>fA",
         function()
@@ -73,26 +94,6 @@ return {
           })
         end,
         desc = "alternate",
-      },
-      { "<leader>,", fzf_buffers, desc = "buffers" },
-      { "<leader>fr", "<cmd>FzfLua oldfiles cwd_only=true<cr>", desc = "recent files" },
-      { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
-      { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
-      { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
-      {
-        "<leader>gl",
-        function()
-          require("fzf-lua").git_commits({ winopts = { fullscreen = true } })
-        end,
-        desc = "log",
-      },
-      { "<leader>gL", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
-      {
-        "<leader>gs",
-        function()
-          require("fzf-lua").git_status({ winopts = { fullscreen = true, preview = { horizontal = "right:80%" } } })
-        end,
-        desc = "status",
       },
     },
   },
