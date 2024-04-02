@@ -1,58 +1,19 @@
 return {
   {
     "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function()
-      local icons = require("lazyvim.config").icons
+    opts = function(_, opts)
       local blank = { sections = { lualine_a = {} }, filetypes = { "neo-tree", "DiffviewFiles" } }
 
-      return {
-        options = {
-          component_separators = "|",
-          section_separators = { left = "", right = "" },
-        },
-        sections = {
-          lualine_a = { "mode" },
-          lualine_b = { "branch" },
-          lualine_c = {
-            {
-              "diagnostics",
-              symbols = {
-                error = icons.diagnostics.Error,
-                warn = icons.diagnostics.Warn,
-                info = icons.diagnostics.Info,
-                hint = icons.diagnostics.Hint,
-              },
-            },
-            {
-              "diff",
-              symbols = {
-                added = icons.git.added,
-                modified = icons.git.modified,
-                removed = icons.git.removed,
-              },
-              source = function()
-                local gitsigns = vim.b.gitsigns_status_dict
-                if gitsigns then
-                  return {
-                    added = gitsigns.added,
-                    modified = gitsigns.changed,
-                    removed = gitsigns.removed,
-                  }
-                end
-              end,
-            },
-          },
-          lualine_x = {},
-          lualine_y = { "filetype", "encoding" },
-          lualine_z = {},
-        },
-        inactive_sections = {
-          lualine_c = {},
-          lualine_x = {},
-        },
-        extensions = { blank },
+      opts.options = {
+        component_separators = "|",
+        section_separators = { left = "", right = "" },
       }
+
+      opts.extensions = { blank }
+
+      table.remove(opts.sections.lualine_c) -- remove navic
+      table.remove(opts.sections.lualine_c) -- filename
+      table.remove(opts.sections.lualine_c) -- icon
     end,
   },
 }

@@ -1,6 +1,5 @@
 return {
   'SuperBo/fugit2.nvim',
-  branch = 'rc/support_fzf-lua',
   opts = {},
   dependencies = {
     'MunifTanjim/nui.nvim',
