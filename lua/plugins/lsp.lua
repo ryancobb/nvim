@@ -36,7 +36,7 @@ return {
         virtual_text = false,
       },
       servers = {
-        ruby_ls = {
+        solargraph = {
           mason = false,
         }
       },
