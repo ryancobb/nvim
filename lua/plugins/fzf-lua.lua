@@ -27,12 +27,11 @@ return {
         },
       },
       files = {
-        fd_opts = "--color=never --type f --hidden --follow --exclude .git --exclude node_modules --exclude spec/fixtures",
+        fd_opts = "--color=never --type f --no-ignore --hidden --follow --exclude .git --exclude tmp --exclude node_modules --exclude spec/fixtures",
         fzf_opts = {
           -- ctrl+n ctrl+p to cycle history
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
         },
-        formatter = "path.filename_first"
       },
       keymap = {
         builtin = {
