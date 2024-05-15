@@ -27,7 +27,7 @@ return {
         },
       },
       files = {
-        fd_opts = "--color=never --type f --no-ignore --hidden --follow --exclude .git --exclude tmp --exclude node_modules --exclude spec/fixtures",
+        fd_opts = "--color=never --type f --no-ignore --hidden --follow --exclude .git --exclude tmp --exclude vendor --exclude node_modules --exclude spec/fixtures",
         fzf_opts = {
           -- ctrl+n ctrl+p to cycle history
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
@@ -89,11 +89,11 @@ return {
           require("fzf-lua").files({
             fzf_opts = {
               ["--query"] = vim.fn
-                .expand("%:~:.")
+                .expand("%:~:.:r")
                 :gsub("_spec", "")
                 :gsub("^app/", "")
                 :gsub("^spec/", "")
-                :gsub("^ee/app/", "") .. '\\ "!' .. vim.fn.expand("%:t") .. '"\\ ',
+                :gsub("^ee/app/", "") .. ' !' .. vim.fn.expand("%:t"),
             },
           })
         end,

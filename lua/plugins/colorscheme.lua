@@ -30,6 +30,13 @@ return {
             DiffDelete = { bg = C(spec.bg1):blend(C(palette.red.dim), 0.2):to_css() },
             DiffText = { bg = C(spec.bg1):blend(C(palette.yellow.dim), 0.2):to_css() },
             Folded = { bg = "none" },
+            RainbowDelimiterRed = { link = "TSRainbowRed" },
+            RainbowDelimiterBlue = { link = "TSRainbowBlue" },
+            RainbowDelimiterCyan = { link = "TSRainbowCyan" },
+            RainbowDelimiterGreen = { link = "TSRainbowGreen" },
+            RainbowDelimiterOrange = { link = "TSRainbowOrange" },
+            RainbowDelimiterViolet = { link = "TSRainbowViolet" },
+            RainbowDelimiterYellow = { link = "TSRainbowYellow" },
           },
         },
       }
