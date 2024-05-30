@@ -73,7 +73,7 @@ return {
         desc = "status",
       },
       {
-        "<leader>gc",
+        "<leader>gB",
         function()
           require("fzf-lua").git_branches({
             cmd = "git branch -l --sort=-committerdate --color",
