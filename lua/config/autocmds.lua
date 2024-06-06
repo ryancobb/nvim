@@ -23,3 +23,21 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     vim.cmd("set filetype=sh")
   end,
 })
+
+local palette = require('nightfox.palette').load("nordfox")
+
+vim.api.nvim_create_autocmd({ "FocusLost" }, {
+  pattern = { "*" },
+  callback = function()
+    vim.cmd("hi clear Normal")
+    vim.cmd("hi Normal guibg=" .. palette.bg0)
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "FocusGained" }, {
+  pattern = { "*" },
+  callback = function()
+    vim.cmd("hi clear Normal")
+    vim.cmd("hi Normal guibg=" .. palette.bg1)
+  end,
+})
