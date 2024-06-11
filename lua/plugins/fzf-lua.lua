@@ -1,48 +1,7 @@
-local fzf_buffers = function()
-  require("fzf-lua").buffers({
-    previewer = false,
-    winopts = { height = 0.20 },
-    global_resume = false,
-  })
-end
-
 return {
   {
     "ibhagwan/fzf-lua",
-    cmd = "FzfLua",
     opts = {
-      grep = {
-        rg_glob = true,
-        rg_opts = "--hidden --column --line-number --no-heading --color=always --smart-case --max-columns=4096 \z
-          -g !.git \z
-          -g !spec/fixtures \z
-          -g !package-lock.json \z
-          -g !yarn.lock \z
-          -g !locale \z
-          -g !Gemfile.lock \z
-          -e",
-        fzf_opts = {
-          -- ctrl+n ctrl+p to cycle history
-          ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-grep-history",
-        },
-      },
-      files = {
-        fd_opts = "--color=never --type f --no-ignore --hidden --follow --exclude .git --exclude tmp --exclude vendor --exclude node_modules --exclude spec/fixtures",
-        fzf_opts = {
-          -- ctrl+n ctrl+p to cycle history
-          ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
-        },
-      },
-      keymap = {
-        builtin = {
-          ["<c-d>"] = "preview-page-down",
-          ["<c-u>"] = "preview-page-up",
-        },
-        fzf = {
-          ["ctrl-d"] = "preview-page-down",
-          ["ctrl-u"] = "preview-page-up",
-        },
-      },
       winopts = {
         preview = {
           layout = "flex",
@@ -51,12 +10,6 @@ return {
       },
     },
     keys = {
-      { "<leader>,", fzf_buffers, desc = "buffers" },
-      { "<leader>fr", "<cmd>FzfLua oldfiles cwd_only=true<cr>", desc = "recent files" },
-      { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
-      { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
-      { "<leader>sc", "<cmd>FzfLua grep_cword<cr>", desc = "cursor word" },
-      { "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", desc = "resume" },
       { "<leader>gL", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
       {
         "<leader>gl",
