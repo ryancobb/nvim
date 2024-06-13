@@ -1,7 +1,30 @@
 return {
   {
     "ibhagwan/fzf-lua",
+    cmd = "FzfLua",
     opts = {
+      grep = {
+        rg_glob = true,
+        rg_opts = "--hidden --column --line-number --no-heading --color=always --smart-case --max-columns=4096 \z
+          -g !.git \z
+          -g !spec/fixtures \z
+          -g !package-lock.json \z
+          -g !yarn.lock \z
+          -g !locale \z
+          -g !Gemfile.lock \z
+          -e",
+        fzf_opts = {
+          -- ctrl+n ctrl+p to cycle history
+          ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-grep-history",
+        },
+      },
+      files = {
+        fd_opts = "--color=never --type f --no-ignore --hidden --follow --exclude .git --exclude tmp --exclude vendor --exclude node_modules --exclude spec/fixtures",
+        fzf_opts = {
+          -- ctrl+n ctrl+p to cycle history
+          ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
+        },
+      },
       winopts = {
         preview = {
           layout = "flex",
@@ -10,32 +33,11 @@ return {
       },
     },
     keys = {
+      { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
+      { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
+      { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "text" },
+      { "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", desc = "resume" },
       { "<leader>gL", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
-      {
-        "<leader>gl",
-        function()
-          require("fzf-lua").git_commits({ winopts = { fullscreen = true } })
-        end,
-        desc = "log",
-      },
-      {
-        "<leader>gs",
-        function()
-          require("fzf-lua").git_status({ winopts = { fullscreen = true, preview = { horizontal = "right:80%" } } })
-        end,
-        desc = "status",
-      },
-      {
-        "<leader>gB",
-        function()
-          require("fzf-lua").git_branches({
-            cmd = "git branch -l --sort=-committerdate --color",
-            preview = "git log --decorate --graph --color --date=relative {1}",
-            winopts = { preview = { vertical = "down:70%" } },
-          })
-        end,
-        desc = "checkout",
-      },
       {
         "<leader>fa",
         function()
@@ -46,7 +48,7 @@ return {
                 :gsub("_spec", "")
                 :gsub("^app/", "")
                 :gsub("^spec/", "")
-                :gsub("^ee/app/", "") .. ' !' .. vim.fn.expand("%:t"),
+                :gsub("^ee/app/", "") .. " !" .. vim.fn.expand("%:t"),
             },
           })
         end,
