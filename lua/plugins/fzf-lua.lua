@@ -19,10 +19,18 @@ return {
         },
       },
       files = {
-        fd_opts = "--color=never --type f --no-ignore --hidden --follow --exclude .git --exclude tmp --exclude vendor --exclude node_modules --exclude spec/fixtures",
+        fd_opts = "--color=never --type f --no-ignore --hidden --follow --exclude .git --exclude tmp --exclude vendor --exclude node_modules --exclude spec/fixtures --exclude public",
         fzf_opts = {
           -- ctrl+n ctrl+p to cycle history
           ["--history"] = vim.fn.stdpath("data") .. "/fzf-lua-files-history",
+        },
+        actions = {
+          ["enter"] = function(selected, opts)
+            local fallback = vim.api.nvim_get_current_win()
+            local window_id = require("window-picker").pick_window() or fallback
+            vim.api.nvim_set_current_win(window_id)
+            require("fzf-lua.actions").file_edit(selected, opts)
+          end,
         },
       },
       winopts = {
@@ -36,7 +44,6 @@ return {
       { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
       { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
       { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "text" },
-      { "<leader>sr", "<cmd>FzfLua live_grep_resume<cr>", desc = "resume" },
       { "<leader>gL", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
       {
         "<leader>fa",
