@@ -15,9 +15,6 @@ return {
         },
         groups = {
           all = {
-            LspReferenceRead = { bg = "none" },
-            LspReferenceText = { bg = "none" },
-            LspReferenceWrite = { bg = "none" },
             NeoTreeNormal = { link = "Normal" },
             NeoTreeNormalNC = { link = "NormalNC" },
             WindowPickerStatusLine = { link = "@text.warning" },
