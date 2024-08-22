@@ -36,12 +36,12 @@ return {
         virtual_text = false,
       },
       servers = {
-        solargraph = {
-          mason = false
-        }
-        -- ruby_lsp = {
-        --   mason = false,
+        -- solargraph = {
+        --   mason = false
         -- }
+        ruby_lsp = {
+          mason = false,
+        }
       },
     },
   },
