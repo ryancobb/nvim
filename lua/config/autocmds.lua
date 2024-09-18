@@ -24,6 +24,13 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
   end,
 })
 
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+  pattern = { "*.md" },
+  callback = function()
+    vim.cmd("set nowrap")
+  end,
+})
+
 local palette = require('nightfox.palette').load("nordfox")
 
 vim.api.nvim_create_autocmd({ "FocusLost" }, {

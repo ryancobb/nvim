@@ -5,6 +5,7 @@ return {
       javascript = { "prettier" },
       ruby = { "rubocop" },
       vue = { "prettier" },
+      markdown = { "markdownlint-cli2" }
     },
   },
 }
