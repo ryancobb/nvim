@@ -14,7 +14,7 @@ map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link"
 map("n", "<leader>cf", function()
   require("conform").format({
     timeout_ms = 5000,
-    lsp_fallback = true
+    lsp_fallback = true,
   })
 end, { desc = "format" })
 

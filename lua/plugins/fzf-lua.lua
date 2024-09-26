@@ -3,7 +3,7 @@ return {
     "ibhagwan/fzf-lua",
     cmd = "FzfLua",
     dependencies = {
-      "echasnovski/mini.icons"
+      "echasnovski/mini.icons",
     },
     opts = {
       grep = {
@@ -37,8 +37,8 @@ return {
     keys = {
       { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
       { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
-      -- { "<leader>/", "<cmd>FzfLua live_grep<cr>", desc = "text" },
-      { "<leader>gL", "<cmd>FzfLua git_bcommits<cr>", desc = "log (buffer)" },
+      { "<leader>fr", LazyVim.pick("oldfiles", { cwd = vim.uv.cwd() }), desc = "Recent (cwd)" },
+      { "<leader>fR", "<cmd>FzfLua oldfiles<cr>", desc = "Recent" },
       {
         "<leader>fa",
         function()
