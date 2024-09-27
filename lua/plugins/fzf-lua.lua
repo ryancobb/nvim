@@ -33,6 +33,13 @@ return {
           flip_columns = 230,
         },
       },
+      previewers = {
+        git_diff = {
+          cmd_deleted = "DFT_WIDTH=$FZF_PREVIEW_COLUMNS git diff HEAD --",
+          cmd_modified = "DFT_WIDTH=$FZF_PREVIEW_COLUMNS git diff HEAD",
+          cmd_untracked = "DFT_WIDTH=$FZF_PREVIEW_COLUMNS git diff --no-index /dev/null",
+        }
+      }
     },
     keys = {
       { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
