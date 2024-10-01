@@ -38,12 +38,13 @@ return {
           cmd_deleted = "DFT_WIDTH=$FZF_PREVIEW_COLUMNS git diff HEAD --",
           cmd_modified = "DFT_WIDTH=$FZF_PREVIEW_COLUMNS git diff HEAD",
           cmd_untracked = "DFT_WIDTH=$FZF_PREVIEW_COLUMNS git diff --no-index /dev/null",
-        }
-      }
+        },
+      },
     },
     keys = {
       { "<leader><space>", "<cmd>FzfLua files<cr>", desc = "files" },
       { "<leader>st", "<cmd>FzfLua live_grep<cr>", desc = "text" },
+      { "<leader>sr", "<cmd>FzfLua resume<cr>", desc = "Resume" },
       { "<leader>fr", LazyVim.pick("oldfiles", { cwd = vim.uv.cwd() }), desc = "Recent (cwd)" },
       { "<leader>fR", "<cmd>FzfLua oldfiles<cr>", desc = "Recent" },
       {
