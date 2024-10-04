@@ -11,6 +11,8 @@ map({ "n", "x" }, "q:", "<nop>")
 map("n", "<leader>yf", '<cmd>let @+ = expand("%:~:.")<cr>', { desc = "filename" })
 map("n", "<leader>yg", "<cmd>GetCurrentBranchLink<cr>", { desc = "git repo link" })
 
+map("n", "<leader>sr", "<cmd>FzfLua resume<cr>", { desc = "Resume" })
+
 map("n", "<leader>cf", function()
   require("conform").format({
     timeout_ms = 5000,

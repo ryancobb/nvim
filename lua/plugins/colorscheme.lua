@@ -6,6 +6,22 @@ return {
       local palette = require("nightfox.palette").load("nightfox")
       local C = require("nightfox.lib.color")
 
+      -- vim.api.nvim_create_autocmd({ "FocusLost" }, {
+      --   pattern = { "*" },
+      --   callback = function()
+      --     vim.cmd("hi clear Normal")
+      --     vim.cmd("hi Normal guibg=" .. palette.bg0)
+      --   end,
+      -- })
+      --
+      -- vim.api.nvim_create_autocmd({ "FocusGained" }, {
+      --   pattern = { "*" },
+      --   callback = function()
+      --     vim.cmd("hi clear Normal")
+      --     vim.cmd("hi Normal guibg=" .. palette.bg1)
+      --   end,
+      -- })
+
       return {
         options = {
           dim_inactive = true,
@@ -37,6 +53,26 @@ return {
           },
         },
       }
+    end,
+  },
+  {
+    "neanias/everforest-nvim",
+    version = false,
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("everforest").setup({
+        background = "soft",
+        italics = true,
+        dim_inactive_windows = true,
+        on_highlights = function(hl, _)
+          hl.TSFunctBuiltin = { link = "TSField" }
+          hl.TSFunction = { link = "TSField" }
+          hl.TSFunctionCall = { link = "TSField" }
+          hl.TSMethod = { link = "TSField" }
+          hl.TSSymbol = { link = "TSField"}
+        end
+      })
     end,
   },
 }
