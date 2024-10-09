@@ -26,14 +26,14 @@ return {
       opts.winbar = {
         lualine_c = {
           { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 }, color = "Normal" },
-          { LazyVim.lualine.pretty_path({ length = 10 }), color = "Normal" },
+          { LazyVim.lualine.pretty_path({ modified_hl = 'Special', modified_sign = '[+]', length = 10 }), color = "Normal" },
         },
       }
 
       opts.inactive_winbar = {
         lualine_c = {
           { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 }, color = "NormalNC" },
-          { LazyVim.lualine.pretty_path({ length = 10 }), color = "NormalNC" },
+          { LazyVim.lualine.pretty_path({ modified_hl = 'Special', modified_sign = '[+]', length = 10 }), color = "NormalNC" },
         },
       }
     end,
