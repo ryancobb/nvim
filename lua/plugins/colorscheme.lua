@@ -70,9 +70,10 @@ return {
           hl.TSFunction = { link = "TSField" }
           hl.TSFunctionCall = { link = "TSField" }
           hl.TSMethod = { link = "TSField" }
-          hl.TSSymbol = { link = "TSField"}
-        end
+          hl.TSSymbol = { link = "TSField" }
+          hl["@string.special.symbol.ruby"] = { link = "Special" }
+        end,
       })
     end,
-  },
+  }
 }
